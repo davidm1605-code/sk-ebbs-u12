@@ -16,69 +16,167 @@
         .team-name { flex: 1; text-align: left; }
         .team-right { flex: 1; text-align: right; }
         .round { font-size: 0.8rem; color: #94a3b8; width: 70px; }
+        .btn-container { margin-top: 20px; text-align: center; }
+        button { background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #38bdf8; color: #0f172a; }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>Gruppe WEISS - Spielplan</h2>
-        <!-- SK Ebbs Spiele zuerst -->
-        <div class="match"><span class="round">1. Rde</span><span class="team-name">SK Ebbs</span><input type="text" value="7"> : <input type="text" value="3"><span class="team-right">Kufstein</span></div>
-        <div class="match"><span class="round">2. Rde</span><span class="team-name">Walchsee</span><input type="text" value="1"> : <input type="text" value="4"><span class="team-right">SK Ebbs</span></div>
-        <div class="match"><span class="round">3. Rde</span><span class="team-name">SK Ebbs</span><input type="text" value=""> : <input type="text" value=""><span class="team-right">Wörgl</span></div>
-        <div class="match"><span class="round">4. Rde</span><span class="team-name">Erl</span><input type="text" value=""> : <input type="text" value=""><span class="team-right">SK Ebbs</span></div>
-        <div class="match"><span class="round">5. Rde</span><span class="team-name">SK Ebbs</span><input type="text" value=""> : <input type="text" value=""><span class="team-right">Bichlach B</span></div>
-
-        <!-- Übrige Mannschaften alphabetisch -->
-        <div class="match"><span class="round">3. Rde</span><span class="team-name">Niederndorf</span><input type="text" value="4"> : <input type="text" value="2"><span class="team-right">Bichlach B</span></div>
-        <div class="match"><span class="round">2. Rde</span><span class="team-name">Erl</span><input type="text" value="7"> : <input type="text" value="2"><span class="team-right">Niederndorf</span></div>
-        <div class="match"><span class="round">2. Rde</span><span class="team-name">Kössen</span><input type="text" value=""> : <input type="text" value=""><span class="team-right">Walchsee</span></div>
-        <div class="match"><span class="round">1. Rde</span><span class="team-name">Schwoich</span><input type="text" value="2"> : <input type="text" value="1"><span class="team-right">Erl</span></div>
-        <div class="match"><span class="round">3. Rde</span><span class="team-name">Wörgl</span><input type="text" value="19"> : <input type="text" value="3"><span class="team-right">Söll</span></div>
-        <div class="match"><span class="round">1. Rde</span><span class="team-name">Wörgl</span><input type="text" value="8"> : <input type="text" value="1"><span class="team-right">Bichlach B</span></div>
+        <div id="matches-weiss"></div>
 
         <h2>Tabelle Gruppe WEISS</h2>
         <table>
-            <tr><th>#</th><th>Team</th><th>SP</th><th>Tore</th><th>PKT</th></tr>
-            <tr><td>1</td><td>Wörgl</td><td>2</td><td>27:4</td><td><strong>6</strong></td></tr>
-            <tr><td>2</td><td>SK Ebbs</td><td>2</td><td>11:4</td><td><strong>6</strong></td></tr>
-            <tr><td>3</td><td>Erl</td><td>2</td><td>8:4</td><td><strong>3</strong></td></tr>
-            <tr><td>4</td><td>Schwoich</td><td>1</td><td>2:1</td><td><strong>3</strong></td></tr>
-            <tr><td>5</td><td>Niederndorf</td><td>2</td><td>6:9</td><td><strong>3</strong></td></tr>
-            <tr><td>6</td><td>Bad Häring sv.</td><td>0</td><td>0:0</td><td><strong>0</strong></td></tr>
-            <tr><td>7</td><td>Kössen</td><td>0</td><td>0:0</td><td><strong>0</strong></td></tr>
-            <tr><td>8</td><td>St.Johann B</td><td>0</td><td>0:0</td><td><strong>0</strong></td></tr>
-            <tr><td>9</td><td>Walchsee</td><td>1</td><td>1:4</td><td><strong>0</strong></td></tr>
-            <tr><td>10</td><td>Kufstein</td><td>1</td><td>3:7</td><td><strong>0</strong></td></tr>
-            <tr><td>11</td><td>Bichlach B</td><td>2</td><td>3:12</td><td><strong>0</strong></td></tr>
-            <tr><td>12</td><td>Söll</td><td>1</td><td>3:19</td><td><strong>0</strong></td></tr>
+            <thead>
+                <tr><th>#</th><th>TEAM</th><th>SP</th><th>TORE</th><th>PKT</th></tr>
+            </thead>
+            <tbody id="table-weiss"></tbody>
         </table>
 
         <h2>Gruppe GRÜN - Spielplan</h2>
-        <!-- SK Ebbs Spiele zuerst -->
-        <div class="match"><span class="round">1. Rde</span><span class="team-name">SK Ebbs</span><input type="text" value="8"> : <input type="text" value="2"><span class="team-right">St.Johann A</span></div>
-        <div class="match"><span class="round">2. Rde</span><span class="team-name">Kundl/Breitenbach</span><input type="text" value="1"> : <input type="text" value="4"><span class="team-right">SK Ebbs</span></div>
-        <div class="match"><span class="round">3. Rde</span><span class="team-name">SK Ebbs</span><input type="text" value=""> : <input type="text" value=""><span class="team-right">Bichlach A</span></div>
-        <div class="match"><span class="round">4. Rde</span><span class="team-name">Söll</span><input type="text" value=""> : <input type="text" value=""><span class="team-right">SK Ebbs</span></div>
-        <div class="match"><span class="round">5. Rde</span><span class="team-name">SK Ebbs</span><input type="text" value=""> : <input type="text" value=""><span class="team-right">Waidring</span></div>
-        <div class="match"><span class="round">6. Rde</span><span class="team-name">SK Ebbs</span><input type="text" value=""> : <input type="text" value=""><span class="team-right">Pillerseetal</span></div>
-        <div class="match"><span class="round">7. Rde</span><span class="team-name">Kirchberg (U11)</span><input type="text" value=""> : <input type="text" value=""><span class="team-right">SK Ebbs</span></div>
-        <div class="match"><span class="round">8. Rde</span><span class="team-name">Kössen</span><input type="text" value=""> : <input type="text" value=""><span class="team-right">SK Ebbs</span></div>
-        <div class="match"><span class="round">9. Rde</span><span class="team-name">SK Ebbs</span><input type="text" value=""> : <input type="text" value=""><span class="team-right">Bruckhäusl</span></div>
+        <div id="matches-gruen"></div>
 
         <h2>Tabelle Gruppe GRÜN</h2>
         <table>
-            <tr><th>#</th><th>Team</th><th>SP</th><th>Tore</th><th>PKT</th></tr>
-            <tr><td>1</td><td>SK Ebbs</td><td>2</td><td>12:3</td><td><strong>6</strong></td></tr>
-            <tr><td>2</td><td>Bichlach A</td><td>0</td><td>0:0</td><td><strong>0</strong></td></tr>
-            <tr><td>3</td><td>Bruckhäusl</td><td>0</td><td>0:0</td><td><strong>0</strong></td></tr>
-            <tr><td>4</td><td>Kirchberg (U11)</td><td>0</td><td>0:0</td><td><strong>0</strong></td></tr>
-            <tr><td>5</td><td>Kössen</td><td>0</td><td>0:0</td><td><strong>0</strong></td></tr>
-            <tr><td>6</td><td>Pillerseetal</td><td>0</td><td>0:0</td><td><strong>0</strong></td></tr>
-            <tr><td>7</td><td>Söll</td><td>0</td><td>0:0</td><td><strong>0</strong></td></tr>
-            <tr><td>8</td><td>Waidring</td><td>0</td><td>0:0</td><td><strong>0</strong></td></tr>
-            <tr><td>9</td><td>Kundl/Breitenbach</td><td>1</td><td>1:4</td><td><strong>0</strong></td></tr>
-            <tr><td>10</td><td>St.Johann A</td><td>1</td><td>2:8</td><td><strong>0</strong></td></tr>
+            <thead>
+                <tr><th>#</th><th>TEAM</th><th>SP</th><th>TORE</th><th>PKT</th></tr>
+            </thead>
+            <tbody id="table-gruen"></tbody>
         </table>
+
+        <div class="btn-container">
+            <button onclick="updateTables()">Aktualisieren</button>
+        </div>
     </div>
+
+    <script>
+        const dataWeiss = {
+            teams: ["SK Ebbs", "Wörgl", "Erl", "Schwoich", "Niederndorf", "Bad Häring sv.", "Kössen", "St.Johann B", "Walchsee", "Kufstein", "Bichlach B", "Söll"],
+            matches: [
+                { round: "1. Rde", home: "SK Ebbs", away: "Kufstein", homeGoals: "7", awayGoals: "3" },
+                { round: "2. Rde", home: "Walchsee", away: "SK Ebbs", homeGoals: "1", awayGoals: "4" },
+                { round: "3. Rde", home: "SK Ebbs", away: "Wörgl", homeGoals: "", awayGoals: "" },
+                { round: "4. Rde", home: "Erl", away: "SK Ebbs", homeGoals: "", awayGoals: "" },
+                { round: "5. Rde", home: "SK Ebbs", away: "Bichlach B", homeGoals: "", awayGoals: "" },
+                { round: "3. Rde", home: "Niederndorf", away: "Bichlach B", homeGoals: "4", awayGoals: "2" },
+                { round: "2. Rde", home: "Erl", away: "Niederndorf", homeGoals: "7", awayGoals: "2" },
+                { round: "2. Rde", home: "Kössen", away: "Walchsee", homeGoals: "", awayGoals: "" },
+                { round: "1. Rde", home: "Schwoich", away: "Erl", homeGoals: "2", awayGoals: "1" },
+                { round: "3. Rde", home: "Wörgl", away: "Söll", homeGoals: "19", awayGoals: "3" },
+                { round: "1. Rde", home: "Wörgl", away: "Bichlach B", homeGoals: "8", awayGoals: "1" }
+            ]
+        };
+
+        const dataGruen = {
+            teams: ["SK Ebbs", "Bichlach A", "Bruckhäusl", "Kirchberg (U11)", "Kössen", "Pillerseetal", "Söll", "Waidring", "Kundl/Breitenbach", "St.Johann A"],
+            matches: [
+                { round: "1. Rde", home: "SK Ebbs", away: "St.Johann A", homeGoals: "8", awayGoals: "2" },
+                { round: "2. Rde", home: "Kundl/Breitenbach", away: "SK Ebbs", homeGoals: "1", awayGoals: "4" },
+                { round: "3. Rde", home: "SK Ebbs", away: "Bichlach A", homeGoals: "", awayGoals: "" },
+                { round: "4. Rde", home: "Söll", away: "SK Ebbs", homeGoals: "", awayGoals: "" },
+                { round: "5. Rde", home: "SK Ebbs", away: "Waidring", homeGoals: "", awayGoals: "" },
+                { round: "6. Rde", home: "SK Ebbs", away: "Pillerseetal", homeGoals: "", awayGoals: "" },
+                { round: "7. Rde", home: "Kirchberg (U11)", away: "SK Ebbs", homeGoals: "", awayGoals: "" },
+                { round: "8. Rde", home: "Kössen", away: "SK Ebbs", homeGoals: "", awayGoals: "" },
+                { round: "9. Rde", home: "SK Ebbs", away: "Bruckhäusl", homeGoals: "", awayGoals: "" }
+            ]
+        };
+
+        function renderGroup(groupKey, groupData) {
+            const matchContainer = document.getElementById(`matches-${groupKey}`);
+            matchContainer.innerHTML = "";
+
+            groupData.matches.forEach((m, index) => {
+                const div = document.createElement("div");
+                div.className = "match";
+                div.innerHTML = `
+                    <span class="round">${m.round}</span>
+                    <span class="team-name">${m.home}</span>
+                    <input type="text" id="${groupKey}-h-${index}" value="${m.homeGoals}" oninput="updateTables()"> : 
+                    <input type="text" id="${groupKey}-a-${index}" value="${m.awayGoals}" oninput="updateTables()">
+                    <span class="team-right">${m.away}</span>
+                `;
+                matchContainer.appendChild(div);
+            });
+        }
+
+        function calculateTable(groupKey, groupData) {
+            const stats = {};
+            groupData.teams.forEach(team => {
+                stats[team] = { sp: 0, goalsFor: 0, goalsAgainst: 0, pts: 0 };
+            });
+
+            groupData.matches.forEach((m, index) => {
+                const hInput = document.getElementById(`${groupKey}-h-${index}`);
+                const aInput = document.getElementById(`${groupKey}-a-${index}`);
+                if (!hInput || !aInput) return;
+
+                const hVal = hInput.value.trim();
+                const aVal = aInput.value.trim();
+
+                if (hVal !== "" && aVal !== "" && !isNaN(hVal) && !isNaN(aVal)) {
+                    const hG = parseInt(hVal);
+                    const aG = parseInt(aVal);
+
+                    if (stats[m.home]) {
+                        stats[m.home].sp += 1;
+                        stats[m.home].goalsFor += hG;
+                        stats[m.home].goalsAgainst += aG;
+                    }
+                    if (stats[m.away]) {
+                        stats[m.away].sp += 1;
+                        stats[m.away].goalsFor += aG;
+                        stats[m.away].goalsAgainst += hG;
+                    }
+
+                    if (hG > aG) {
+                        if (stats[m.home]) stats[m.home].pts += 3;
+                    } else if (hG < aG) {
+                        if (stats[m.away]) stats[m.away].pts += 3;
+                    } else {
+                        if (stats[m.home]) stats[m.home].pts += 1;
+                        if (stats[m.away]) stats[m.away].pts += 1;
+                    }
+                }
+            });
+
+            const sortedTeams = groupData.teams.sort((a, b) => {
+                const sA = stats[a];
+                const sB = stats[b];
+                if (sB.pts !== sA.pts) return sB.pts - sA.pts;
+                const diffA = sA.goalsFor - sA.goalsAgainst;
+                const diffB = sB.goalsFor - sB.goalsAgainst;
+                if (diffB !== diffA) return diffB - diffA;
+                if (sB.goalsFor !== sA.goalsFor) return sB.goalsFor - sA.goalsFor;
+                return a.localeCompare(b);
+            });
+
+            const tbody = document.getElementById(`table-${groupKey}`);
+            tbody.innerHTML = "";
+
+            sortedTeams.forEach((team, idx) => {
+                const s = stats[team];
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${idx + 1}</td>
+                    <td>${team}</td>
+                    <td>${s.sp}</td>
+                    <td>${s.goalsFor}:${s.goalsAgainst}</td>
+                    <td><strong>${s.pts}</strong></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateTables() {
+            calculateTable("weiss", dataWeiss);
+            calculateTable("gruen", dataGruen);
+        }
+
+        renderGroup("weiss", dataWeiss);
+        renderGroup("gruen", dataGruen);
+        updateTables();
+    </script>
 </body>
 </html>
