@@ -82,7 +82,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Deine Firebase Konfiguration
         const firebaseConfig = {
             apiKey: "AIzaSyDlkQPYaygg7CDYpNYfvFJUq83ylMGfAoo",
             authDomain: "sk-ebbs-u12.firebaseapp.com",
@@ -261,7 +260,6 @@
             });
         }
 
-        // Daten aus Firebase laden beim Start
         async function loadFromFirebase() {
             try {
                 const docRef = doc(db, "matchdata", "seasons");
@@ -269,7 +267,7 @@
                 if (docSnap.exists()) {
                     const savedData = docSnap.data();
                     if (savedData.weiss) {
-                        savedData.weissforEach((gMatch, idx) => {
+                        savedData.weiss.forEach((gMatch, idx) => {
                             if (dataWeiss.matches[idx]) {
                                 dataWeiss.matches[idx].homeGoals = gMatch.homeGoals;
                                 dataWeiss.matches[idx].awayGoals = gMatch.awayGoals;
@@ -291,7 +289,6 @@
             renderAll();
         }
 
-        // Daten in Firebase speichern beim Klick auf Aktualisieren
         window.triggerUpdate = async function() {
             collectValues("weiss", dataWeiss);
             collectValues("gruen", dataGruen);
@@ -309,7 +306,6 @@
             }
         }
 
-        // Initial beim Laden ausführen
         loadFromFirebase();
     </script>
 </body>
