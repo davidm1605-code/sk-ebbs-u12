@@ -3,111 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SK Ebbs U12 - Meisterschaft 2026</title>
+    <title>SK Ebbs U12 - Spielplan & Tabelle</title>
     <style>
         :root {
-            --primary-color: #0f233e;
-            --secondary-color: #16325c;
-            --accent-color: #1d4ed8;
+            --primary-color: #0f172a;
+            --accent-color: #1e293b;
             --bg-color: #f8fafc;
             --card-bg: #ffffff;
-            --text-color: #1e293b;
-            --text-muted: #64748b;
+            --text-color: #334155;
             --border-color: #e2e8f0;
         }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
             padding: 10px;
-            -webkit-font-smoothing: antialiased;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-
         .container {
+            width: 100%;
             max-width: 600px;
-            margin: 0 auto;
-            background: var(--card-bg);
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
-            padding: 16px;
         }
-
-        header {
-            text-align: center;
-            padding: 10px 0 20px 0;
-            border-bottom: 2px solid var(--border-color);
-            margin-bottom: 20px;
-        }
-
-        header h1 {
-            font-size: 1.35rem;
-            color: var(--primary-color);
-            margin: 0 0 6px 0;
-            font-weight: 700;
-        }
-
-        header p {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin: 0;
-        }
-
         h2 {
-            font-size: 1.1rem;
             color: var(--primary-color);
-            margin: 24px 0 12px 0;
-            font-weight: 700;
             border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 4px;
+            padding-bottom: 5px;
+            margin-top: 25px;
+            font-size: 1.2rem;
         }
-
-        .table-responsive {
-            width: 100%;
-            overflow-x: auto;
-            margin-bottom: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .matchday-title {
             font-size: 0.85rem;
-            background: #fff;
-        }
-
-        th, td {
-            padding: 8px 6px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        th {
-            background-color: #f1f5f9;
-            color: var(--primary-color);
-            font-weight: 600;
+            font-weight: bold;
+            color: #64748b;
+            margin: 15px 0 5px 5px;
             text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.5px;
         }
-
         .match-row {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 8px 4px;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 0.85rem;
+            background: var(--card-bg);
+            padding: 8px 10px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+            font-size: 0.9rem;
         }
-
-        .match-round {
-            width: 35px;
-            color: var(--text-muted);
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
         .team-home {
             flex: 1;
             text-align: right;
@@ -116,7 +60,6 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-
         .team-away {
             flex: 1;
             text-align: left;
@@ -125,281 +68,303 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-
         .score-inputs {
             display: flex;
             align-items: center;
             gap: 4px;
         }
-
-        .score-input {
+        .score-inputs input {
             width: 36px;
             height: 32px;
             text-align: center;
+            font-size: 1rem;
             border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 0.9rem;
-            font-weight: 600;
+            border-radius: 4px;
             background: #fff;
-            color: var(--text-color);
         }
-
-        .score-input:focus {
-            outline: none;
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.15);
-        }
-
-        .colon {
+        .score-inputs span {
             font-weight: bold;
-            color: var(--text-muted);
+            color: #94a3b8;
         }
-
-        .btn-container {
-            position: sticky;
-            bottom: 10px;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 12px 0;
-            text-align: center;
-            margin-top: 20px;
-            z-index: 10;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-top: 10px;
+            border: 1px solid var(--border-color);
+            font-size: 0.85rem;
         }
-
+        th, td {
+            padding: 8px 6px;
+            text-align: left;
+        }
+        th {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+            font-weight: bold;
+            border-bottom: 1px solid var(--border-color);
+        }
+        tr:not(:last-child) td {
+            border-bottom: 1px solid #f1f5f9;
+        }
+        td:nth-child(1), th:nth-child(1) { text-align: center; width: 30px; }
+        td:nth-child(3), th:nth-child(3),
+        td:nth-child(4), th:nth-child(4),
+        td:nth-child(5), th:nth-child(5) { text-align: center; }
+        
         .update-btn {
+            display: block;
+            width: 100%;
             background-color: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 24px;
-            padding: 12px 24px;
-            font-size: 0.95rem;
-            font-weight: 600;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(15, 35, 62, 0.3);
-            transition: background 0.2s, transform 0.1s;
-            width: 100%;
-            max-width: 320px;
+            margin: 30px 0;
+            box-shadow: 0 4px 6px rgba(15, 23, 42, 0.2);
         }
-
         .update-btn:active {
             transform: scale(0.98);
-        }
-
-        .update-btn:hover {
-            background-color: var(--secondary-color);
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header>
-        <h1>SK Ebbs U12 - Meisterschaft 2026</h1>
-        <p>Ergebnisse eintragen & Tabellen automatisch berechnen</p>
-    </header>
-
-    <!-- GRUPPE WEISS -->
     <h2>Gruppe WEISS - Spielplan</h2>
-    <div id="matches-weiss"></div>
+    <div id="schedule-weiss"></div>
 
     <h2>Tabelle Gruppe WEISS</h2>
-    <div class="table-responsive">
-        <table id="table-weiss">
-            <thead>
-                <tr>
-                    <th style="width: 30px;">#</th>
-                    <th>Team</th>
-                    <th style="width: 35px; text-align: center;">Sp</th>
-                    <th style="width: 60px; text-align: center;">Tore</th>
-                    <th style="width: 35px; text-align: center;">Pkt</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
+    <div id="table-weiss-container"></div>
 
-    <!-- GRUPPE GRÜN -->
     <h2>Gruppe GRÜN - Spielplan</h2>
-    <div id="matches-gruen"></div>
+    <div id="schedule-gruen"></div>
 
     <h2>Tabelle Gruppe GRÜN</h2>
-    <div class="table-responsive">
-        <table id="table-gruen">
-            <thead>
-                <tr>
-                    <th style="width: 30px;">#</th>
-                    <th>Team</th>
-                    <th style="width: 35px; text-align: center;">Sp</th>
-                    <th style="width: 60px; text-align: center;">Tore</th>
-                    <th style="width: 35px; text-align: center;">Pkt</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
+    <div id="table-gruen-container"></div>
 
-    <div class="btn-container">
-        <button class="update-btn" onclick="updateTables()">Ergebnisse & Tabelle aktualisieren</button>
-    </div>
+    <button class="update-btn" onclick="saveAndCalculate()">Ergebnisse & Tabelle aktualisieren</button>
 </div>
 
 <script>
     const teamsWeiss = [
-        "SK Ebbs", "Wörgl", "Erl", "Schwoich", "Niederndorf", 
-        "Bad Häring sv.", "Kössen", "St.Johann B", "Walchsee", "Kufstein", "Bichlach B", "Söll"
+        "Wörgl", "SK Ebbs", "Erl", "Schwoich", "Niederndorf", 
+        "Bad Häring sv.", "Kössen", "St.Johann B", "Walchsee", 
+        "Kufstein", "Bichlach B", "Söll"
     ];
 
     const teamsGruen = [
         "SK Ebbs", "Bichlach A", "Bruckhäusl", "Kirchberg (U11)", 
-        "Kössen", "Pillerseetal", "Söll", "Waidring", "Kundl/Breitenbach", "St.Johann A"
+        "Kössen", "Pillerseetal", "Söll", "Waidring", 
+        "Kundl/Breitenbach", "St.Johann A"
     ];
 
-    const matchesWeiss = [
-        { round: 1, home: "SK Ebbs", away: "Kufstein", homeScore: 7, awayScore: 3 },
-        { round: 1, home: "Schwoich", away: "Erl", homeScore: 2, awayScore: 1 },
-        { round: 1, home: "Wörgl", away: "Bichlach B", homeScore: 8, awayScore: 1 },
-        { round: 2, home: "Walchsee", away: "SK Ebbs", homeScore: 1, awayScore: 4 },
-        { round: 2, home: "Erl", away: "Niederndorf", homeScore: 7, awayScore: 2 },
-        { round: 2, home: "Kössen", away: "Walchsee", homeScore: "", awayScore: "" },
-        { round: 3, home: "Niederndorf", away: "Bichlach B", homeScore: 4, awayScore: 2 },
-        { round: 3, home: "SK Ebbs", away: "Wörgl", homeScore: "", awayScore: "" },
-        { round: 3, home: "Wörgl", away: "Söll", homeScore: 19, awayScore: 3 },
-        { round: 4, home: "Erl", away: "SK Ebbs", homeScore: "", awayScore: "" },
-        { round: 5, home: "SK Ebbs", away: "Bichlach B", homeScore: "", awayScore: "" }
-    ];
+    // Generator für "Jeder gegen jeden" (Round Robin)
+    function generateSchedule(teams) {
+        let t = [...teams];
+        if (t.length % 2 !== 0) t.push("SPIELFREI");
+        const rounds = [];
+        const numRounds = t.length - 1;
+        const half = t.length / 2;
 
-    const matchesGruen = [
-        { round: 1, home: "SK Ebbs", away: "St.Johann A", homeScore: 8, awayScore: 2 },
-        { round: 2, home: "Kundl/Breitenbach", away: "SK Ebbs", homeScore: 1, awayScore: 4 },
-        { round: 3, home: "SK Ebbs", away: "Bichlach A", homeScore: "", awayScore: "" },
-        { round: 4, home: "Söll", away: "SK Ebbs", homeScore: "", awayScore: "" },
-        { round: 5, home: "SK Ebbs", away: "Waidring", homeScore: "", awayScore: "" },
-        { round: 6, home: "SK Ebbs", away: "Pillerseetal", homeScore: "", awayScore: "" },
-        { round: 7, home: "Kirchberg (U11)", away: "SK Ebbs", homeScore: "", awayScore: "" },
-        { round: 8, home: "Kössen", away: "SK Ebbs", homeScore: "", awayScore: "" },
-        { round: 9, home: "SK Ebbs", away: "Bruckhäusl", homeScore: "", awayScore: "" }
-    ];
-
-    function renderMatches() {
-        const containerWeiss = document.getElementById('matches-weiss');
-        containerWeiss.innerHTML = '';
-        matchesWeiss.forEach((m, idx) => {
-            containerWeiss.innerHTML += `
-                <div class="match-row">
-                    <div class="match-round">${m.round}. Rde</div>
-                    <div class="team-home" title="${m.home}">${m.home}</div>
-                    <div class="score-inputs">
-                        <input type="number" class="score-input" id="w-home-${idx}" value="${m.homeScore}" min="0">
-                        <span class="colon">:</span>
-                        <input type="number" class="score-input" id="w-away-${idx}" value="${m.awayScore}" min="0">
-                    </div>
-                    <div class="team-away" title="${m.away}">${m.away}</div>
-                </div>
-            `;
-        });
-
-        const containerGruen = document.getElementById('matches-gruen');
-        containerGruen.innerHTML = '';
-        matchesGruen.forEach((m, idx) => {
-            containerGruen.innerHTML += `
-                <div class="match-row">
-                    <div class="match-round">${m.round}. Rde</div>
-                    <div class="team-home" title="${m.home}">${m.home}</div>
-                    <div class="score-inputs">
-                        <input type="number" class="score-input" id="g-home-${idx}" value="${m.homeScore}" min="0">
-                        <span class="colon">:</span>
-                        <input type="number" class="score-input" id="g-away-${idx}" value="${m.awayScore}" min="0">
-                    </div>
-                    <div class="team-away" title="${m.away}">${m.away}</div>
-                </div>
-            `;
-        });
-    }
-
-    function calculateTable(teamList, matches, prefix) {
-        let stats = {};
-        teamList.forEach(t => {
-            stats[t] = { name: t, played: 0, goalsFor: 0, goalsAgainst: 0, points: 0 };
-        });
-
-        matches.forEach((m, idx) => {
-            const hInput = document.getElementById(`${prefix}-home-${idx}`);
-            const aInput = document.getElementById(`${prefix}-away-${idx}`);
-            if (!hInput || !aInput) return;
-
-            const hVal = hInput.value.trim();
-            const aVal = aInput.value.trim();
-
-            if (hVal !== '' && aVal !== '') {
-                const hGoals = parseInt(hVal, 10);
-                const aGoals = parseInt(aVal, 10);
-
-                if (!isNaN(hGoals) && !isNaN(aGoals)) {
-                    if (stats[m.home]) {
-                        stats[m.home].played++;
-                        stats[m.home].goalsFor += hGoals;
-                        stats[m.home].goalsAgainst += aGoals;
-                        if (hGoals > aGoals) stats[m.home].points += 3;
-                        else if (hGoals === aGoals) stats[m.home].points += 1;
-                    }
-                    if (stats[m.away]) {
-                        stats[m.away].played++;
-                        stats[m.away].goalsFor += aGoals;
-                        stats[m.away].goalsAgainst += hGoals;
-                        if (aGoals > hGoals) stats[m.away].points += 3;
-                        else if (aGoals === hGoals) stats[m.away].points += 1;
+        for (let i = 0; i < numRounds; i++) {
+            const matches = [];
+            for (let j = 0; j < half; j++) {
+                const home = t[j];
+                const away = t[t.length - 1 - j];
+                if (home !== "SPIELFREI" && away !== "SPIELFREI") {
+                    // Zufällige Heim/Auswärts-Verteilung oder feste Logik
+                    if (j % 2 === 0) {
+                        matches.push({ home: home, away: away });
+                    } else {
+                        matches.push({ home: away, away: home });
                     }
                 }
             }
-        });
-
-        let sortedTeams = Object.values(stats).sort((a, b) => {
-            if (b.points !== a.points) return b.points - a.points;
-            let diffA = a.goalsFor - a.goalsAgainst;
-            let diffB = b.goalsFor - b.goalsAgainst;
-            if (diffB !== diffA) return diffB - diffA;
-            return b.goalsFor - a.goalsFor;
-        });
-
-        return sortedTeams;
+            rounds.push(matches);
+            // Rotieren (Ringtausch)
+            t.splice(1, 0, t.pop());
+        }
+        return rounds;
     }
 
-    function renderTable(sortedTeams, tableId) {
-        const tbody = document.querySelector(`#${tableId} tbody`);
-        tbody.innerHTML = '';
-        sortedTeams.forEach((t, index) => {
-            tbody.innerHTML += `
+    const scheduleWeissData = generateSchedule(teamsWeiss);
+    const scheduleGruenData = generateSchedule(teamsGruen);
+
+    function renderGroup(groupName, teams, scheduleData) {
+        const schedContainer = document.getElementById(`schedule-${groupName}`);
+        let schedHTML = '';
+
+        scheduleData.forEach((round, rIndex) => {
+            schedHTML += `<div class="matchday-title">${rIndex + 1}. Rde</div>`;
+            round.forEach((match, mIndex) => {
+                const idPrefix = `${groupName}_r${rIndex}_m${mIndex}`;
+                schedHTML.innerHTML; // placeholder
+                schedHTML += `
+                    <div class="match-row">
+                        <div class="team-home">${match.home}</div>
+                        <div class="score-inputs">
+                            <input type="number" id="${idPrefix}_home" min="0" max="99">
+                            <span>:</span>
+                            <input type="number" id="${idPrefix}_away" min="0" max="99">
+                        </div>
+                        <div class="team-away">${match.away}</div>
+                    </div>
+                `;
+            });
+        });
+        schedContainer.innerHTML = schedHTML;
+
+        // Tabelle rendern
+        renderTable(groupName, teams);
+    }
+
+    function renderTable(groupName, teams) {
+        const tableContainer = document.getElementById(`table-${groupName}-container`);
+        let tableHTML = `
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>TEAM</th>
+                        <th>SP</th>
+                        <th>TORE</th>
+                        <th>PKT</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-${groupName}">
+        `;
+        teams.forEach((team, index) => {
+            tableHTML += `
                 <tr>
-                    <td style="font-weight: 600; color: var(--text-muted);">${index + 1}</td>
-                    <td style="font-weight: 600;">${t.name}</td>
-                    <td style="text-align: center;">${t.played}</td>
-                    <td style="text-align: center;">${t.goalsFor}:${t.goalsAgainst}</td>
-                    <td style="text-align: center; font-weight: bold;">${t.points}</td>
+                    <td>${index + 1}</td>
+                    <td>${team}</td>
+                    <td id="t_${groupName}_${index}_sp">0</td>
+                    <td id="t_${groupName}_${index}_tore">0:0</td>
+                    <td id="t_${groupName}_${index}_pkt">0</td>
                 </tr>
             `;
         });
+        tableHTML += `</tbody></table>`;
+        tableContainer.innerHTML = tableHTML;
     }
 
-    function updateTables() {
-        matchesWeiss.forEach((m, idx) => {
-            m.homeScore = document.getElementById(`w-home-${idx}`).value;
-            m.awayScore = document.getElementById(`w-away-${idx}`).value;
-        });
-        matchesGruen.forEach((m, idx) => {
-            m.homeScore = document.getElementById(`g-home-${idx}`).value;
-            m.awayScore = document.getElementById(`g-away-${idx}`).value;
-        });
+    // Initialisierung beim Laden
+    renderGroup('weiss', teamsWeiss, scheduleWeissData);
+    renderGroup('gruen', teamsGruen, scheduleGruenData);
 
-        const sortedWeiss = calculateTable(teamsWeiss, matchesWeiss, 'w');
-        renderTable(sortedWeiss, 'table-weiss');
-
-        const sortedGruen = calculateTable(teamsGruen, matchesGruen, 'g');
-        renderTable(sortedGruen, 'table-gruen');
+    // Gespeicherte Ergebnisse laden
+    function loadScores() {
+        const saved = localStorage.getItem('u12_scores_v2');
+        if (!saved) return;
+        const data = JSON.parse(saved);
+        for (const id in data) {
+            const input = document.getElementById(id);
+            if (input) input.value = data[id];
+        }
+        calculateTables();
     }
 
-    window.onload = function() {
-        renderMatches();
-        updateTables();
-    };
+    function saveAndCalculate() {
+        const inputs = document.querySelectorAll('.score-inputs input');
+        const data = {};
+        inputs.forEach(input => {
+            if (input.value !== '') {
+                data[input.id] = input.value;
+            }
+        });
+        localStorage.setItem('u12_scores_v2', JSON.stringify(data));
+        calculateTables();
+        alert('Ergebnisse gespeichert und Tabelle aktualisiert!');
+    }
+
+    function calculateGroupTable(groupName, teams, scheduleData) {
+        const stats = {};
+        teams.forEach(team => {
+            stats[team] = { sp: 0, gScore: 0, eScore: 0, pkt: 0 };
+        });
+
+        scheduleData.forEach((round, rIndex) => {
+            round.forEach((match, mIndex) => {
+                const idPrefix = `${groupName}_r${rIndex}_m${mIndex}`;
+                const homeInput = document.getElementById(`${idPrefix}_home`);
+                const awayInput = document.getElementById(`${idPrefix}_away`);
+
+                if (homeInput && awayInput && homeInput.value !== '' && awayInput.value !== '') {
+                    const hGoals = parseInt(homeInput.value);
+                    const aGoals = parseInt(awayInput.value);
+                    const homeTeam = match.home;
+                    const awayTeam = match.away;
+
+                    if (stats[homeTeam] && stats[awayTeam]) {
+                        stats[homeTeam].sp++;
+                        stats[homeTeam].gScore += hGoals;
+                        stats[homeTeam].eScore += aGoals;
+
+                        stats[awayTeam].sp++;
+                        stats[awayTeam].gScore += aGoals;
+                        stats[awayTeam].eScore += hGoals;
+
+                        if (hGoals > aGoals) {
+                            stats[homeTeam].pkt += 3;
+                        } else if (hGoals < aGoals) {
+                            stats[awayTeam].pkt += 3;
+                        } else {
+                            stats[homeTeam].pkt += 1;
+                            stats[awayTeam].pkt += 1;
+                        }
+                    }
+                }
+            });
+        });
+
+        // Sortieren nach Punkten, Tordifferenz, erzielten Toren
+        const sortedTeams = [...teams].sort((a, b) => {
+            if (stats[b].pkt !== stats[a].pkt) return stats[b].pkt - stats[a].pkt;
+            const diffA = stats[a].gScore - stats[a].eScore;
+            const diffB = stats[b].gScore - stats[b].eScore;
+            if (diffB !== diffA) return diffB - diffA;
+            return stats[b].gScore - stats[a].gScore;
+        });
+
+        // HTML Tabelle aktualisieren
+        sortedTeams.forEach((team, index) => {
+            const originalIndex = teams.indexOf(team);
+            const st = stats[team];
+            document.getElementById(`t_${groupName}_${index}_sp`).innerText = st.sp;
+            document.getElementById(`t_${groupName}_${index}_tore`).innerText = `${st.gScore}:${st.eScore}`;
+            document.getElementById(`t_${groupName}_${index}_pkt`).innerText = st.pkt;
+            // Teamname in der Zeile anpassen falls möglich oder visuell sortieren
+        });
+        
+        // Tabellenzeilen visuell neu anordnen
+        const tbody = document.getElementById(`tbody-${groupName}`);
+        const rows = Array.from(tbody.rows);
+        sortedTeams.forEach((team, newIndex) => {
+            const origIndex = teams.indexOf(team);
+            // Wir aktualisieren die Zellen der bestehenden Reihen anhand der Sortierung
+            const row = rows[newIndex];
+            row.cells[0].innerText = newIndex + 1;
+            row.cells[1].innerText = team;
+            row.cells[2].innerText = stats[team].sp;
+            row.cells[3].innerText = `${stats[team].gScore}:${stats[team].eScore}`;
+            row.cells[4].innerText = stats[team].pkt;
+        });
+    }
+
+    function calculateTables() {
+        calculateGroupTable('weiss', teamsWeiss, scheduleWeissData);
+        calculateGroupTable('gruen', teamsGruen, scheduleGruenData);
+    }
+
+    // Beim Start laden
+    loadScores();
 </script>
 
 </body>
