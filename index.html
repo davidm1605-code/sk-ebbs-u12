@@ -5,373 +5,80 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SK Ebbs U12 - Spielplan & Tabelle</title>
     <style>
-        :root {
-            --primary-color: #0f172a;
-            --accent-color: #1e293b;
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-color: #334155;
-            --border-color: #e2e8f0;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .container {
-            width: 100%;
-            max-width: 600px;
-        }
-        h2 {
-            color: var(--primary-color);
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 5px;
-            margin-top: 25px;
-            font-size: 1.2rem;
-        }
-        .matchday-title {
-            font-size: 0.85rem;
-            font-weight: bold;
-            color: #64748b;
-            margin: 15px 0 5px 5px;
-            text-transform: uppercase;
-        }
-        .match-row {
-            display: flex;
-            align-items: center;
-            background: var(--card-bg);
-            padding: 8px 10px;
-            border-radius: 8px;
-            margin-bottom: 6px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            border: 1px solid var(--border-color);
-            font-size: 0.9rem;
-        }
-        .team-home {
-            flex: 1;
-            text-align: right;
-            padding-right: 8px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .team-away {
-            flex: 1;
-            text-align: left;
-            padding-left: 8px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .score-inputs {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .score-inputs input {
-            width: 36px;
-            height: 32px;
-            text-align: center;
-            font-size: 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            background: #fff;
-        }
-        .score-inputs span {
-            font-weight: bold;
-            color: #94a3b8;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: var(--card-bg);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            margin-top: 10px;
-            border: 1px solid var(--border-color);
-            font-size: 0.85rem;
-        }
-        th, td {
-            padding: 8px 6px;
-            text-align: left;
-        }
-        th {
-            background-color: #f1f5f9;
-            color: var(--primary-color);
-            font-weight: bold;
-            border-bottom: 1px solid var(--border-color);
-        }
-        tr:not(:last-child) td {
-            border-bottom: 1px solid #f1f5f9;
-        }
-        td:nth-child(1), th:nth-child(1) { text-align: center; width: 30px; }
-        td:nth-child(3), th:nth-child(3),
-        td:nth-child(4), th:nth-child(4),
-        td:nth-child(5), th:nth-child(5) { text-align: center; }
-        
-        .update-btn {
-            display: block;
-            width: 100%;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 14px;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            margin: 30px 0;
-            box-shadow: 0 4px 6px rgba(15, 23, 42, 0.2);
-        }
-        .update-btn:active {
-            transform: scale(0.98);
-        }
+        body { font-family: Arial, sans-serif; background-color: #0f172a; color: #f8fafc; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: #1e293b; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        h2 { border-bottom: 2px solid #38bdf8; padding-bottom: 8px; margin-top: 24px; color: #38bdf8; font-size: 1.2rem; }
+        .match { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #334155; font-size: 0.9rem; }
+        .match input { width: 35px; text-align: center; background: #0f172a; border: 1px solid #475569; color: white; border-radius: 4px; padding: 4px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
+        th, td { padding: 8px; text-align: left; border-bottom: 1px solid #334155; }
+        th { background: #334155; color: #38bdf8; }
+        .team-name { flex: 1; text-align: left; }
+        .team-right { flex: 1; text-align: right; }
+        .round { font-size: 0.8rem; color: #94a3b8; width: 70px; }
     </style>
 </head>
 <body>
+    <div class="container">
+        <h2>Gruppe WEISS - Spielplan</h2>
+        <!-- SK Ebbs Spiele zuerst -->
+        <div class="match"><span class="round">1. Rde</span><span class="team-name">SK Ebbs</span><input type="text" value="7"> : <input type="text" value="3"><span class="team-right">Kufstein</span></div>
+        <div class="match"><span class="round">2. Rde</span><span class="team-name">Walchsee</span><input type="text" value="1"> : <input type="text" value="4"><span class="team-right">SK Ebbs</span></div>
+        <div class="match"><span class="round">3. Rde</span><span class="team-name">SK Ebbs</span><input type="text" value=""> : <input type="text" value=""><span class="team-right">Wörgl</span></div>
+        <div class="match"><span class="round">4. Rde</span><span class="team-name">Erl</span><input type="text" value=""> : <input type="text" value=""><span class="team-right">SK Ebbs</span></div>
+        <div class="match"><span class="round">5. Rde</span><span class="team-name">SK Ebbs</span><input type="text" value=""> : <input type="text" value=""><span class="team-right">Bichlach B</span></div>
 
-<div class="container">
-    <h2>Gruppe WEISS - Spielplan</h2>
-    <div id="schedule-weiss"></div>
+        <!-- Übrige Mannschaften alphabetisch -->
+        <div class="match"><span class="round">3. Rde</span><span class="team-name">Niederndorf</span><input type="text" value="4"> : <input type="text" value="2"><span class="team-right">Bichlach B</span></div>
+        <div class="match"><span class="round">2. Rde</span><span class="team-name">Erl</span><input type="text" value="7"> : <input type="text" value="2"><span class="team-right">Niederndorf</span></div>
+        <div class="match"><span class="round">2. Rde</span><span class="team-name">Kössen</span><input type="text" value=""> : <input type="text" value=""><span class="team-right">Walchsee</span></div>
+        <div class="match"><span class="round">1. Rde</span><span class="team-name">Schwoich</span><input type="text" value="2"> : <input type="text" value="1"><span class="team-right">Erl</span></div>
+        <div class="match"><span class="round">3. Rde</span><span class="team-name">Wörgl</span><input type="text" value="19"> : <input type="text" value="3"><span class="team-right">Söll</span></div>
+        <div class="match"><span class="round">1. Rde</span><span class="team-name">Wörgl</span><input type="text" value="8"> : <input type="text" value="1"><span class="team-right">Bichlach B</span></div>
 
-    <h2>Tabelle Gruppe WEISS</h2>
-    <div id="table-weiss-container"></div>
+        <h2>Tabelle Gruppe WEISS</h2>
+        <table>
+            <tr><th>#</th><th>Team</th><th>SP</th><th>Tore</th><th>PKT</th></tr>
+            <tr><td>1</td><td>Wörgl</td><td>2</td><td>27:4</td><td><strong>6</strong></td></tr>
+            <tr><td>2</td><td>SK Ebbs</td><td>2</td><td>11:4</td><td><strong>6</strong></td></tr>
+            <tr><td>3</td><td>Erl</td><td>2</td><td>8:4</td><td><strong>3</strong></td></tr>
+            <tr><td>4</td><td>Schwoich</td><td>1</td><td>2:1</td><td><strong>3</strong></td></tr>
+            <tr><td>5</td><td>Niederndorf</td><td>2</td><td>6:9</td><td><strong>3</strong></td></tr>
+            <tr><td>6</td><td>Bad Häring sv.</td><td>0</td><td>0:0</td><td><strong>0</strong></td></tr>
+            <tr><td>7</td><td>Kössen</td><td>0</td><td>0:0</td><td><strong>0</strong></td></tr>
+            <tr><td>8</td><td>St.Johann B</td><td>0</td><td>0:0</td><td><strong>0</strong></td></tr>
+            <tr><td>9</td><td>Walchsee</td><td>1</td><td>1:4</td><td><strong>0</strong></td></tr>
+            <tr><td>10</td><td>Kufstein</td><td>1</td><td>3:7</td><td><strong>0</strong></td></tr>
+            <tr><td>11</td><td>Bichlach B</td><td>2</td><td>3:12</td><td><strong>0</strong></td></tr>
+            <tr><td>12</td><td>Söll</td><td>1</td><td>3:19</td><td><strong>0</strong></td></tr>
+        </table>
 
-    <h2>Gruppe GRÜN - Spielplan</h2>
-    <div id="schedule-gruen"></div>
+        <h2>Gruppe GRÜN - Spielplan</h2>
+        <!-- SK Ebbs Spiele zuerst -->
+        <div class="match"><span class="round">1. Rde</span><span class="team-name">SK Ebbs</span><input type="text" value="8"> : <input type="text" value="2"><span class="team-right">St.Johann A</span></div>
+        <div class="match"><span class="round">2. Rde</span><span class="team-name">Kundl/Breitenbach</span><input type="text" value="1"> : <input type="text" value="4"><span class="team-right">SK Ebbs</span></div>
+        <div class="match"><span class="round">3. Rde</span><span class="team-name">SK Ebbs</span><input type="text" value=""> : <input type="text" value=""><span class="team-right">Bichlach A</span></div>
+        <div class="match"><span class="round">4. Rde</span><span class="team-name">Söll</span><input type="text" value=""> : <input type="text" value=""><span class="team-right">SK Ebbs</span></div>
+        <div class="match"><span class="round">5. Rde</span><span class="team-name">SK Ebbs</span><input type="text" value=""> : <input type="text" value=""><span class="team-right">Waidring</span></div>
+        <div class="match"><span class="round">6. Rde</span><span class="team-name">SK Ebbs</span><input type="text" value=""> : <input type="text" value=""><span class="team-right">Pillerseetal</span></div>
+        <div class="match"><span class="round">7. Rde</span><span class="team-name">Kirchberg (U11)</span><input type="text" value=""> : <input type="text" value=""><span class="team-right">SK Ebbs</span></div>
+        <div class="match"><span class="round">8. Rde</span><span class="team-name">Kössen</span><input type="text" value=""> : <input type="text" value=""><span class="team-right">SK Ebbs</span></div>
+        <div class="match"><span class="round">9. Rde</span><span class="team-name">SK Ebbs</span><input type="text" value=""> : <input type="text" value=""><span class="team-right">Bruckhäusl</span></div>
 
-    <h2>Tabelle Gruppe GRÜN</h2>
-    <div id="table-gruen-container"></div>
-
-    <button class="update-btn" onclick="saveAndCalculate()">Ergebnisse & Tabelle aktualisieren</button>
-</div>
-
-<script>
-    const teamsWeiss = [
-        "Wörgl", "SK Ebbs", "Erl", "Schwoich", "Niederndorf", 
-        "Bad Häring sv.", "Kössen", "St.Johann B", "Walchsee", 
-        "Kufstein", "Bichlach B", "Söll"
-    ];
-
-    const teamsGruen = [
-        "SK Ebbs", "Bichlach A", "Bruckhäusl", "Kirchberg (U11)", 
-        "Kössen", "Pillerseetal", "Söll", "Waidring", 
-        "Kundl/Breitenbach", "St.Johann A"
-    ];
-
-    function generateSchedule(teams) {
-        let t = [...teams];
-        if (t.length % 2 !== 0) t.push("SPIELFREI");
-        const rounds = [];
-        const numRounds = t.length - 1;
-        const half = t.length / 2;
-
-        for (let i = 0; i < numRounds; i++) {
-            const matches = [];
-            for (let j = 0; j < half; j++) {
-                const home = t[j];
-                const away = t[t.length - 1 - j];
-                if (home !== "SPIELFREI" && away !== "SPIELFREI") {
-                    if (j % 2 === 0) {
-                        matches.push({ home: home, away: away });
-                    } else {
-                        matches.push({ home: away, away: home });
-                    }
-                }
-            }
-            rounds.push(matches);
-            t.splice(1, 0, t.pop());
-        }
-        return rounds;
-    }
-
-    const scheduleWeissData = generateSchedule(teamsWeiss);
-    const scheduleGruenData = generateSchedule(teamsGruen);
-
-    function renderGroup(groupName, teams, scheduleData) {
-        const schedContainer = document.getElementById(`schedule-${groupName}`);
-        let schedHTML = '';
-
-        scheduleData.forEach((round, rIndex) => {
-            schedHTML += `<div class="matchday-title">${rIndex + 1}. Rde</div>`;
-            round.forEach((match, mIndex) => {
-                const idPrefix = `${groupName}_r${rIndex}_m${mIndex}`;
-                schedHTML += `
-                    <div class="match-row">
-                        <div class="team-home">${match.home}</div>
-                        <div class="score-inputs">
-                            <input type="number" id="${idPrefix}_home" min="0" max="99">
-                            <span>:</span>
-                            <input type="number" id="${idPrefix}_away" min="0" max="99">
-                        </div>
-                        <div class="team-away">${match.away}</div>
-                    </div>
-                `;
-            });
-        });
-        schedContainer.innerHTML = schedHTML;
-        renderTable(groupName, teams);
-    }
-
-    function renderTable(groupName, teams) {
-        const tableContainer = document.getElementById(`table-${groupName}-container`);
-        let tableHTML = `
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>TEAM</th>
-                        <th>SP</th>
-                        <th>TORE</th>
-                        <th>PKT</th>
-                    </tr>
-                </thead>
-                <tbody id="tbody-${groupName}">
-        `;
-        teams.forEach((team, index) => {
-            tableHTML += `
-                <tr>
-                    <td>${index + 1}</td>
-                    <td>${team}</td>
-                    <td id="t_${groupName}_${index}_sp">0</td>
-                    <td id="t_${groupName}_${index}_tore">0:0</td>
-                    <td id="t_${groupName}_${index}_pkt">0</td>
-                </tr>
-            `;
-        });
-        tableHTML += `</tbody></table>`;
-        tableContainer.innerHTML = tableHTML;
-    }
-
-    renderGroup('weiss', teamsWeiss, scheduleWeissData);
-    renderGroup('gruen', teamsGruen, scheduleGruenData);
-
-    function loadScores() {
-        let saved = localStorage.getItem('u12_scores_v4');
-        if (!saved) {
-            const initialScores = {};
-            
-            const setInitialScore = (groupName, scheduleData, homeTeam, awayTeam, hGoals, aGoals) => {
-                scheduleData.forEach((round, rIndex) => {
-                    round.forEach((match, mIndex) => {
-                        if (match.home === homeTeam && match.away === awayTeam) {
-                            initialScores[`${groupName}_r${rIndex}_m${mIndex}_home`] = hGoals;
-                            initialScores[`${groupName}_r${rIndex}_m${mIndex}_away`] = aGoals;
-                        }
-                    });
-                });
-            };
-
-            // Exakte Ergebnisse aus den Screenshots übertragen
-            setInitialScore('weiss', scheduleWeissData, 'SK Ebbs', 'Kufstein', 7, 3);
-            setInitialScore('weiss', scheduleWeissData, 'Schwoich', 'Erl', 2, 1);
-            setInitialScore('weiss', scheduleWeissData, 'Wörgl', 'Bichlach B', 8, 1);
-            setInitialScore('weiss', scheduleWeissData, 'Walchsee', 'SK Ebbs', 1, 4);
-            setInitialScore('weiss', scheduleWeissData, 'Erl', 'Niederndorf', 7, 2);
-            setInitialScore('weiss', scheduleWeissData, 'Niederndorf', 'Bichlach B', 4, 2);
-            setInitialScore('weiss', scheduleWeissData, 'Wörgl', 'Söll', 19, 3);
-
-            setInitialScore('gruen', scheduleGruenData, 'SK Ebbs', 'St.Johann A', 8, 2);
-            setInitialScore('gruen', scheduleGruenData, 'Kundl/Breitenbach', 'SK Ebbs', 1, 4);
-
-            localStorage.setItem('u12_scores_v4', JSON.stringify(initialScores));
-            saved = JSON.stringify(initialScores);
-        }
-
-        const data = JSON.parse(saved);
-        for (const id in data) {
-            const input = document.getElementById(id);
-            if (input) input.value = data[id];
-        }
-        calculateTables();
-    }
-
-    function saveAndCalculate() {
-        const inputs = document.querySelectorAll('.score-inputs input');
-        const data = {};
-        inputs.forEach(input => {
-            if (input.value !== '') {
-                data[input.id] = input.value;
-            }
-        });
-        localStorage.setItem('u12_scores_v4', JSON.stringify(data));
-        calculateTables();
-        alert('Ergebnisse gespeichert und Tabelle aktualisiert!');
-    }
-
-    function calculateGroupTable(groupName, teams, scheduleData) {
-        const stats = {};
-        teams.forEach(team => {
-            stats[team] = { sp: 0, gScore: 0, eScore: 0, pkt: 0 };
-        });
-
-        scheduleData.forEach((round, rIndex) => {
-            round.forEach((match, mIndex) => {
-                const idPrefix = `${groupName}_r${rIndex}_m${mIndex}`;
-                const homeInput = document.getElementById(`${idPrefix}_home`);
-                const awayInput = document.getElementById(`${idPrefix}_away`);
-
-                if (homeInput && awayInput && homeInput.value !== '' && awayInput.value !== '') {
-                    const hGoals = parseInt(homeInput.value);
-                    const aGoals = parseInt(awayInput.value);
-                    const homeTeam = match.home;
-                    const awayTeam = match.away;
-
-                    if (stats[homeTeam] && stats[awayTeam]) {
-                        stats[homeTeam].sp++;
-                        stats[homeTeam].gScore += hGoals;
-                        stats[homeTeam].eScore += aGoals;
-
-                        stats[awayTeam].sp++;
-                        stats[awayTeam].gScore += aGoals;
-                        stats[awayTeam].eScore += hGoals;
-
-                        if (hGoals > aGoals) {
-                            stats[homeTeam].pkt += 3;
-                        } else if (hGoals < aGoals) {
-                            stats[awayTeam].pkt += 3;
-                        } else {
-                            stats[homeTeam].pkt += 1;
-                            stats[awayTeam].pkt += 1;
-                        }
-                    }
-                }
-            });
-        });
-
-        const sortedTeams = [...teams].sort((a, b) => {
-            if (stats[b].pkt !== stats[a].pkt) return stats[b].pkt - stats[a].pkt;
-            const diffA = stats[a].gScore - stats[a].eScore;
-            const diffB = stats[b].gScore - stats[b].eScore;
-            if (diffB !== diffA) return diffB - diffA;
-            return stats[b].gScore - stats[a].gScore;
-        });
-
-        const tbody = document.getElementById(`tbody-${groupName}`);
-        const rows = Array.from(tbody.rows);
-        sortedTeams.forEach((team, newIndex) => {
-            const row = rows[newIndex];
-            row.cells[0].innerText = newIndex + 1;
-            row.cells[1].innerText = team;
-            row.cells[2].innerText = stats[team].sp;
-            row.cells[3].innerText = `${stats[team].gScore}:${stats[team].eScore}`;
-            row.cells[4].innerText = stats[team].pkt;
-        });
-    }
-
-    function calculateTables() {
-        calculateGroupTable('weiss', teamsWeiss, scheduleWeissData);
-        calculateGroupTable('gruen', teamsGruen, scheduleGruenData);
-    }
-
-    loadScores();
-</script>
-
+        <h2>Tabelle Gruppe GRÜN</h2>
+        <table>
+            <tr><th>#</th><th>Team</th><th>SP</th><th>Tore</th><th>PKT</th></tr>
+            <tr><td>1</td><td>SK Ebbs</td><td>2</td><td>12:3</td><td><strong>6</strong></td></tr>
+            <tr><td>2</td><td>Bichlach A</td><td>0</td><td>0:0</td><td><strong>0</strong></td></tr>
+            <tr><td>3</td><td>Bruckhäusl</td><td>0</td><td>0:0</td><td><strong>0</strong></td></tr>
+            <tr><td>4</td><td>Kirchberg (U11)</td><td>0</td><td>0:0</td><td><strong>0</strong></td></tr>
+            <tr><td>5</td><td>Kössen</td><td>0</td><td>0:0</td><td><strong>0</strong></td></tr>
+            <tr><td>6</td><td>Pillerseetal</td><td>0</td><td>0:0</td><td><strong>0</strong></td></tr>
+            <tr><td>7</td><td>Söll</td><td>0</td><td>0:0</td><td><strong>0</strong></td></tr>
+            <tr><td>8</td><td>Waidring</td><td>0</td><td>0:0</td><td><strong>0</strong></td></tr>
+            <tr><td>9</td><td>Kundl/Breitenbach</td><td>1</td><td>1:4</td><td><strong>0</strong></td></tr>
+            <tr><td>10</td><td>St.Johann A</td><td>1</td><td>2:8</td><td><strong>0</strong></td></tr>
+        </table>
+    </div>
 </body>
 </html>
