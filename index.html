@@ -30,18 +30,18 @@
 <body>
     <div class="container">
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('gespielt')">Bereits gespielt</button>
-            <button class="tab-btn" onclick="switchTab('offen')">Noch offen</button>
-            <button class="tab-btn" onclick="switchTab('tabelle')">Tabellen</button>
+            <button class="tab-btn active" onclick="switchTab('gespielt', event)">Bereits gespielt</button>
+            <button class="tab-btn" onclick="switchTab('offen', event)">Noch offen</button>
+            <button class="tab-btn" onclick="switchTab('tabelle', event)">Tabellen</button>
         </div>
 
         <div id="tab-gespielt" class="tab-content active">
             <h2>Gruppe WEISS - Berechnete Ergebnisse</h2>
-            <div class="info-text">Diese Spiele fließen bereits in die Wertung ein. Ergebnisse können hier ebenfalls angepasst werden.</div>
+            <div class="info-text">Diese Spiele fließen bereits in die Wertung ein.</div>
             <div id="matches-weiss-played"></div>
 
             <h2>Gruppe GRÜN - Berechnete Ergebnisse</h2>
-            <div class="info-text">Diese Spiele fließen bereits in die Wertung ein. Ergebnisse können hier ebenfalls angepasst werden.</div>
+            <div class="info-text">Diese Spiele fließen bereits in die Wertung ein.</div>
             <div id="matches-gruen-played"></div>
         </div>
 
@@ -74,7 +74,7 @@
         </div>
 
         <div class="btn-container">
-            <button class="action-btn" onclick="updateTables()">Aktualisieren</button>
+            <button class="action-btn" onclick="triggerUpdate()">Aktualisieren</button>
         </div>
     </div>
 
@@ -130,14 +130,23 @@
         const dataWeiss = { teams: teamsWeiss, matches: populateMatches(teamsWeiss, initialWeissResults) };
         const dataGruen = { teams: teamsGruen, matches: populateMatches(teamsGruen, initialGruenResults) };
 
-        function switchTab(tabId) {
+        function switchTab(tabId, evt) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             document.getElementById(`tab-${tabId}`).classList.add('active');
-            event.target.classList.add('active');
+            if (evt && evt.target) {
+                evt.target.classList.add('active');
+            }
         }
 
-        function renderGroup(groupKey, groupData) {
+        function renderAll() {
+            renderGroupContainer("weiss", dataWeiss);
+            renderGroupContainer("gruen", dataGruen);
+            calculateTable("weiss", dataWeiss);
+            calculateTable("gruen", dataGruen);
+        }
+
+        function renderGroupContainer(groupKey, groupData) {
             const playedContainer = document.getElementById(`matches-${groupKey}-played`);
             const openContainer = document.getElementById(`matches-${groupKey}-open`);
             playedContainer.innerHTML = "";
@@ -152,11 +161,22 @@
                 div.innerHTML = `
                     <span class="round">${m.round}</span>
                     <span class="team-name">${m.home}</span>
-                    <input type="text" id="${groupKey}-h-${index}" value="${m.homeGoals}" oninput="updateTables()"> : 
-                    <input type="text" id="${groupKey}-a-${index}" value="${m.awayGoals}" oninput="updateTables()">
+                    <input type="text" id="${groupKey}-h-${index}" value="${m.homeGoals}"> : 
+                    <input type="text" id="${groupKey}-a-${index}" value="${m.awayGoals}">
                     <span class="team-right">${m.away}</span>
                 `;
                 targetContainer.appendChild(div);
+            });
+        }
+
+        function collectValues(groupKey, groupData) {
+            groupData.matches.forEach((m, index) => {
+                const hInput = document.getElementById(`${groupKey}-h-${index}`);
+                const aInput = document.getElementById(`${groupKey}-a-${index}`);
+                if (hInput && aInput) {
+                    m.homeGoals = hInput.value.trim();
+                    m.awayGoals = aInput.value.trim();
+                }
             });
         }
 
@@ -166,13 +186,9 @@
                 stats[team] = { sp: 0, goalsFor: 0, goalsAgainst: 0, pts: 0 };
             });
 
-            groupData.matches.forEach((m, index) => {
-                const hInput = document.getElementById(`${groupKey}-h-${index}`);
-                const aInput = document.getElementById(`${groupKey}-a-${index}`);
-                if (!hInput || !aInput) return;
-
-                const hVal = hInput.value.trim();
-                const aVal = aInput.value.trim();
+            groupData.matches.forEach((m) => {
+                const hVal = m.homeGoals;
+                const aVal = m.awayGoals;
 
                 if (hVal !== "" && aVal !== "" && !isNaN(hVal) && !isNaN(aVal)) {
                     const hG = parseInt(hVal);
@@ -200,7 +216,7 @@
                 }
             });
 
-            const sortedTeams = groupData.teams.sort((a, b) => {
+            const sortedTeams = [...groupData.teams].sort((a, b) => {
                 const sA = stats[a];
                 const sB = stats[b];
                 if (sB.pts !== sA.pts) return sB.pts - sA.pts;
@@ -228,14 +244,13 @@
             });
         }
 
-        function updateTables() {
-            calculateTable("weiss", dataWeiss);
-            calculateTable("gruen", dataGruen);
+        function triggerUpdate() {
+            collectValues("weiss", dataWeiss);
+            collectValues("gruen", dataGruen);
+            renderAll();
         }
 
-        renderGroup("weiss", dataWeiss);
-        renderGroup("gruen", dataGruen);
-        updateTables();
+        renderAll();
     </script>
 </body>
 </html>
