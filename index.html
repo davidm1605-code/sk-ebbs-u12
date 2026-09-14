@@ -165,7 +165,6 @@
         "Kundl/Breitenbach", "St.Johann A"
     ];
 
-    // Generator für "Jeder gegen jeden" (Round Robin)
     function generateSchedule(teams) {
         let t = [...teams];
         if (t.length % 2 !== 0) t.push("SPIELFREI");
@@ -179,7 +178,6 @@
                 const home = t[j];
                 const away = t[t.length - 1 - j];
                 if (home !== "SPIELFREI" && away !== "SPIELFREI") {
-                    // Zufällige Heim/Auswärts-Verteilung oder feste Logik
                     if (j % 2 === 0) {
                         matches.push({ home: home, away: away });
                     } else {
@@ -188,7 +186,6 @@
                 }
             }
             rounds.push(matches);
-            // Rotieren (Ringtausch)
             t.splice(1, 0, t.pop());
         }
         return rounds;
@@ -205,7 +202,6 @@
             schedHTML += `<div class="matchday-title">${rIndex + 1}. Rde</div>`;
             round.forEach((match, mIndex) => {
                 const idPrefix = `${groupName}_r${rIndex}_m${mIndex}`;
-                schedHTML.innerHTML; // placeholder
                 schedHTML += `
                     <div class="match-row">
                         <div class="team-home">${match.home}</div>
@@ -220,8 +216,6 @@
             });
         });
         schedContainer.innerHTML = schedHTML;
-
-        // Tabelle rendern
         renderTable(groupName, teams);
     }
 
@@ -255,14 +249,44 @@
         tableContainer.innerHTML = tableHTML;
     }
 
-    // Initialisierung beim Laden
     renderGroup('weiss', teamsWeiss, scheduleWeissData);
     renderGroup('gruen', teamsGruen, scheduleGruenData);
 
-    // Gespeicherte Ergebnisse laden
+    // Vorgegebene Ergebnisse aus den Screenshots einfügen, falls noch nichts gespeichert ist
     function loadScores() {
-        const saved = localStorage.getItem('u12_scores_v2');
-        if (!saved) return;
+        let saved = localStorage.getItem('u12_scores_v3');
+        if (!saved) {
+            const initialScores = {};
+            
+            // Finde die passenden Input-IDs anhand der Paarungen für die bekannten Ergebnisse
+            const setInitialScore = (groupName, scheduleData, homeTeam, awayTeam, hGoals, aGoals) => {
+                scheduleData.forEach((round, rIndex) => {
+                    round.forEach((match, mIndex) => {
+                        if (match.home === homeTeam && match.away === awayTeam) {
+                            initialScores[`${groupName}_r${rIndex}_m${mIndex}_home`] = hGoals;
+                            initialScores[`${groupName}_r${rIndex}_m${mIndex}_away`] = aGoals;
+                        }
+                    });
+                });
+            };
+
+            // Gruppe Weiss bekannte Resultate
+            setInitialScore('weiss', scheduleWeissData, 'SK Ebbs', 'Kufstein', 7, 3);
+            setInitialScore('weiss', scheduleWeissData, 'Schwoich', 'Erl', 2, 1);
+            setInitialScore('weiss', scheduleWeissData, 'Wörgl', 'Bichlach B', 8, 1);
+            setInitialScore('weiss', scheduleWeissData, 'Walchsee', 'SK Ebbs', 1, 4);
+            setInitialScore('weiss', scheduleWeissData, 'Erl', 'Niederndorf', 7, 2);
+            setInitialScore('weiss', scheduleWeissData, 'Niederndorf', 'Bichlach B', 4, 2);
+            setInitialScore('weiss', scheduleWeissData, 'Wörgl', 'Söll', 19, 3);
+
+            // Gruppe Grün bekannte Resultate
+            setInitialScore('gruen', scheduleGruenData, 'SK Ebbs', 'St.Johann A', 8, 2);
+            setInitialScore('gruen', scheduleGruenData, 'Kundl/Breitenbach', 'SK Ebbs', 1, 4);
+
+            localStorage.setItem('u12_scores_v3', JSON.stringify(initialScores));
+            saved = JSON.stringify(initialScores);
+        }
+
         const data = JSON.parse(saved);
         for (const id in data) {
             const input = document.getElementById(id);
@@ -279,7 +303,7 @@
                 data[input.id] = input.value;
             }
         });
-        localStorage.setItem('u12_scores_v2', JSON.stringify(data));
+        localStorage.setItem('u12_scores_v3', JSON.stringify(data));
         calculateTables();
         alert('Ergebnisse gespeichert und Tabelle aktualisiert!');
     }
@@ -324,7 +348,6 @@
             });
         });
 
-        // Sortieren nach Punkten, Tordifferenz, erzielten Toren
         const sortedTeams = [...teams].sort((a, b) => {
             if (stats[b].pkt !== stats[a].pkt) return stats[b].pkt - stats[a].pkt;
             const diffA = stats[a].gScore - stats[a].eScore;
@@ -333,22 +356,9 @@
             return stats[b].gScore - stats[a].gScore;
         });
 
-        // HTML Tabelle aktualisieren
-        sortedTeams.forEach((team, index) => {
-            const originalIndex = teams.indexOf(team);
-            const st = stats[team];
-            document.getElementById(`t_${groupName}_${index}_sp`).innerText = st.sp;
-            document.getElementById(`t_${groupName}_${index}_tore`).innerText = `${st.gScore}:${st.eScore}`;
-            document.getElementById(`t_${groupName}_${index}_pkt`).innerText = st.pkt;
-            // Teamname in der Zeile anpassen falls möglich oder visuell sortieren
-        });
-        
-        // Tabellenzeilen visuell neu anordnen
         const tbody = document.getElementById(`tbody-${groupName}`);
         const rows = Array.from(tbody.rows);
         sortedTeams.forEach((team, newIndex) => {
-            const origIndex = teams.indexOf(team);
-            // Wir aktualisieren die Zellen der bestehenden Reihen anhand der Sortierung
             const row = rows[newIndex];
             row.cells[0].innerText = newIndex + 1;
             row.cells[1].innerText = team;
@@ -363,7 +373,6 @@
         calculateGroupTable('gruen', teamsGruen, scheduleGruenData);
     }
 
-    // Beim Start laden
     loadScores();
 </script>
 
