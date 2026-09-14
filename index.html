@@ -74,11 +74,28 @@
         </div>
 
         <div class="btn-container">
-            <button class="action-btn" onclick="triggerUpdate()">Aktualisieren</button>
+            <button class="action-btn" onclick="triggerUpdate()">Aktualisieren & Speichern</button>
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Deine Firebase Konfiguration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDlkQPYaygg7CDYpNYfvFJUq83ylMGfAoo",
+            authDomain: "sk-ebbs-u12.firebaseapp.com",
+            projectId: "sk-ebbs-u12",
+            storageBucket: "sk-ebbs-u12.firebasestorage.app",
+            messagingSenderId: "1066194709918",
+            appId: "1:1066194709918:web:e20e84524f4fc12c6a3a8f",
+            measurementId: "G-Q7PZ4HCBZ6"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
         function generateAllMatches(teams) {
             const matches = [];
             let roundCounter = 1;
@@ -130,7 +147,7 @@
         const dataWeiss = { teams: teamsWeiss, matches: populateMatches(teamsWeiss, initialWeissResults) };
         const dataGruen = { teams: teamsGruen, matches: populateMatches(teamsGruen, initialGruenResults) };
 
-        function switchTab(tabId, evt) {
+        window.switchTab = function(tabId, evt) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             document.getElementById(`tab-${tabId}`).classList.add('active');
@@ -244,13 +261,56 @@
             });
         }
 
-        function triggerUpdate() {
-            collectValues("weiss", dataWeiss);
-            collectValues("gruen", dataGruen);
+        // Daten aus Firebase laden beim Start
+        async function loadFromFirebase() {
+            try {
+                const docRef = doc(db, "matchdata", "seasons");
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const savedData = docSnap.data();
+                    if (savedData.weiss) {
+                        savedData.weissforEach((gMatch, idx) => {
+                            if (dataWeiss.matches[idx]) {
+                                dataWeiss.matches[idx].homeGoals = gMatch.homeGoals;
+                                dataWeiss.matches[idx].awayGoals = gMatch.awayGoals;
+                            }
+                        });
+                    }
+                    if (savedData.gruen) {
+                        savedData.gruen.forEach((gMatch, idx) => {
+                            if (dataGruen.matches[idx]) {
+                                dataGruen.matches[idx].homeGoals = gMatch.homeGoals;
+                                dataGruen.matches[idx].awayGoals = gMatch.awayGoals;
+                            }
+                        });
+                    }
+                }
+            } catch (e) {
+                console.error("Fehler beim Laden aus Firebase: ", e);
+            }
             renderAll();
         }
 
-        renderAll();
+        // Daten in Firebase speichern beim Klick auf Aktualisieren
+        window.triggerUpdate = async function() {
+            collectValues("weiss", dataWeiss);
+            collectValues("gruen", dataGruen);
+            renderAll();
+
+            try {
+                await setDoc(doc(db, "matchdata", "seasons"), {
+                    weiss: dataWeiss.matches.map(m => ({ homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
+                    gruen: dataGruen.matches.map(m => ({ homeGoals: m.homeGoals, awayGoals: m.awayGoals }))
+                });
+                alert("Erfolge erfolgreich in der Cloud (Firebase) gespeichert!");
+            } catch (e) {
+                console.error("Fehler beim Speichern: ", e);
+                alert("Fehler beim Speichern in Firebase.");
+            }
+        }
+
+        // Initial beim Laden ausführen
+        loadFromFirebase();
     </script>
 </body>
 </html>
