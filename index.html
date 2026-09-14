@@ -143,8 +143,8 @@
             });
         }
 
-        const dataWeiss = { teams: teamsWeiss, matches: populateMatches(teamsWeiss, initialWeissResults) };
-        const dataGruen = { teams: teamsGruen, matches: populateMatches(teamsGruen, initialGruenResults) };
+        let dataWeiss = { teams: teamsWeiss, matches: populateMatches(teamsWeiss, initialWeissResults) };
+        let dataGruen = { teams: teamsGruen, matches: populateMatches(teamsGruen, initialGruenResults) };
 
         window.switchTab = function(tabId, evt) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -269,16 +269,16 @@
                     if (savedData.weiss) {
                         savedData.weiss.forEach((gMatch, idx) => {
                             if (dataWeiss.matches[idx]) {
-                                dataWeiss.matches[idx].homeGoals = gMatch.homeGoals;
-                                dataWeiss.matches[idx].awayGoals = gMatch.awayGoals;
+                                dataWeiss.matches[idx].homeGoals = gMatch.homeGoals !== undefined ? gMatch.homeGoals : "";
+                                dataWeiss.matches[idx].awayGoals = gMatch.awayGoals !== undefined ? gMatch.awayGoals : "";
                             }
                         });
                     }
                     if (savedData.gruen) {
                         savedData.gruen.forEach((gMatch, idx) => {
                             if (dataGruen.matches[idx]) {
-                                dataGruen.matches[idx].homeGoals = gMatch.homeGoals;
-                                dataGruen.matches[idx].awayGoals = gMatch.awayGoals;
+                                dataGruen.matches[idx].homeGoals = gMatch.homeGoals !== undefined ? gMatch.homeGoals : "";
+                                dataGruen.matches[idx].awayGoals = gMatch.awayGoals !== undefined ? gMatch.awayGoals : "";
                             }
                         });
                     }
