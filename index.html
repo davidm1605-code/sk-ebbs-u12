@@ -252,13 +252,11 @@
     renderGroup('weiss', teamsWeiss, scheduleWeissData);
     renderGroup('gruen', teamsGruen, scheduleGruenData);
 
-    // Vorgegebene Ergebnisse aus den Screenshots einfügen, falls noch nichts gespeichert ist
     function loadScores() {
-        let saved = localStorage.getItem('u12_scores_v3');
+        let saved = localStorage.getItem('u12_scores_v4');
         if (!saved) {
             const initialScores = {};
             
-            // Finde die passenden Input-IDs anhand der Paarungen für die bekannten Ergebnisse
             const setInitialScore = (groupName, scheduleData, homeTeam, awayTeam, hGoals, aGoals) => {
                 scheduleData.forEach((round, rIndex) => {
                     round.forEach((match, mIndex) => {
@@ -270,7 +268,7 @@
                 });
             };
 
-            // Gruppe Weiss bekannte Resultate
+            // Exakte Ergebnisse aus den Screenshots übertragen
             setInitialScore('weiss', scheduleWeissData, 'SK Ebbs', 'Kufstein', 7, 3);
             setInitialScore('weiss', scheduleWeissData, 'Schwoich', 'Erl', 2, 1);
             setInitialScore('weiss', scheduleWeissData, 'Wörgl', 'Bichlach B', 8, 1);
@@ -279,11 +277,10 @@
             setInitialScore('weiss', scheduleWeissData, 'Niederndorf', 'Bichlach B', 4, 2);
             setInitialScore('weiss', scheduleWeissData, 'Wörgl', 'Söll', 19, 3);
 
-            // Gruppe Grün bekannte Resultate
             setInitialScore('gruen', scheduleGruenData, 'SK Ebbs', 'St.Johann A', 8, 2);
             setInitialScore('gruen', scheduleGruenData, 'Kundl/Breitenbach', 'SK Ebbs', 1, 4);
 
-            localStorage.setItem('u12_scores_v3', JSON.stringify(initialScores));
+            localStorage.setItem('u12_scores_v4', JSON.stringify(initialScores));
             saved = JSON.stringify(initialScores);
         }
 
@@ -303,7 +300,7 @@
                 data[input.id] = input.value;
             }
         });
-        localStorage.setItem('u12_scores_v3', JSON.stringify(data));
+        localStorage.setItem('u12_scores_v4', JSON.stringify(data));
         calculateTables();
         alert('Ergebnisse gespeichert und Tabelle aktualisiert!');
     }
