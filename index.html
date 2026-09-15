@@ -134,10 +134,15 @@
         function populateMatches(teams, initialResults) {
             const generated = generateAllMatches(teams);
             return generated.map(m => {
-                const key = `${m.home}-${m.away}`;
-                if (initialResults[key]) {
-                    m.homeGoals = initialResults[key].h;
-                    m.awayGoals = initialResults[key].a;
+                const key1 = `${m.home}-${m.away}`;
+                const key2 = `${m.away}-${m.home}`;
+                if (initialResults[key1]) {
+                    m.homeGoals = initialResults[key1].h;
+                    m.awayGoals = initialResults[key1].a;
+                } else if (initialResults[key2]) {
+                    // Falls Heim/Gast vertauscht angegeben wurden
+                    m.homeGoals = initialResults[key2].a;
+                    m.awayGoals = initialResults[key2].h;
                 }
                 return m;
             });
