@@ -97,12 +97,6 @@
             <button class="tab-btn" onclick="switchTab('tabelle', event)">Tabelle</button>
         </div>
 
-        <!-- OBERE AKTIONSLISTE -->
-        <div class="btn-container" style="margin-top: 0; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 2px solid #334155;">
-            <button class="action-btn" id="toggle-btn-top" onclick="toggleEditMode()">🔒 Schreibmodus Aus</button>
-            <button class="action-btn" onclick="triggerUpdate()" style="border-color: #22c55e; color: #22c55e;">💾 Speichern</button>
-        </div>
-
         <div id="tab-termene-weiss" class="tab-content">
             <div class="info-box">
                 <h3>SK Ebbs U12 – Spieltermine (Weiß)</h3>
@@ -134,6 +128,12 @@
         </div>
 
         <div id="tab-gespielt" class="tab-content active">
+            <!-- OBERE AKTIONSLISTE (Nur hier und bei Offen) -->
+            <div class="btn-container" style="margin-top: 0; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 2px solid #334155;">
+                <button class="action-btn" id="toggle-btn-top-gespielt" onclick="toggleEditMode()">🔒 Schreibmodus Aus</button>
+                <button class="action-btn" onclick="triggerUpdate()" style="border-color: #22c55e; color: #22c55e;">💾 Speichern</button>
+            </div>
+
             <!-- Filter-Leiste für Gespielt -->
             <div class="filter-chips">
                 <button class="filter-chip active" onclick="filterGroup('gespielt', 'all', this)">Alle</button>
@@ -154,6 +154,12 @@
         </div>
 
         <div id="tab-offen" class="tab-content">
+            <!-- OBERE AKTIONSLISTE (Nur hier und bei Gespielt) -->
+            <div class="btn-container" style="margin-top: 0; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 2px solid #334155;">
+                <button class="action-btn" id="toggle-btn-top-offen" onclick="toggleEditMode()">🔒 Schreibmodus Aus</button>
+                <button class="action-btn" onclick="triggerUpdate()" style="border-color: #22c55e; color: #22c55e;">💾 Speichern</button>
+            </div>
+
             <!-- Filter-Leiste für Offen -->
             <div class="filter-chips">
                 <button class="filter-chip active" onclick="filterGroup('offen', 'all', this)">Alle</button>
@@ -191,7 +197,7 @@
             </table>
         </div>
 
-        <!-- UNTERE AKTIONSLISTE -->
+        <!-- UNTERE AKTIONSLISTE (bleibt unverändert ganz unten auf jedem Reiter erreichbar) -->
         <div class="btn-container">
             <button class="action-btn" id="toggle-btn-bottom" onclick="toggleEditMode()">🔒 Schreibmodus Aus</button>
             <button class="action-btn" onclick="triggerUpdate()" style="border-color: #22c55e; color: #22c55e;">💾 Speichern</button>
@@ -322,7 +328,6 @@
         let dataWeiss = { teams: teamsWeiss, matches: populateMatches(teamsWeiss, initialWeissResults) };
         let dataGruen = { teams: teamsGruen, matches: populateMatches(teamsGruen, initialGruenResults) };
 
-        // Global zugängliche Funktionen für das HTML
         window.switchTab = function(tabId, evt) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -354,25 +359,27 @@
 
         window.toggleEditMode = function() {
             const body = document.body;
-            const topBtn = document.getElementById("toggle-btn-top");
+            const topGespieltBtn = document.getElementById("toggle-btn-top-gespielt");
+            const topOffenBtn = document.getElementById("toggle-btn-top-offen");
             const bottomBtn = document.getElementById("toggle-btn-bottom");
             
             if (body.classList.contains("readonly-mode")) {
                 body.classList.remove("readonly-mode");
                 body.classList.add("editable-mode");
                 const activeText = "🔓 Schreibmodus Ein";
-                topBtn.innerHTML = activeText;
+                if (topGespieltBtn) topGespieltBtn.innerHTML = activeText;
+                if (topOffenBtn) topOffenBtn.innerHTML = activeText;
                 bottomBtn.innerHTML = activeText;
             } else {
                 body.classList.remove("editable-mode");
                 body.classList.add("readonly-mode");
                 const inactiveText = "🔒 Schreibmodus Aus";
-                topBtn.innerHTML = inactiveText;
+                if (topGespieltBtn) topGespieltBtn.innerHTML = inactiveText;
+                if (topOffenBtn) topOffenBtn.innerHTML = inactiveText;
                 bottomBtn.innerHTML = inactiveText;
             }
         }
 
-        // ICS-Generator Funktion für separate Gruppen-Downloads
         window.downloadICS = function(group) {
             const list = group === 'weiss' ? scheduleWeiss : scheduleGruen;
             const groupName = group === 'weiss' ? 'WEISS' : 'GRÜN';
@@ -381,7 +388,7 @@
             
             list.forEach(item => {
                 const startDate = new Date(item.iso);
-                const endDate = new Date(startDate.getTime() + 90 * 60000); // 1.5 Stunden Dauer
+                const endDate = new Date(startDate.getTime() + 90 * 60000);
                 
                 function formatICSDate(date) {
                     return date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
@@ -614,6 +621,7 @@
                         savedData.weiss.forEach((gMatch, idx) => {
                             if (dataWeiss.matches[idx]) {
                                 dataWeiss.matches[idx].homeGoals = gMatch.homeGoals !== undefined ? gMatch.homeGoals : "";
+                                dataWeiss.matches.forEach
                                 dataWeiss.matches[idx].awayGoals = gMatch.awayGoals !== undefined ? gMatch.awayGoals : "";
                             }
                         });
@@ -640,7 +648,7 @@
 
             try {
                 await setDoc(doc(db, "matchdata", "seasons"), {
-                    weiss: dataWeiss.matches.map(m => ({ homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
+                    weiss: dataWeiss.matches.matches ? dataWeiss.matches.map(m => ({ homeGoals: m.homeGoals, awayGoals: m.awayGoals })) : dataWeiss.matches.map(m => ({ homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
                     gruen: dataGruen.matches.map(m => ({ homeGoals: m.homeGoals, awayGoals: m.awayGoals }))
                 });
                 alert("Erfolge erfolgreich in der Cloud (Firebase) gespeichert!");
