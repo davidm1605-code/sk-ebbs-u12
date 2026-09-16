@@ -14,13 +14,14 @@
         .tab-content.active { display: block; }
         h2 { border-bottom: 2px solid #38bdf8; padding-bottom: 6px; margin-top: 20px; color: #38bdf8; font-size: 1rem; }
         
-        /* Spiel-Zeile im Bearbeitungs-Tab (optimiert für Smartphones) */
+        /* Spiel-Zeile im Bearbeitungs-Tab */
         .match { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #334155; font-size: 0.75rem; gap: 2px; }
         .match .round { width: 42px; font-size: 0.7rem; color: #94a3b8; flex-shrink: 0; }
         .match .team-home { flex: 1; display: flex; align-items: center; gap: 3px; text-align: left; overflow: hidden; min-width: 0; }
         .match .team-away { flex: 1; display: flex; align-items: center; justify-content: flex-end; gap: 3px; text-align: right; overflow: hidden; min-width: 0; }
         .score-inputs { display: flex; align-items: center; justify-content: center; gap: 2px; width: 65px; flex-shrink: 0; }
         .match input { width: 26px; height: 24px; text-align: center; background: #0f172a; border: 1px solid #475569; color: white; border-radius: 4px; font-size: 0.8rem; padding: 0; }
+        .match input:disabled { background: #1e293b; color: #64748b; border-color: #334155; }
         
         table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.75rem; }
         th, td { padding: 5px; text-align: left; border-bottom: 1px solid #334155; }
@@ -44,7 +45,6 @@
             padding-bottom: 2px;
         }
         
-        /* Spieltermine-Zeile (mit festen Spalten für perfekte Ausrichtung) */
         .schedule-row { display: flex; flex-direction: column; padding: 8px; border-bottom: 1px solid #334155; font-size: 0.8rem; border-radius: 6px; margin-bottom: 6px; background: rgba(255,255,255,0.02); gap: 4px; }
         .schedule-row.finished { background: rgba(239, 68, 68, 0.15); border-left: 4px solid #ef4444; color: #fca5a5; }
         .schedule-row.live { background: rgba(234, 179, 8, 0.15); border-left: 4px solid #eab308; }
@@ -52,7 +52,6 @@
         .schedule-header { display: flex; justify-content: space-between; width: 100%; font-size: 0.7rem; color: #94a3b8; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 3px; }
         .schedule-body { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 2px; }
         
-        /* Feste Breiten für Heim- und Auswärtsteam, damit die Logos exakt fluchten */
         .schedule-team-home { display: flex; align-items: center; gap: 3px; width: 38%; overflow: hidden; min-width: 0; text-align: left; }
         .schedule-vs { color: #94a3b8; flex-shrink: 0; text-align: center; width: 20px; font-size: 0.75rem; }
         .schedule-team-away { display: flex; align-items: center; justify-content: flex-end; gap: 3px; width: 38%; overflow: hidden; min-width: 0; text-align: right; }
@@ -62,14 +61,17 @@
         .badge-finished { background: #ef4444; color: white; font-size: 0.6rem; font-weight: bold; padding: 2px 4px; border-radius: 4px; white-space: nowrap; }
         .badge-live { background: #eab308; color: #0f172a; font-size: 0.6rem; font-weight: bold; padding: 2px 4px; border-radius: 4px; white-space: nowrap; }
         
-        .btn-container { margin-top: 16px; text-align: center; }
-        button.action-btn { background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 0.9rem; }
+        .btn-container { margin-top: 16px; display: flex; gap: 8px; }
+        button.action-btn { background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.85rem; flex: 1; }
         button.action-btn:hover { background: #38bdf8; color: #0f172a; }
+        
+        /* Edit Mode Toggle Button spezielles Design */
+        button.edit-lock-btn { background: #334155; color: #94a3b8; border: 1px solid #475569; }
+        button.edit-lock-btn.active-edit { background: #eab308; color: #0f172a; border-color: #eab308; }
+
         .info-box { background: rgba(56, 189, 248, 0.1); border-left: 4px solid #38bdf8; padding: 8px; border-radius: 6px; margin-bottom: 8px; }
         .info-box h3 { margin: 0 0 3px 0; color: #38bdf8; font-size: 0.9rem; }
         .info-box p { margin: 0; font-size: 0.75rem; color: #94a3b8; }
-        
-        /* Legende für Heim / Auswärts */
         .venue-legend { display: flex; justify-content: space-between; font-size: 0.7rem; color: #94a3b8; padding: 0 4px 8px 4px; margin-bottom: 6px; border-bottom: 1px dashed #334155; }
         .venue-legend span { font-weight: bold; color: #38bdf8; }
     </style>
@@ -147,7 +149,8 @@
         </div>
 
         <div class="btn-container">
-            <button class="action-btn" onclick="triggerUpdate()">Aktualisieren & Speichern</button>
+            <button id="editToggleBtn" class="action-btn edit-lock-btn" onclick="toggleEditMode()">🔒 Schreibmodus Aus</button>
+            <button class="action-btn" onclick="triggerUpdate()">💾 Speichern</button>
         </div>
     </div>
 
@@ -167,6 +170,8 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+
+        let isEditMode = false; // Zustand für den Schreibmodus
 
         const teamConfigs = {
             "SK Ebbs": { label: "SKE", color: "#15803d" },
@@ -284,6 +289,21 @@
             }
         }
 
+        // Funktion zum Umschalten des Schreibmodus
+        window.toggleEditMode = function() {
+            isEditMode = !isEditMode;
+            const btn = document.getElementById("editToggleBtn");
+            if (isEditMode) {
+                btn.innerHTML = "🔓 Schreibmodus AN";
+                btn.classList.add("active-edit");
+            } else {
+                btn.innerHTML = "🔒 Schreibmodus AUS";
+                btn.classList.remove("active-edit");
+            }
+            renderGroupContainer("weiss", dataWeiss);
+            renderGroupContainer("gruen", dataGruen);
+        }
+
         function renderAll() {
             renderSchedule("schedule-weiss-list", scheduleWeiss, dataWeiss);
             renderSchedule("schedule-gruen-list", scheduleGruen, dataGruen);
@@ -376,6 +396,7 @@
 
                 const homeLogo = getTeamLogoHtml(m.home);
                 const awayLogo = getTeamLogoHtml(m.away);
+                const disabledAttr = isEditMode ? "" : "disabled"; // Sperrt oder öffnet das Feld basierend auf dem Modus
 
                 const div = document.createElement("div");
                 div.className = "match";
@@ -383,9 +404,9 @@
                     <span class="round">${m.round}</span>
                     <div class="team-home">${homeLogo} <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.home}</span></div>
                     <div class="score-inputs">
-                        <input type="text" id="${groupKey}-h-${index}" value="${m.homeGoals}" oninput="syncAndUpdate()"> 
+                        <input type="text" id="${groupKey}-h-${index}" value="${m.homeGoals}" ${disabledAttr} oninput="syncAndUpdate()"> 
                         <span>:</span> 
-                        <input type="text" id="${groupKey}-a-${index}" value="${m.awayGoals}" oninput="syncAndUpdate()">
+                        <input type="text" id="${groupKey}-a-${index}" value="${m.awayGoals}" ${disabledAttr} oninput="syncAndUpdate()">
                     </div>
                     <div class="team-away"><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.away}</span> ${awayLogo}</div>
                 `;
@@ -510,14 +531,21 @@
         window.triggerUpdate = async function() {
             collectValues("weiss", dataWeiss);
             collectValues("gruen", dataGruen);
-            renderAll();
-
+            
             try {
                 await setDoc(doc(db, "matchdata", "seasons"), {
                     weiss: dataWeiss.matches.map(m => ({ homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
                     gruen: dataGruen.matches.map(m => ({ homeGoals: m.homeGoals, awayGoals: m.awayGoals }))
                 });
-                alert("Erfolge erfolgreich in der Cloud (Firebase) gespeichert!");
+                
+                // Nach dem Speichern den Schreibmodus automatisch wieder sperren
+                isEditMode = false;
+                const btn = document.getElementById("editToggleBtn");
+                btn.innerHTML = "🔒 Schreibmodus AUS";
+                btn.classList.remove("active-edit");
+                
+                renderAll();
+                alert("Erfolge erfolgreich in der Cloud (Firebase) gespeichert und Schreibmodus gesperrt!");
             } catch (e) {
                 console.error("Fehler beim Speichern: ", e);
                 alert("Fehler beim Speichern in Firebase.");
