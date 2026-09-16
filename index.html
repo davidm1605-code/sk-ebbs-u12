@@ -297,13 +297,13 @@
                     cssClass = "finished";
                     badgeHtml = '<span class="badge-finished">BEENDET</span>';
                     if (hasScore) {
-                        scoreText = `<div style="text-align: right; font-weight: bold; font-size: 0.95rem; color: #f8fafc; min-width: 35px;">${goals.h} : ${goals.a}</div>`;
+                        scoreText = `<div style="text-align: right; font-weight: bold; font-size: 0.95rem; color: #f8fafc;">${goals.h} : ${goals.a}</div>`;
                     }
                 } else if (now >= kickoff && now < matchEnd) {
                     cssClass = "live";
                     badgeHtml = '<span class="badge-live">LÄUFT</span>';
                     if (hasScore) {
-                        scoreText = `<div style="text-align: right; font-weight: bold; font-size: 0.95rem; color: #f8fafc; min-width: 35px;">${goals.h} : ${goals.a}</div>`;
+                        scoreText = `<div style="text-align: right; font-weight: bold; font-size: 0.95rem; color: #f8fafc;">${goals.h} : ${goals.a}</div>`;
                     }
                 }
 
@@ -317,14 +317,12 @@
                         <span class="round">${item.round}</span><br>
                         <small style="color: #94a3b8;">${item.dateStr}</small>
                     </div>
-                    <div style="flex: 2; padding: 0 10px; min-width: 0;">
-                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
-                            <span class="team-name">${homeLogo} <span>${item.home}</span></span>
-                            <span style="color: #94a3b8; font-size: 0.8rem;">vs.</span>
-                            <span class="team-right"><span>${item.away}</span> ${awayLogo}</span>
+                    <div style="flex: 2; padding-left: 10px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span>${homeLogo} ${item.home}</span> vs. <span>${awayLogo} ${item.away}</span>
                         </div>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 4px; flex-shrink: 0;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
                         ${scoreText}
                         <div>${badgeHtml}</div>
                     </div>
