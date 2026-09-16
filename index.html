@@ -128,13 +128,11 @@
         </div>
 
         <div id="tab-gespielt" class="tab-content active">
-            <!-- OBERE AKTIONSLISTE (Nur hier und bei Offen) -->
             <div class="btn-container" style="margin-top: 0; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 2px solid #334155;">
                 <button class="action-btn" id="toggle-btn-top-gespielt" onclick="toggleEditMode()">🔒 Schreibmodus Aus</button>
                 <button class="action-btn" onclick="triggerUpdate()" style="border-color: #22c55e; color: #22c55e;">💾 Speichern</button>
             </div>
 
-            <!-- Filter-Leiste für Gespielt -->
             <div class="filter-chips">
                 <button class="filter-chip active" onclick="filterGroup('gespielt', 'all', this)">Alle</button>
                 <button class="filter-chip" onclick="filterGroup('gespielt', 'weiss', this)">Gruppe Weiß</button>
@@ -154,13 +152,11 @@
         </div>
 
         <div id="tab-offen" class="tab-content">
-            <!-- OBERE AKTIONSLISTE (Nur hier und bei Gespielt) -->
             <div class="btn-container" style="margin-top: 0; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 2px solid #334155;">
                 <button class="action-btn" id="toggle-btn-top-offen" onclick="toggleEditMode()">🔒 Schreibmodus Aus</button>
                 <button class="action-btn" onclick="triggerUpdate()" style="border-color: #22c55e; color: #22c55e;">💾 Speichern</button>
             </div>
 
-            <!-- Filter-Leiste für Offen -->
             <div class="filter-chips">
                 <button class="filter-chip active" onclick="filterGroup('offen', 'all', this)">Alle</button>
                 <button class="filter-chip" onclick="filterGroup('offen', 'weiss', this)">Gruppe Weiß</button>
@@ -197,7 +193,6 @@
             </table>
         </div>
 
-        <!-- UNTERE AKTIONSLISTE (bleibt unverändert ganz unten auf jedem Reiter erreichbar) -->
         <div class="btn-container">
             <button class="action-btn" id="toggle-btn-bottom" onclick="toggleEditMode()">🔒 Schreibmodus Aus</button>
             <button class="action-btn" onclick="triggerUpdate()" style="border-color: #22c55e; color: #22c55e;">💾 Speichern</button>
@@ -291,7 +286,7 @@
             return matches;
         }
 
-        // Söll und Kössen hier aus Gruppe Weiß entfernt (Söll war fälschlicherweise drin, Kössen gehört zu Grün)
+        // Korrigierte Team-Listen (Walchsee & Kufstein in Weiß, Söll in Grün)
         const teamsWeiss = ["SK Ebbs", "Wörgl", "Erl", "Schwoich", "Niederndorf", "Bad Häring sv.", "St.Johann B", "Walchsee", "Kufstein", "Bichlach B"];
         const teamsGruen = ["SK Ebbs", "Bichlach A", "Bruckhäusl", "Kirchberg (U11)", "Kössen", "Pillerseetal", "Söll", "Waidring", "Kundl/Breitenbach", "St.Johann A"];
 
