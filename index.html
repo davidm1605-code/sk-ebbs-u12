@@ -89,7 +89,7 @@
             <button class="tab-btn" onclick="switchTab('tabelle', event)">Tabelle</button>
         </div>
 
-        <!-- OBERE AKTIONSLISTE (Neu hinzugefügt unter den Tabs) -->
+        <!-- OBERE AKTIONSLISTE -->
         <div class="btn-container" style="margin-top: 0; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 2px solid #334155;">
             <button class="action-btn" id="toggle-btn-top" onclick="toggleEditMode()">🔒 Schreibmodus Aus</button>
             <button class="action-btn" onclick="triggerUpdate()" style="border-color: #22c55e; color: #22c55e;">💾 Speichern</button>
@@ -537,7 +537,7 @@
                         savedData.gruen.forEach((gMatch, idx) => {
                             if (dataGruen.matches[idx]) {
                                 dataGruen.matches[idx].homeGoals = gMatch.homeGoals !== undefined ? gMatch.homeGoals : "";
-                                dataGruen.matches.match[idx].awayGoals = gMatch.awayGoals !== undefined ? gMatch.awayGoals : "";
+                                dataGruen.matches[idx].awayGoals = gMatch.awayGoals !== undefined ? gMatch.awayGoals : "";
                             }
                         });
                     }
