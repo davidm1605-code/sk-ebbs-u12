@@ -322,6 +322,7 @@
         let dataWeiss = { teams: teamsWeiss, matches: populateMatches(teamsWeiss, initialWeissResults) };
         let dataGruen = { teams: teamsGruen, matches: populateMatches(teamsGruen, initialGruenResults) };
 
+        // Global zugängliche Funktionen für das HTML
         window.switchTab = function(tabId, evt) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -395,17 +396,13 @@
             });
             icsContent += "END:VCALENDAR";
 
-            // Auf Mobilgeräten (iOS/Android) erzwingen wir den Download über eine Data-URI
-            const encodedUri = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(icsContent);
+            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
             const link = document.createElement('a');
-            link.setAttribute('href', encodedUri);
+            link.href = window.URL.createObjectURL(blob);
             link.setAttribute('download', filename);
             document.body.appendChild(link);
-            
-            setTimeout(() => {
-                link.click();
-                document.body.removeChild(link);
-            }, 50);
+            link.click();
+            document.body.removeChild(link);
         }
 
         function renderAll() {
