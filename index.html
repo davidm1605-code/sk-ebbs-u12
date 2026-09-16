@@ -589,10 +589,6 @@
 
             groupData.matches.forEach((m, index) => {
                 const isPlayed = m.homeGoals !== "" && m.awayGoals !== "";
-                
-                if (groupKey === 'gespielt') {
-                    // Für den "Gespielt"-Tab (wird über getrennte Container gesteuert, hier nur zur Sicherheit)
-                }
 
                 if (isPlayed) {
                     playedCount++;
