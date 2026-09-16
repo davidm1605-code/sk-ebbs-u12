@@ -291,7 +291,8 @@
             return matches;
         }
 
-        const teamsWeiss = ["SK Ebbs", "Wörgl", "Erl", "Schwoich", "Niederndorf", "Bad Häring sv.", "Kössen", "St.Johann B", "Walchsee", "Kufstein", "Bichlach B", "Söll"];
+        // Söll und Kössen hier aus Gruppe Weiß entfernt (Söll war fälschlicherweise drin, Kössen gehört zu Grün)
+        const teamsWeiss = ["SK Ebbs", "Wörgl", "Erl", "Schwoich", "Niederndorf", "Bad Häring sv.", "St.Johann B", "Walchsee", "Kufstein", "Bichlach B"];
         const teamsGruen = ["SK Ebbs", "Bichlach A", "Bruckhäusl", "Kirchberg (U11)", "Kössen", "Pillerseetal", "Söll", "Waidring", "Kundl/Breitenbach", "St.Johann A"];
 
         const initialWeissResults = {
@@ -300,7 +301,6 @@
             "Niederndorf-Bichlach B": { h: "4", a: "2" },
             "Erl-Niederndorf": { h: "7", a: "2" },
             "Schwoich-Erl": { h: "2", a: "1" },
-            "Wörgl-Söll": { h: "19", a: "3" },
             "Wörgl-Bichlach B": { h: "8", a: "1" }
         };
 
@@ -621,7 +621,6 @@
                         savedData.weiss.forEach((gMatch, idx) => {
                             if (dataWeiss.matches[idx]) {
                                 dataWeiss.matches[idx].homeGoals = gMatch.homeGoals !== undefined ? gMatch.homeGoals : "";
-                                dataWeiss.matches.forEach
                                 dataWeiss.matches[idx].awayGoals = gMatch.awayGoals !== undefined ? gMatch.awayGoals : "";
                             }
                         });
@@ -648,7 +647,7 @@
 
             try {
                 await setDoc(doc(db, "matchdata", "seasons"), {
-                    weiss: dataWeiss.matches.matches ? dataWeiss.matches.map(m => ({ homeGoals: m.homeGoals, awayGoals: m.awayGoals })) : dataWeiss.matches.map(m => ({ homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
+                    weiss: dataWeiss.matches.map(m => ({ homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
                     gruen: dataGruen.matches.map(m => ({ homeGoals: m.homeGoals, awayGoals: m.awayGoals }))
                 });
                 alert("Erfolge erfolgreich in der Cloud (Firebase) gespeichert!");
