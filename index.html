@@ -37,8 +37,8 @@
 <body>
     <div class="container">
         <div class="tabs">
-            <button class="tab-btn" onclick="switchTab('termene-weiss', event)">SK Ebbs Weiß</button>
-            <button class="tab-btn" onclick="switchTab('termene-gruen', event)">SK Ebbs Grün</button>
+            <button class="tab-btn" onclick="switchTab('termene-weiss', event)">Termine weiß</button>
+            <button class="tab-btn" onclick="switchTab('termene-gruen', event)">Termine grün</button>
             <button class="tab-btn active" onclick="switchTab('gespielt', event)">Bereits gespielt</button>
             <button class="tab-btn" onclick="switchTab('offen', event)">Noch offen</button>
             <button class="tab-btn" onclick="switchTab('tabelle', event)">Tabellen</button>
@@ -46,16 +46,16 @@
 
         <div id="tab-termene-weiss" class="tab-content">
             <div class="info-box">
-                <h3>SK Ebbs U12 – Spieltermine (Weiß / U12 B)</h3>
-                <p>Übersicht der offiziellen Meisterschaftsspiele. Live-Indikator passt sich automatisch an die Uhrzeit an (60 Min. Spieldauer).</p>
+                <h3>SK Ebbs U12 – Spieltermine (Weiß)</h3>
+                <p>Übersicht der Meisterschaftsspiele inklusive Echtzeit-Ergebnissen.</p>
             </div>
             <div id="schedule-weiss-list"></div>
         </div>
 
         <div id="tab-termene-gruen" class="tab-content">
             <div class="info-box">
-                <h3>SK Ebbs U12 – Spieltermine (Grün / U12 A)</h3>
-                <p>Übersicht der offiziellen Meisterschaftsspiele. Live-Indikator passt sich automatisch an die Uhrzeit an (60 Min. Spieldauer).</p>
+                <h3>SK Ebbs U12 – Spieltermine (Grün)</h3>
+                <p>Übersicht der Meisterschaftsspiele inklusive Echtzeit-Ergebnissen.</p>
             </div>
             <div id="schedule-gruen-list"></div>
         </div>
@@ -120,28 +120,29 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Exakte Meisterschaftstermine für SK Ebbs WEISS (U12 B)
+        // Exakte Meisterschaftstermine inklusive der gespielten Partien aus den Screenshots
         const scheduleWeiss = [
-            { round: "1. Spiel", dateStr: "Sa, 19.09.2026 | 12:00", iso: "2026-09-19T12:00:00", match: "vs. SV Wörgl in Ebbs (U12 B)" },
-            { round: "2. Spiel", dateStr: "Fr, 25.09.2026 | 17:00", iso: "2026-09-25T17:00:00", match: "vs. SVG Erl in Erl (U12 A)" },
-            { round: "3. Spiel", dateStr: "Mo, 05.10.2026 | 18:00", iso: "2026-10-05T18:00:00", match: "vs. SPG Bichlach B in Ebbs (U12 B)" },
-            { round: "4. Spiel", dateStr: "So, 11.10.2026 | 14:30", iso: "2026-10-11T14:30:00", match: "vs. FC Schwoich in Schwoich (U12 A)" },
-            { round: "5. Spiel", dateStr: "Sa, 17.10.2026 | 12:30", iso: "2026-10-17T12:30:00", match: "vs. SV Niederndorf in Niederndorf (U12 A)" },
-            { round: "6. Spiel", dateStr: "Sa, 24.10.2026 | 12:00", iso: "2026-10-24T12:00:00", match: "vs. SK St. Johann B in Ebbs (U12 B)" },
-            { round: "7. Spiel", dateStr: "Fr, 30.10.2026 | 17:00", iso: "2026-10-30T17:00:00", match: "vs. FC Bad Häring in Bad Häring (U12 B)" },
-            { round: "8. Spiel", dateStr: "Sa, 31.10.2026 | 12:00", iso: "2026-10-31T12:00:00", match: "vs. SV Westendorf U11 in Westendorf (statt U10) (ALLE) (U11 A)" }
+            { round: "1. Rde", dateStr: "Fr, 04.09.2026 | 18:30", iso: "2026-09-04T18:30:00", match: "SK Ebbs vs. Kufstein", home: "SK Ebbs", away: "Kufstein" },
+            { round: "2. Rde", dateStr: "Sa, 12.09.2026 | 14:00", iso: "2026-09-12T14:00:00", match: "Walchsee vs. SK Ebbs", home: "Walchsee", away: "SK Ebbs" },
+            { round: "3. Rde", dateStr: "Sa, 19.09.2026 | 12:00", iso: "2026-09-19T12:00:00", match: "SK Ebbs vs. SV Wörgl", home: "SK Ebbs", away: "Wörgl" },
+            { round: "4. Rde", dateStr: "Fr, 25.09.2026 | 17:00", iso: "2026-09-25T17:00:00", match: "SVG Erl vs. SK Ebbs", home: "Erl", away: "SK Ebbs" },
+            { round: "5. Rde", dateStr: "Mo, 05.10.2026 | 18:00", iso: "2026-10-05T18:00:00", match: "SK Ebbs vs. Bichlach B", home: "SK Ebbs", away: "Bichlach B" },
+            { round: "6. Rde", dateStr: "So, 11.10.2026 | 14:30", iso: "2026-10-11T14:30:00", match: "FC Schwoich vs. SK Ebbs", home: "Schwoich", away: "SK Ebbs" },
+            { round: "7. Rde", dateStr: "Sa, 17.10.2026 | 12:30", iso: "2026-10-17T12:30:00", match: "SV Niederndorf vs. SK Ebbs", home: "Niederndorf", away: "SK Ebbs" },
+            { round: "8. Rde", dateStr: "Sa, 24.10.2026 | 12:00", iso: "2026-10-24T12:00:00", match: "SK Ebbs vs. St. Johann B", home: "SK Ebbs", away: "St.Johann B" },
+            { round: "9. Rde", dateStr: "Fr, 30.10.2026 | 17:00", iso: "2026-10-30T17:00:00", match: "FC Bad Häring vs. SK Ebbs", home: "Bad Häring sv.", away: "SK Ebbs" }
         ];
 
-        // Exakte Meisterschaftstermine für SK Ebbs GRÜN (U12 A)
         const scheduleGruen = [
-            { round: "1. Spiel", dateStr: "Sa, 19.09.2026 | 12:00", iso: "2026-09-19T12:00:00", match: "vs. SPG Bichlach A in Ebbs (U12 A)" },
-            { round: "2. Spiel", dateStr: "Sa, 26.09.2026 | 13:00", iso: "2026-09-26T13:00:00", match: "vs. FC Söll in Söll (U12 B)" },
-            { round: "3. Spiel", dateStr: "Sa, 03.10.2026 | 11:30", iso: "2026-10-03T11:30:00", match: "vs. SK Waidring in Ebbs (U12 A)" },
-            { round: "4. Spiel", dateStr: "Sa, 10.10.2026 | 12:00", iso: "2026-10-10T12:00:00", match: "vs. SK Pillerseetal in Ebbs (U12 B)" },
-            { round: "5. Spiel", dateStr: "Sa, 17.10.2026 | 11:30", iso: "2026-10-17T11:30:00", match: "vs. SC Kirchberg U11 in Kirchberg (statt U10) (U11 A)" },
-            { round: "6. Spiel", dateStr: "Sa, 24.10.2026 | 12:00", iso: "2026-10-24T12:00:00", match: "vs. FC Kössen in Kössen (U12 A)" },
-            { round: "7. Spiel", dateStr: "Do, 29.10.2026 | 17:00", iso: "2026-10-29T17:00:00", match: "vs. SV Bruckhäusl in Ebbs (U12 A)" },
-            { round: "8. Spiel", dateStr: "Sa, 31.10.2026 | 12:00", iso: "2026-10-31T12:00:00", match: "vs. SV Westendorf U11 in Westendorf (statt U10) (ALLE) (U11 A)" }
+            { round: "1. Rde", dateStr: "Fr, 04.09.2026 | 18:30", iso: "2026-09-04T18:30:00", match: "SK Ebbs vs. St. Johann A", home: "SK Ebbs", away: "St.Johann A" },
+            { round: "2. Rde", dateStr: "Fr, 11.09.2026 | 17:00", iso: "2026-09-11T17:00:00", match: "Kundl/Breitenbach vs. SK Ebbs", home: "Kundl/Breitenbach", away: "SK Ebbs" },
+            { round: "3. Rde", dateStr: "Sa, 19.09.2026 | 12:00", iso: "2026-09-19T12:00:00", match: "SK Ebbs vs. Bichlach A", home: "SK Ebbs", away: "Bichlach A" },
+            { round: "4. Rde", dateStr: "Sa, 26.09.2026 | 13:00", iso: "2026-09-26T13:00:00", match: "FC Söll vs. SK Ebbs", home: "Söll", away: "SK Ebbs" },
+            { round: "5. Rde", dateStr: "Sa, 03.10.2026 | 11:30", iso: "2026-10-03T11:30:00", match: "SK Ebbs vs. SK Waidring", home: "SK Ebbs", away: "Waidring" },
+            { round: "6. Rde", dateStr: "Sa, 10.10.2026 | 12:00", iso: "2026-10-10T12:00:00", match: "SK Ebbs vs. SK Pillerseetal", home: "SK Ebbs", away: "Pillerseetal" },
+            { round: "7. Rde", dateStr: "Sa, 17.10.2026 | 11:30", iso: "2026-10-17T11:30:00", match: "SC Kirchberg vs. SK Ebbs", home: "Kirchberg (U11)", away: "SK Ebbs" },
+            { round: "8. Rde", dateStr: "Sa, 24.10.2026 | 12:00", iso: "2026-10-24T12:00:00", match: "FC Kössen vs. SK Ebbs", home: "Kössen", away: "SK Ebbs" },
+            { round: "9. Rde", dateStr: "Do, 29.10.2026 | 17:00", iso: "2026-10-29T17:00:00", match: "SK Ebbs vs. SV Bruckhäusl", home: "SK Ebbs", away: "Bruckhäusl" }
         ];
 
         function generateAllMatches(teams) {
@@ -209,32 +210,55 @@
         }
 
         function renderAll() {
-            renderSchedule("schedule-weiss-list", scheduleWeiss);
-            renderSchedule("schedule-gruen-list", scheduleGruen);
+            renderSchedule("schedule-weiss-list", scheduleWeiss, dataWeiss);
+            renderSchedule("schedule-gruen-list", scheduleGruen, dataGruen);
             renderGroupContainer("weiss", dataWeiss);
             renderGroupContainer("gruen", dataGruen);
             calculateTable("weiss", dataWeiss);
             calculateTable("gruen", dataGruen);
         }
 
-        function renderSchedule(containerId, list) {
+        function findMatchGoals(groupData, homeTeam, awayTeam) {
+            const match = groupData.matches.find(m => 
+                (m.home === homeTeam && m.away === awayTeam) || 
+                (m.home === awayTeam && m.away === homeTeam)
+            );
+            if (!match) return null;
+            if (match.home === homeTeam) {
+                return { h: match.homeGoals, a: match.awayGoals };
+            } else {
+                return { h: match.awayGoals, a: match.homeGoals };
+            }
+        }
+
+        function renderSchedule(containerId, list, groupData) {
             const container = document.getElementById(containerId);
             container.innerHTML = "";
             const now = new Date();
 
             list.forEach(item => {
                 const kickoff = new Date(item.iso);
-                const matchEnd = new Date(kickoff.getTime() + 60 * 60000); // 60 Min U12 Spieldauer
+                const matchEnd = new Date(kickoff.getTime() + 60 * 60000); // 60 Min Spieldauer
                 
                 let cssClass = "";
                 let badgeHtml = "";
+                let scoreText = "";
 
-                if (now >= matchEnd) {
+                const goals = findMatchGoals(groupData, item.home, item.away);
+                const hasScore = goals && goals.h !== "" && goals.a !== "";
+
+                if (hasScore || now >= matchEnd) {
                     cssClass = "finished";
                     badgeHtml = '<span class="badge-finished">BEENDET</span>';
+                    if (hasScore) {
+                        scoreText = `<div style="text-align: right; font-weight: bold; font-size: 0.95rem; color: #f8fafc;">${goals.h} : ${goals.a}</div>`;
+                    }
                 } else if (now >= kickoff && now < matchEnd) {
                     cssClass = "live";
                     badgeHtml = '<span class="badge-live">LÄUFT</span>';
+                    if (hasScore) {
+                        scoreText = `<div style="text-align: right; font-weight: bold; font-size: 0.95rem; color: #f8fafc;">${goals.h} : ${goals.a}</div>`;
+                    }
                 }
 
                 const div = document.createElement("div");
@@ -247,7 +271,10 @@
                     <div style="flex: 2; padding-left: 10px;">
                         <strong>${item.match}</strong>
                     </div>
-                    <div>${badgeHtml}</div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        ${scoreText}
+                        <div>${badgeHtml}</div>
+                    </div>
                 `;
                 container.appendChild(div);
             });
@@ -268,8 +295,8 @@
                 div.innerHTML = `
                     <span class="round">${m.round}</span>
                     <span class="team-name">${m.home}</span>
-                    <input type="text" id="${groupKey}-h-${index}" value="${m.homeGoals}"> : 
-                    <input type="text" id="${groupKey}-a-${index}" value="${m.awayGoals}">
+                    <input type="text" id="${groupKey}-h-${index}" value="${m.homeGoals}" oninput="syncAndUpdate()"> : 
+                    <input type="text" id="${groupKey}-a-${index}" value="${m.awayGoals}" oninput="syncAndUpdate()">
                     <span class="team-right">${m.away}</span>
                 `;
                 targetContainer.appendChild(div);
@@ -285,6 +312,15 @@
                     m.awayGoals = aInput.value.trim();
                 }
             });
+        }
+
+        window.syncAndUpdate = function() {
+            collectValues("weiss", dataWeiss);
+            collectValues("gruen", dataGruen);
+            renderSchedule("schedule-weiss-list", scheduleWeiss, dataWeiss);
+            renderSchedule("schedule-gruen-list", scheduleGruen, dataGruen);
+            calculateTable("weiss", dataWeiss);
+            calculateTable("gruen", dataGruen);
         }
 
         function calculateTable(groupKey, groupData) {
