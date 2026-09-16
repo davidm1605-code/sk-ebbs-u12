@@ -291,8 +291,7 @@
             return matches;
         }
 
-        // Korrigierte Team-Listen ohne Duplikate und Fehlschaltungen
-        const teamsWeiss = ["SK Ebbs", "Wörgl", "Erl", "Schwoich", "Niederndorf", "Bad Häring sv.", "Kössen", "St.Johann B", "Walchsee", "Kufstein", "Bichlach B"];
+        const teamsWeiss = ["SK Ebbs", "Wörgl", "Erl", "Schwoich", "Niederndorf", "Bad Häring sv.", "Kössen", "St.Johann B", "Walchsee", "Kufstein", "Bichlach B", "Söll"];
         const teamsGruen = ["SK Ebbs", "Bichlach A", "Bruckhäusl", "Kirchberg (U11)", "Kössen", "Pillerseetal", "Söll", "Waidring", "Kundl/Breitenbach", "St.Johann A"];
 
         const initialWeissResults = {
@@ -622,6 +621,7 @@
                         savedData.weiss.forEach((gMatch, idx) => {
                             if (dataWeiss.matches[idx]) {
                                 dataWeiss.matches[idx].homeGoals = gMatch.homeGoals !== undefined ? gMatch.homeGoals : "";
+                                dataWeiss.matches.forEach
                                 dataWeiss.matches[idx].awayGoals = gMatch.awayGoals !== undefined ? gMatch.awayGoals : "";
                             }
                         });
@@ -648,7 +648,7 @@
 
             try {
                 await setDoc(doc(db, "matchdata", "seasons"), {
-                    weiss: dataWeiss.matches.map(m => ({ homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
+                    weiss: dataWeiss.matches.matches ? dataWeiss.matches.map(m => ({ homeGoals: m.homeGoals, awayGoals: m.awayGoals })) : dataWeiss.matches.map(m => ({ homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
                     gruen: dataGruen.matches.map(m => ({ homeGoals: m.homeGoals, awayGoals: m.awayGoals }))
                 });
                 alert("Erfolge erfolgreich in der Cloud (Firebase) gespeichert!");
