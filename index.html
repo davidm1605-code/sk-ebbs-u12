@@ -19,9 +19,9 @@
         .filter-chip { background: #334155; color: #94a3b8; border: none; padding: 4px 10px; border-radius: 16px; cursor: pointer; font-size: 0.7rem; font-weight: bold; }
         .filter-chip.active { background: #38bdf8; color: #0f172a; }
         
-        .team-filter-select { width: 100%; background: #0f172a; color: #38bdf8; border: 1px solid #475569; padding: 6px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; margin-bottom: 12px; }
+        .team-filter-select { width: 100%; background: #0f172a; color: #38bdf8; border: 1px solid #475569; padding: 6px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; margin-bottom: 12px; box-sizing: border-box; }
 
-        /* Spiel-Zeile */
+        /* Spiel-Zeile im Bearbeitungs-Tab (optimiert für Smartphones) */
         .match { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #334155; font-size: 0.75rem; gap: 2px; }
         .match .round { width: 42px; font-size: 0.7rem; color: #94a3b8; flex-shrink: 0; }
         .match .team-home { flex: 1; display: flex; align-items: center; gap: 3px; text-align: left; overflow: hidden; min-width: 0; }
@@ -33,6 +33,7 @@
         th, td { padding: 5px; text-align: left; border-bottom: 1px solid #334155; }
         th { background: #334155; color: #38bdf8; }
         
+        /* Echte Wappen-Form */
         .team-shield { 
             width: 18px; 
             height: 22px; 
@@ -50,6 +51,7 @@
             padding-bottom: 2px;
         }
         
+        /* Spieltermine-Zeile */
         .schedule-row { display: flex; flex-direction: column; padding: 8px; border-bottom: 1px solid #334155; font-size: 0.8rem; border-radius: 6px; margin-bottom: 6px; background: rgba(255,255,255,0.02); gap: 4px; }
         .schedule-row.finished { background: rgba(239, 68, 68, 0.15); border-left: 4px solid #ef4444; color: #fca5a5; }
         .schedule-row.live { background: rgba(234, 179, 8, 0.15); border-left: 4px solid #eab308; }
@@ -160,7 +162,7 @@
             <div id="section-offen-weiss">
                 <h2>Gruppe WEISS - Noch offene Spiele</h2>
                 <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px; font-style: italic;">Trage hier die Tore ein, sobald die Partien absolviert sind.</div>
-                <label style="font-size: 0.7rem; color: #94a3b8; display: block; margin-bottom: 3px;">Filter Gruppe Weiß:</label>
+                <label style="font-size: 0.7rem; color: #94a3b8; display: block; margin-bottom: 3px; margin-top: 8px;">Filter Team (Weiß):</label>
                 <select id="select-team-offen-weiss" class="team-filter-select" onchange="renderAll()">
                     <option value="">-- Alle Weiß --</option>
                 </select>
@@ -170,7 +172,7 @@
             <div id="section-offen-gruen" style="margin-top: 15px;">
                 <h2>Gruppe GRÜN - Noch offene Spiele</h2>
                 <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px; font-style: italic;">Trage hier die Tore ein, sobald die Partien absolviert sind.</div>
-                <label style="font-size: 0.7rem; color: #94a3b8; display: block; margin-bottom: 3px;">Filter Gruppe Grün:</label>
+                <label style="font-size: 0.7rem; color: #94a3b8; display: block; margin-bottom: 3px; margin-top: 8px;">Filter Team (Grün):</label>
                 <select id="select-team-offen-gruen" class="team-filter-select" onchange="renderAll()">
                     <option value="">-- Alle Grün --</option>
                 </select>
@@ -444,8 +446,8 @@
             const selectedTeamOffenWeiss = filterOffenWeissEl ? filterOffenWeissEl.value : "";
             const selectedTeamOffenGruen = filterOffenGruenEl ? filterOffenGruenEl.value : "";
 
-            renderGroupContainer("weiss", dataWeiss, "", selectedTeamOffenWeiss);
-            renderGroupContainer("gruen", dataGruen, "", selectedTeamOffenGruen);
+            renderGroupContainer("weiss", dataWeiss, selectedTeamOffenWeiss);
+            renderGroupContainer("gruen", dataGruen, selectedTeamOffenGruen);
             
             calculateTable("weiss", dataWeiss);
             calculateTable("gruen", dataGruen);
@@ -523,7 +525,7 @@
             });
         }
 
-        function renderGroupContainer(groupKey, groupData, filterTeamGespielt, filterTeamOffen) {
+        function renderGroupContainer(groupKey, groupData, filterTeamOffen) {
             const playedContainer = document.getElementById(`matches-${groupKey}-played`);
             const openContainer = document.getElementById(`matches-${groupKey}-open`);
             if (!playedContainer || !openContainer) return;
@@ -537,14 +539,9 @@
             groupData.matches.forEach((m, index) => {
                 const isPlayed = m.homeGoals !== "" && m.awayGoals !== "";
                 
-                // Korrekter Filter für offene Spiele anhand von Team-Auswahl
+                // Filter nur auf offene Spiele anwenden, wenn ein Team ausgewählt ist
                 if (!isPlayed && filterTeamOffen && filterTeamOffen !== "" && m.home !== filterTeamOffen && m.away !== filterTeamOffen) {
                     return; 
-                }
-                
-                // Korrekter Filter für gespielte Spiele
-                if (isPlayed && filterTeamGespielt && filterTeamGespielt !== "" && m.home !== filterTeamGespielt && m.away !== filterTeamGespielt) {
-                    return;
                 }
 
                 if (isPlayed) playedCount++;
