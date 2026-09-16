@@ -67,7 +67,7 @@
         .badge-finished { background: #ef4444; color: white; font-size: 0.6rem; font-weight: bold; padding: 2px 4px; border-radius: 4px; white-space: nowrap; }
         .badge-live { background: #eab308; color: #0f172a; font-size: 0.6rem; font-weight: bold; padding: 2px 4px; border-radius: 4px; white-space: nowrap; }
         
-        .cal-btn { background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+        .cal-btn { background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; padding: 6px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; width: 100%; justify-content: center; margin-bottom: 10px; box-sizing: border-box; }
         .cal-btn:hover { background: #38bdf8; color: #0f172a; }
 
         .btn-container { margin-top: 16px; display: flex; gap: 8px; }
@@ -104,15 +104,13 @@
         </div>
 
         <div id="tab-termene-weiss" class="tab-content">
-            <div class="info-box" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-                <div>
-                    <h3>SK Ebbs U12 – Spieltermine (Weiß)</h3>
-                    <p>Übersicht der Meisterschaftsspiele inklusive Echtzeit-Ergebnissen.</p>
-                </div>
-                <a class="cal-btn" href="https://www.google.com/calendar/render?cid=https%3A%2F%2Fcalendar.google.com%2Fcalendar%2Fical%2Fp86d072d0d23c4a9db738934f5e7ac1d668a85746%2540group.calendar.google.com%2Fpublic%2Fbasic.ics" target="_blank">
-                    📅 Kalenderfeed Gruppe WEISS
-                </a>
+            <div class="info-box">
+                <h3>SK Ebbs U12 – Spieltermine (Weiß)</h3>
+                <p>Übersicht der Meisterschaftsspiele inklusive Echtzeit-Ergebnissen.</p>
             </div>
+            <button class="cal-btn" onclick="downloadICS('weiss')">
+                📅 Alle Termine Gruppe WEISS in den Kalender laden
+            </button>
             <div class="venue-legend">
                 <div>Links: <span>Heimspiel</span></div>
                 <div>Rechts: <span>Auswärtsspiel</span></div>
@@ -121,15 +119,13 @@
         </div>
 
         <div id="tab-termene-gruen" class="tab-content">
-            <div class="info-box" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-                <div>
-                    <h3>SK Ebbs U12 – Spieltermine (Grün)</h3>
-                    <p>Übersicht der Meisterschaftsspiele inklusive Echtzeit-Ergebnissen.</p>
-                </div>
-                <a class="cal-btn" href="https://www.google.com/calendar/render?cid=https%3A%2F%2Fcalendar.google.com%2Fcalendar%2Fical%2Fp38f0c160ae445108a82977ac301988024224a70f%2540group.calendar.google.com%2Fpublic%2Fbasic.ics" target="_blank">
-                    📅 Kalenderfeed Gruppe GRÜN
-                </a>
+            <div class="info-box">
+                <h3>SK Ebbs U12 – Spieltermine (Grün)</h3>
+                <p>Übersicht der Meisterschaftsspiele inklusive Echtzeit-Ergebnissen.</p>
             </div>
+            <button class="cal-btn" onclick="downloadICS('gruen')">
+                📅 Alle Termine Gruppe GRÜN in den Kalender laden
+            </button>
             <div class="venue-legend">
                 <div>Links: <span>Heimspiel</span></div>
                 <div>Rechts: <span>Auswärtsspiel</span></div>
@@ -374,6 +370,44 @@
                 topBtn.innerHTML = inactiveText;
                 bottomBtn.innerHTML = inactiveText;
             }
+        }
+
+        // ICS-Generator Funktion für separate Gruppen-Downloads
+        window.downloadICS = function(group) {
+            const list = group === 'weiss' ? scheduleWeiss : scheduleGruen;
+            const groupName = group === 'weiss' ? 'WEISS' : 'GRÜN';
+            
+            let icsContent = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//SK Ebbs U12//Spielplan//DE\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\n";
+            
+            list.forEach(item => {
+                const startDate = new Date(item.iso);
+                const endDate = new Date(startDate.getTime() + 90 * 60000); // 1.5 Stunden Dauer
+                
+                function formatICSDate(date) {
+                    return date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+                }
+
+                icsContent += "BEGIN:VEVENT\n";
+                icsContent += `UID:sk-ebbs-u12-${group}-${item.round.replace(/[^a-zA-Z0-9]/g, "")}@skebbs.local\n`;
+                icsContent += `DTSTAMP:${formatICSDate(new Date())}\n`;
+                icsContent += `DTSTART:${formatICSDate(startDate)}\n`;
+                icsContent += `DTEND:${formatICSDate(endDate)}\n`;
+                icsContent += `SUMMARY:SK Ebbs U12 (${groupName}) - ${item.match}\n`;
+                icsContent += `DESCRIPTION:Meisterschaftsspiel U12 Gruppe ${groupName}\\nRunde: ${item.round}\n`;
+                icsContent += "END:VEVENT\n";
+            });
+            
+            icsContent += "END:VCALENDAR";
+
+            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `SK_Ebbs_U12_Gruppe_${groupName}.ics`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
         }
 
         function renderAll() {
