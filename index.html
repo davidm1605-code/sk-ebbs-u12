@@ -22,8 +22,23 @@
         .team-right { flex: 1; text-align: right; display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
         .round { font-size: 0.8rem; color: #94a3b8; width: 70px; }
         
-        /* Saubere Wappen-Nachbauten mit Farben */
-        .team-shield { width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 0.6rem; font-weight: bold; color: white; flex-shrink: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.4); text-transform: uppercase; border: 1px solid rgba(255,255,255,0.2); }
+        /* Echte Wappen-Form (oben abgerundet, unten spitz) */
+        .team-shield { 
+            width: 22px; 
+            height: 26px; 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 0.55rem; 
+            font-weight: bold; 
+            color: white; 
+            flex-shrink: 0; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.4); 
+            text-transform: uppercase; 
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 4px 4px 12px 12px; 
+            padding-bottom: 2px;
+        }
         
         .schedule-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-bottom: 1px solid #334155; font-size: 0.85rem; border-radius: 6px; margin-bottom: 6px; background: rgba(255,255,255,0.02); }
         .schedule-row.finished { background: rgba(239, 68, 68, 0.15); border-left: 4px solid #ef4444; color: #fca5a5; }
@@ -124,24 +139,23 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Nachgebaute Wappen-Identitäten mit den korrekten Vereinsfarben aus deinen Screenshots
         const teamConfigs = {
-            "SK Ebbs": { label: "SKE", color: "#15803d" },       // Grün-Weiß (Ebbs)
-            "Waidring": { label: "WAI", color: "#b91c1c" },      // Schwarz-Rot (Waidring)
-            "Pillerseetal": { label: "PIL", color: "#2563eb" },  // Blau-Gelb (Pillerseetal)
-            "Kirchberg (U11)": { label: "KIR", color: "#eab308" },// Gelb-Rot (Kirchberg)
-            "Bruckhäusl": { label: "BRU", color: "#1d4ed8" },    // Blau-Rot (Bruckhäusl)
-            "Söll": { label: "SÖL", color: "#ca8a04" },          // Schwarz-Gelb (Söll)
-            "Walchsee": { label: "WAL", color: "#eab308" },      // Schwarz-Gelb (Walchsee)
-            "Kufstein": { label: "KUF", color: "#0284c7" },      // Blau-Weiß (Kufstein)
-            "Kössen": { label: "KÖS", color: "#1e293b" },        // Schwarz-Weiß (Kössen)
-            "Bad Häring sv.": { label: "HÄR", color: "#eab308" },// Blau-Gelb (Bad Häring)
-            "Schwoich": { label: "SCH", color: "#dc2626" },      // Rot-Weiß (Schwoich)
-            "Erl": { label: "ERL", color: "#b91c1c" },           // Rot-Weiß-Grün (Erl)
-            "Oberndorf": { label: "OBE", color: "#0f172a" },     // Schwarz-Rot (Oberndorf)
-            "Niederndorf": { label: "NIE", color: "#b91c1c" },   // Rot-Weiß (Niederndorf)
-            "Kundl/Breitenbach": { label: "KUB", color: "#2563eb" }, // Blau-Weiß (Kundl)
-            "Wörgl": { label: "WÖG", color: "#475569" },         // Grau-Rot (Wörgl)
+            "SK Ebbs": { label: "SKE", color: "#15803d" },
+            "Waidring": { label: "WAI", color: "#b91c1c" },
+            "Pillerseetal": { label: "PIL", color: "#2563eb" },
+            "Kirchberg (U11)": { label: "KIR", color: "#eab308" },
+            "Bruckhäusl": { label: "BRU", color: "#1d4ed8" },
+            "Söll": { label: "SÖL", color: "#ca8a04" },
+            "Walchsee": { label: "WAL", color: "#eab308" },
+            "Kufstein": { label: "KUF", color: "#0284c7" },
+            "Kössen": { label: "KÖS", color: "#1e293b" },
+            "Bad Häring sv.": { label: "HÄR", color: "#eab308" },
+            "Schwoich": { label: "SCH", color: "#dc2626" },
+            "Erl": { label: "ERL", color: "#b91c1c" },
+            "Oberndorf": { label: "OBE", color: "#0f172a" },
+            "Niederndorf": { label: "NIE", color: "#b91c1c" },
+            "Kundl/Breitenbach": { label: "KUB", color: "#2563eb" },
+            "Wörgl": { label: "WÖG", color: "#475569" },
             "Bichlach A": { label: "BIA", color: "#047857" },
             "Bichlach B": { label: "BIB", color: "#047857" },
             "St.Johann A": { label: "STA", color: "#1d4ed8" },
@@ -369,7 +383,6 @@
                 stats[team] = { sp: 0, goalsFor: 0, goalsAgainst: 0, pts: 0 };
             });
 
-            groupData.matches.matches = groupData.matches || [];
             groupData.matches.forEach((m) => {
                 const hVal = m.homeGoals;
                 const aVal = m.awayGoals;
@@ -425,7 +438,6 @@
                     <td>${s.goalsFor}:${s.goalsAgainst}</td>
                     <td><strong>${s.pts}</strong></td>
                 `;
-                tbody.html = "";
                 tbody.appendChild(tr);
             });
         }
@@ -440,7 +452,6 @@
                         savedData.weiss.forEach((gMatch, idx) => {
                             if (dataWeiss.matches[idx]) {
                                 dataWeiss.matches[idx].homeGoals = gMatch.homeGoals !== undefined ? gMatch.homeGoals : "";
-                                dataWeiss.matches.matches = dataWeiss.matches.matches || [];
                                 dataWeiss.matches[idx].awayGoals = gMatch.awayGoals !== undefined ? gMatch.awayGoals : "";
                             }
                         });
