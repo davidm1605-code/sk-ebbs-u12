@@ -14,6 +14,11 @@
         .tab-content.active { display: block; }
         h2 { border-bottom: 2px solid #38bdf8; padding-bottom: 6px; margin-top: 20px; color: #38bdf8; font-size: 1rem; }
         
+        /* Filter-Chips für Gespielt / Offen Tabs */
+        .filter-chips { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+        .filter-chip { background: #334155; color: #94a3b8; border: none; padding: 4px 10px; border-radius: 16px; cursor: pointer; font-size: 0.7rem; font-weight: bold; }
+        .filter-chip.active { background: #38bdf8; color: #0f172a; }
+
         /* Spiel-Zeile im Bearbeitungs-Tab (optimiert für Smartphones) */
         .match { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #334155; font-size: 0.75rem; gap: 2px; }
         .match .round { width: 42px; font-size: 0.7rem; color: #94a3b8; flex-shrink: 0; }
@@ -120,23 +125,43 @@
         </div>
 
         <div id="tab-gespielt" class="tab-content active">
-            <h2>Gruppe WEISS - Berechnete Ergebnisse</h2>
-            <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 8px; font-style: italic;">Diese Spiele fließen bereits in die Wertung ein.</div>
-            <div id="matches-weiss-played"></div>
+            <!-- Filter-Leiste für Gespielt -->
+            <div class="filter-chips">
+                <button class="filter-chip active" onclick="filterGroup('gespielt', 'all', this)">Alle</button>
+                <button class="filter-chip" onclick="filterGroup('gespielt', 'weiss', this)">Gruppe Weiß</button>
+                <button class="filter-chip" onclick="filterGroup('gespielt', 'gruen', this)">Gruppe Grün</button>
+            </div>
+            <div id="section-gespielt-weiss">
+                <h2>Gruppe WEISS - Berechnete Ergebnisse</h2>
+                <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 8px; font-style: italic;">Diese Spiele fließen bereits in die Wertung ein.</div>
+                <div id="matches-weiss-played"></div>
+            </div>
 
-            <h2>Gruppe GRÜN - Berechnete Ergebnisse</h2>
-            <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 8px; font-style: italic;">Diese Spiele fließen bereits in die Wertung ein.</div>
-            <div id="matches-gruen-played"></div>
+            <div id="section-gespielt-gruen" style="margin-top: 15px;">
+                <h2>Gruppe GRÜN - Berechnete Ergebnisse</h2>
+                <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 8px; font-style: italic;">Diese Spiele fließen bereits in die Wertung ein.</div>
+                <div id="matches-gruen-played"></div>
+            </div>
         </div>
 
         <div id="tab-offen" class="tab-content">
-            <h2>Gruppe WEISS - Noch offene Spiele</h2>
-            <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 8px; font-style: italic;">Trage hier die Tore ein, sobald die Partien absolviert sind.</div>
-            <div id="matches-weiss-open"></div>
+            <!-- Filter-Leiste für Offen -->
+            <div class="filter-chips">
+                <button class="filter-chip active" onclick="filterGroup('offen', 'all', this)">Alle</button>
+                <button class="filter-chip" onclick="filterGroup('offen', 'weiss', this)">Gruppe Weiß</button>
+                <button class="filter-chip" onclick="filterGroup('offen', 'gruen', this)">Gruppe Grün</button>
+            </div>
+            <div id="section-offen-weiss">
+                <h2>Gruppe WEISS - Noch offene Spiele</h2>
+                <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 8px; font-style: italic;">Trage hier die Tore ein, sobald die Partien absolviert sind.</div>
+                <div id="matches-weiss-open"></div>
+            </div>
 
-            <h2>Gruppe GRÜN - Noch offene Spiele</h2>
-            <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 8px; font-style: italic;">Trage hier die Tore ein, sobald die Partien absolviert sind.</div>
-            <div id="matches-gruen-open"></div>
+            <div id="section-offen-gruen" style="margin-top: 15px;">
+                <h2>Gruppe GRÜN - Noch offene Spiele</h2>
+                <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 8px; font-style: italic;">Trage hier die Tore ein, sobald die Partien absolviert sind.</div>
+                <div id="matches-gruen-open"></div>
+            </div>
         </div>
 
         <div id="tab-tabelle" class="tab-content">
@@ -294,6 +319,27 @@
             document.getElementById(`tab-${tabId}`).classList.add('active');
             if (evt && evt.target) {
                 evt.target.classList.add('active');
+            }
+        }
+
+        window.filterGroup = function(tabName, groupType, btn) {
+            // Aktiven Button in der Filter-Leiste umschalten
+            const container = btn.parentElement;
+            container.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const secWeiss = document.getElementById(`section-${tabName}-weiss`);
+            const secGruen = document.getElementById(`section-${tabName}-gruen`);
+
+            if (groupType === 'all') {
+                secWeiss.style.display = 'block';
+                secGruen.style.display = 'block';
+            } else if (groupType === 'weiss') {
+                secWeiss.style.display = 'block';
+                secGruen.style.display = 'none';
+            } else if (groupType === 'gruen') {
+                secWeiss.style.display = 'none';
+                secGruen.style.display = 'block';
             }
         }
 
