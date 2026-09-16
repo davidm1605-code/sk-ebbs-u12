@@ -13,14 +13,21 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         h2 { border-bottom: 2px solid #38bdf8; padding-bottom: 8px; margin-top: 24px; color: #38bdf8; font-size: 1.2rem; }
+        
         .match { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #334155; font-size: 0.9rem; }
-        .match input { width: 35px; text-align: center; background: #0f172a; border: 1px solid #475569; color: white; border-radius: 4px; padding: 4px; }
+        .match input { width: 35px; text-align: center; background: #0f172a; border: 1px solid #475569; color: white; border-radius: 4px; padding: 4px; flex-shrink: 0; }
+        
         table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
         th, td { padding: 8px; text-align: left; border-bottom: 1px solid #334155; }
         th { background: #334155; color: #38bdf8; }
-        .team-name { flex: 1; text-align: left; display: flex; align-items: center; gap: 6px; }
-        .team-right { flex: 1; text-align: right; display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
-        .round { font-size: 0.8rem; color: #94a3b8; width: 70px; }
+        
+        .team-name { flex: 1; text-align: left; display: flex; align-items: center; gap: 6px; min-width: 0; }
+        .team-name span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        
+        .team-right { flex: 1; text-align: right; display: flex; align-items: center; justify-content: flex-end; gap: 6px; min-width: 0; }
+        .team-right span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; }
+        
+        .round { font-size: 0.8rem; color: #94a3b8; width: 65px; flex-shrink: 0; }
         
         /* Echte Wappen-Form (oben abgerundet, unten spitz) */
         .team-shield { 
@@ -43,8 +50,8 @@
         .schedule-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-bottom: 1px solid #334155; font-size: 0.85rem; border-radius: 6px; margin-bottom: 6px; background: rgba(255,255,255,0.02); }
         .schedule-row.finished { background: rgba(239, 68, 68, 0.15); border-left: 4px solid #ef4444; color: #fca5a5; }
         .schedule-row.live { background: rgba(234, 179, 8, 0.15); border-left: 4px solid #eab308; }
-        .badge-finished { background: #ef4444; color: white; font-size: 0.7rem; font-weight: bold; padding: 2px 6px; border-radius: 4px; margin-left: 8px; }
-        .badge-live { background: #eab308; color: #0f172a; font-size: 0.7rem; font-weight: bold; padding: 2px 6px; border-radius: 4px; margin-left: 8px; }
+        .badge-finished { background: #ef4444; color: white; font-size: 0.7rem; font-weight: bold; padding: 2px 6px; border-radius: 4px; margin-left: 8px; flex-shrink: 0; }
+        .badge-live { background: #eab308; color: #0f172a; font-size: 0.7rem; font-weight: bold; padding: 2px 6px; border-radius: 4px; margin-left: 8px; flex-shrink: 0; }
         .btn-container { margin-top: 20px; text-align: center; }
         button.action-btn { background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
         button.action-btn:hover { background: #38bdf8; color: #0f172a; }
@@ -297,13 +304,13 @@
                     cssClass = "finished";
                     badgeHtml = '<span class="badge-finished">BEENDET</span>';
                     if (hasScore) {
-                        scoreText = `<div style="text-align: right; font-weight: bold; font-size: 0.95rem; color: #f8fafc;">${goals.h} : ${goals.a}</div>`;
+                        scoreText = `<div style="text-align: right; font-weight: bold; font-size: 0.95rem; color: #f8fafc; min-width: 35px;">${goals.h} : ${goals.a}</div>`;
                     }
                 } else if (now >= kickoff && now < matchEnd) {
                     cssClass = "live";
                     badgeHtml = '<span class="badge-live">LÄUFT</span>';
                     if (hasScore) {
-                        scoreText = `<div style="text-align: right; font-weight: bold; font-size: 0.95rem; color: #f8fafc;">${goals.h} : ${goals.a}</div>`;
+                        scoreText = `<div style="text-align: right; font-weight: bold; font-size: 0.95rem; color: #f8fafc; min-width: 35px;">${goals.h} : ${goals.a}</div>`;
                     }
                 }
 
@@ -317,12 +324,14 @@
                         <span class="round">${item.round}</span><br>
                         <small style="color: #94a3b8;">${item.dateStr}</small>
                     </div>
-                    <div style="flex: 2; padding-left: 10px;">
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <span>${homeLogo} ${item.home}</span> vs. <span>${awayLogo} ${item.away}</span>
+                    <div style="flex: 2; padding: 0 10px; min-width: 0;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                            <span class="team-name">${homeLogo} <span>${item.home}</span></span>
+                            <span style="color: #94a3b8; font-size: 0.8rem;">vs.</span>
+                            <span class="team-right"><span>${item.away}</span> ${awayLogo}</span>
                         </div>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 8px;">
+                    <div style="display: flex; align-items: center; gap: 4px; flex-shrink: 0;">
                         ${scoreText}
                         <div>${badgeHtml}</div>
                     </div>
@@ -452,7 +461,7 @@
                         savedData.weiss.forEach((gMatch, idx) => {
                             if (dataWeiss.matches[idx]) {
                                 dataWeiss.matches[idx].homeGoals = gMatch.homeGoals !== undefined ? gMatch.homeGoals : "";
-                                dataWeiss.matches[idx].awayGoals = gMatch.awayGoals !== undefined ? gMatch.awayGoals : "";
+                                dataWeiss.matches.idx].awayGoals = gMatch.awayGoals !== undefined ? gMatch.awayGoals : "";
                             }
                         });
                     }
