@@ -7,8 +7,8 @@
     <style>
         body { font-family: Arial, sans-serif; background-color: #0f172a; color: #f8fafc; margin: 0; padding: 20px; }
         .container { max-width: 600px; margin: 0 auto; background: #1e293b; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #334155; padding-bottom: 10px; }
-        .tab-btn { background: #334155; color: #94a3b8; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.9rem; }
+        .tabs { display: flex; gap: 6px; margin-bottom: 20px; border-bottom: 2px solid #334155; padding-bottom: 10px; flex-wrap: wrap; }
+        .tab-btn { background: #334155; color: #94a3b8; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.8rem; }
         .tab-btn.active { background: #38bdf8; color: #0f172a; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
@@ -21,6 +21,11 @@
         .team-name { flex: 1; text-align: left; }
         .team-right { flex: 1; text-align: right; }
         .round { font-size: 0.8rem; color: #94a3b8; width: 70px; }
+        .schedule-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 8px; border-bottom: 1px solid #334155; font-size: 0.85rem; border-radius: 6px; margin-bottom: 4px; background: rgba(255,255,255,0.02); }
+        .schedule-row.finished { background: rgba(239, 68, 68, 0.15); border-left: 4px solid #ef4444; color: #fca5a5; }
+        .schedule-row.live { background: rgba(234, 179, 8, 0.15); border-left: 4px solid #eab308; }
+        .badge-finished { background: #ef4444; color: white; font-size: 0.7rem; font-weight: bold; padding: 2px 6px; border-radius: 4px; margin-left: 8px; }
+        .badge-live { background: #eab308; color: #0f172a; font-size: 0.7rem; font-weight: bold; padding: 2px 6px; border-radius: 4px; margin-left: 8px; }
         .btn-container { margin-top: 20px; text-align: center; }
         button.action-btn { background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
         button.action-btn:hover { background: #38bdf8; color: #0f172a; }
@@ -30,12 +35,26 @@
 <body>
     <div class="container">
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('gespielt', event)">Bereits gespielt</button>
+            <button class="tab-btn active" onclick="switchTab('termene-weiss', event)">SK Ebbs Weiß</button>
+            <button class="tab-btn" onclick="switchTab('termene-gruen', event)">SK Ebbs Grün</button>
+            <button class="tab-btn" onclick="switchTab('gespielt', event)">Bereits gespielt</button>
             <button class="tab-btn" onclick="switchTab('offen', event)">Noch offen</button>
             <button class="tab-btn" onclick="switchTab('tabelle', event)">Tabellen</button>
         </div>
 
-        <div id="tab-gespielt" class="tab-content active">
+        <div id="tab-termene-weiss" class="tab-content active">
+            <h2>SK Ebbs Weiß – Termine</h2>
+            <div class="info-text">Automatische Markierung nach Ablauf der Spielzeit (Anpfiff + 60 Min.).</div>
+            <div id="schedule-weiss-list"></div>
+        </div>
+
+        <div id="tab-termene-gruen" class="tab-content">
+            <h2>SK Ebbs Grün – Termine</h2>
+            <div class="info-text">Automatische Markierung nach Ablauf der Spielzeit (Anpfiff + 60 Min.).</div>
+            <div id="schedule-gruen-list"></div>
+        </div>
+
+        <div id="tab-gespielt" class="tab-content">
             <h2>Gruppe WEISS - Berechnete Ergebnisse</h2>
             <div class="info-text">Diese Spiele fließen bereits in die Wertung ein.</div>
             <div id="matches-weiss-played"></div>
@@ -95,6 +114,31 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // Exakte Termine der Meisterschaft für die neuen Reiter
+        const scheduleWeiss = [
+            { round: "1. Rde", dateStr: "Fr, 04.09.2026 | 18:30", iso: "2026-09-04T18:30:00", match: "SKE A vs. St. Johann A (grün)" },
+            { round: "1. Rde", dateStr: "Fr, 04.09.2026 | 18:30", iso: "2026-09-04T18:30:00", match: "SKE B vs. Kufstein (weiß)" },
+            { round: "2. Rde", dateStr: "Sa, 12.09.2026 | 14:00", iso: "2026-09-12T14:00:00", match: "Walchsee vs. SKE A (weiß)" },
+            { round: "3. Rde", dateStr: "Sa, 19.09.2026 | 12:00", iso: "2026-09-19T12:00:00", match: "SKE A vs. Bichlach A in Ebbs (grün)" },
+            { round: "3. Rde", dateStr: "Sa, 19.09.2026 | 12:00", iso: "2026-09-19T12:00:00", match: "SKE B vs. Wörgl in Ebbs (weiß)" },
+            { round: "4. Rde", dateStr: "Fr, 25.09.2026 | 17:00", iso: "2026-09-25T17:00:00", match: "Erl vs. SKE A (weiß)" },
+            { round: "4. Rde", dateStr: "Sa, 26.09.2026 | 13:00", iso: "2026-09-26T13:00:00", match: "Söll vs. SKE B in Söll (grün)" },
+            { round: "5. Rde", dateStr: "Sa, 03.10.2026 | 11:30", iso: "2026-10-03T11:30:00", match: "SKE A vs. Waidring in Ebbs (grün)" },
+            { round: "5. Rde", dateStr: "Sa, 03.10.2026 | 11:30", iso: "2026-10-03T11:30:00", match: "SKE B vs. Bichlach B in Ebbs (weiß)" },
+            { round: "6. Rde", dateStr: "Mo, 05.10.2026 | 18:00", iso: "2026-10-05T18:00:00", match: "SPG Bichlach B in Ebbs vs. ... (weiß)" },
+            { round: "6. Rde", dateStr: "Sa, 10.10.2026 | 12:00", iso: "2026-10-10T12:00:00", match: "SKE B vs. Pillerseetal in Ebbs (grün)" },
+            { round: "6. Rde", dateStr: "So, 11.10.2026 | 14:30", iso: "2026-10-11T14:30:00", match: "Schwoich vs. SKE A in Schwoich (weiß)" },
+            { round: "7. Rde", dateStr: "Sa, 17.10.2026 | 11:30", iso: "2026-10-17T11:30:00", match: "U11: Kirchberg vs. SKE in Kirchberg (grün)" },
+            { round: "7. Rde", dateStr: "Sa, 17.10.2026 | 12:30", iso: "2026-10-17T12:30:00", match: "SKE vs. Niederndorf in Niederndorf (weiß)" },
+            { round: "8. Rde", dateStr: "Sa, 24.10.2026 | 12:00", iso: "2026-10-24T12:00:00", match: "Kössen vs. SKE A in Kössen (grün)" },
+            { round: "8. Rde", dateStr: "Sa, 24.10.2026 | 12:00", iso: "2026-10-24T12:00:00", match: "SKE B vs. St. Johann B in Ebbs (weiß)" },
+            { round: "9. Rde", dateStr: "Do, 29.10.2026 | 17:00", iso: "2026-10-29T17:00:00", match: "SKE A vs. Bruckhäusl in Ebbs (grün)" },
+            { round: "9. Rde", dateStr: "Fr, 30.10.2026 | 17:00", iso: "2026-10-30T17:00:00", match: "Bad Häring vs. SKE B in Bad Häring (weiß)" },
+            { round: "Zusatz", dateStr: "Sa, 31.10.2026 | 12:00", iso: "2026-10-31T12:00:00", match: "U11: Westendorf vs. SKE" }
+        ];
+
+        const scheduleGruen = scheduleWeiss;
+
         function generateAllMatches(teams) {
             const matches = [];
             let roundCounter = 1;
@@ -140,7 +184,6 @@
                     m.homeGoals = initialResults[key1].h;
                     m.awayGoals = initialResults[key1].a;
                 } else if (initialResults[key2]) {
-                    // Falls Heim/Gast vertauscht angegeben wurden
                     m.homeGoals = initialResults[key2].a;
                     m.awayGoals = initialResults[key2].h;
                 }
@@ -161,10 +204,48 @@
         }
 
         function renderAll() {
+            renderSchedule("schedule-weiss-list", scheduleWeiss);
+            renderSchedule("schedule-gruen-list", scheduleGruen);
             renderGroupContainer("weiss", dataWeiss);
             renderGroupContainer("gruen", dataGruen);
             calculateTable("weiss", dataWeiss);
             calculateTable("gruen", dataGruen);
+        }
+
+        function renderSchedule(containerId, list) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = "";
+            const now = new Date();
+
+            list.forEach(item => {
+                const kickoff = new Date(item.iso);
+                const matchEnd = new Date(kickoff.getTime() + 60 * 60000); // 60 Min nach Anpfiff (U12 Spieldauer)
+                
+                let cssClass = "";
+                let badgeHtml = "";
+
+                if (now >= matchEnd) {
+                    cssClass = "finished";
+                    badgeHtml = '<span class="badge-finished">BEENDET</span>';
+                } else if (now >= kickoff && now < matchEnd) {
+                    cssClass = "live";
+                    badgeHtml = '<span class="badge-live">LÄUFT</span>';
+                }
+
+                const div = document.createElement("div");
+                div.className = `schedule-row ${cssClass}`;
+                div.innerHTML = `
+                    <div>
+                        <span class="round">${item.round}</span><br>
+                        <small style="color: #94a3b8;">${item.dateStr}</small>
+                    </div>
+                    <div style="flex: 2; padding-left: 10px;">
+                        <strong>${item.match}</strong>
+                    </div>
+                    <div>${badgeHtml}</div>
+                `;
+                container.appendChild(div);
+            });
         }
 
         function renderGroupContainer(groupKey, groupData) {
