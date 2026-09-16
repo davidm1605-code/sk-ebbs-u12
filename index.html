@@ -54,7 +54,7 @@
         .schedule-row.finished { background: rgba(239, 68, 68, 0.15); border-left: 4px solid #ef4444; color: #fca5a5; }
         .schedule-row.live { background: rgba(234, 179, 8, 0.15); border-left: 4px solid #eab308; }
         
-        .schedule-header { display: flex; justify-content: space-between; width: 100%; font-size: 0.7rem; color: #94a3b8; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 3px; align-items: center; }
+        .schedule-header { display: flex; justify-content: space-between; width: 100%; font-size: 0.7rem; color: #94a3b8; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 3px; }
         .schedule-body { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 2px; }
         
         /* Feste Breiten für Heim- und Auswärtsteam, damit die Logos exakt fluchten */
@@ -67,9 +67,8 @@
         .badge-finished { background: #ef4444; color: white; font-size: 0.6rem; font-weight: bold; padding: 2px 4px; border-radius: 4px; white-space: nowrap; }
         .badge-live { background: #eab308; color: #0f172a; font-size: 0.6rem; font-weight: bold; padding: 2px 4px; border-radius: 4px; white-space: nowrap; }
         
-        /* Kalender-Button im Termin-Header */
-        .cal-btn { background: #334155; color: #38bdf8; border: 1px solid #475569; padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 3px; }
-        .cal-btn:hover { background: #38bdf8; color: #0f172a; border-color: #38bdf8; }
+        .cal-btn { background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; }
+        .cal-btn:hover { background: #38bdf8; color: #0f172a; }
 
         .btn-container { margin-top: 16px; display: flex; gap: 8px; }
         button.action-btn { background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 50%; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 6px; }
@@ -105,9 +104,12 @@
         </div>
 
         <div id="tab-termene-weiss" class="tab-content">
-            <div class="info-box">
-                <h3>SK Ebbs U12 – Spieltermine (Weiß)</h3>
-                <p>Übersicht der Meisterschaftsspiele inklusive Echtzeit-Ergebnissen.</p>
+            <div class="info-box" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                <div>
+                    <h3>SK Ebbs U12 – Spieltermine (Weiß)</h3>
+                    <p>Übersicht der Meisterschaftsspiele inklusive Echtzeit-Ergebnissen.</p>
+                </div>
+                <button class="cal-btn" onclick="downloadICS(scheduleWeiss, 'SK_Ebbs_U12_Weiss.ics')" style="padding: 6px 10px; font-size: 0.75rem;">📅 Alle Spiele in den Kalender</button>
             </div>
             <div class="venue-legend">
                 <div>Links: <span>Heimspiel</span></div>
@@ -117,9 +119,12 @@
         </div>
 
         <div id="tab-termene-gruen" class="tab-content">
-            <div class="info-box">
-                <h3>SK Ebbs U12 – Spieltermine (Grün)</h3>
-                <p>Übersicht der Meisterschaftsspiele inklusive Echtzeit-Ergebnissen.</p>
+            <div class="info-box" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                <div>
+                    <h3>SK Ebbs U12 – Spieltermine (Grün)</h3>
+                    <p>Übersicht der Meisterschaftsspiele inklusive Echtzeit-Ergebnissen.</p>
+                </div>
+                <button class="cal-btn" onclick="downloadICS(scheduleGruen, 'SK_Ebbs_U12_Gruen.ics')" style="padding: 6px 10px; font-size: 0.75rem;">📅 Alle Spiele in den Kalender</button>
             </div>
             <div class="venue-legend">
                 <div>Links: <span>Heimspiel</span></div>
@@ -357,21 +362,46 @@
                 const activeText = "🔓 Schreibmodus Ein";
                 topBtn.innerHTML = activeText;
                 bottomBtn.innerHTML = activeText;
-                topBtn.style.borderColor = "#38bdf8";
-                topBtn.style.color = "#38bdf8";
-                bottomBtn.style.borderColor = "#38bdf8";
-                bottomBtn.style.color = "#38bdf8";
             } else {
                 body.classList.remove("editable-mode");
                 body.classList.add("readonly-mode");
                 const inactiveText = "🔒 Schreibmodus Aus";
                 topBtn.innerHTML = inactiveText;
                 bottomBtn.innerHTML = inactiveText;
-                topBtn.style.borderColor = "#38bdf8";
-                topBtn.style.color = "#38bdf8";
-                bottomBtn.style.borderColor = "#38bdf8";
-                bottomBtn.style.color = "#38bdf8";
             }
+        }
+
+        function formatICSDate(isoString) {
+            const date = new Date(isoString);
+            return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+        }
+
+        window.downloadICS = function(list, filename) {
+            let icsContent = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//SK Ebbs U12//Spielplan//DE\n";
+            list.forEach(item => {
+                const startDate = new Date(item.iso);
+                const endDate = new Date(startDate.getTime() + 60 * 60000); // 1 Stunde Dauer
+                const startStr = formatICSDate(startDate);
+                const endStr = formatICSDate(endDate);
+
+                icsContent += "BEGIN:VEVENT\n";
+                icsContent += `UID:sk-ebbs-u12-${startDate.getTime()}-${item.home.replace(/[^a-zA-Z0-9]/g, '')}\n`;
+                icsContent += `DTSTAMP:${formatICSDate(new Date())}\n`;
+                icsContent += `DTSTART:${startStr}\n`;
+                icsContent += `DTEND:${endStr}\n`;
+                icsContent += `SUMMARY:${item.match}\n`;
+                icsContent += `DESCRIPTION:Meisterschaftsspiel SK Ebbs U12 (${item.round})\n`;
+                icsContent += "END:VEVENT\n";
+            });
+            icsContent += "END:VCALENDAR";
+
+            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.setAttribute('download', filename);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         function renderAll() {
@@ -429,23 +459,15 @@
                 const homeLogo = getTeamLogoHtml(item.home);
                 const awayLogo = getTeamLogoHtml(item.away);
 
-                // Google Calendar Link generieren
-                const title = encodeURIComponent(`SK Ebbs U12: ${item.match}`);
-                const details = encodeURIComponent(`Meisterschaftsspiel U12 Gruppe\nBegegnung: ${item.match}`);
-                const location = encodeURIComponent(item.home.includes("SK Ebbs") ? "Sportplatz Ebbs" : item.home);
-                
-                const startIso = item.iso.replace(/[-:]/g, '');
-                const endDate = new Date(kickoff.getTime() + 90 * 60000);
-                const endIso = endDate.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-                
-                const gCalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startIso}/${endIso}&details=${details}&location=${location}`;
+                const icsSingle = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:${item.match}\nDTSTART:${formatICSDate(kickoff)}\nDTEND:${formatICSDate(new Date(kickoff.getTime() + 3600000))}\nDESCRIPTION:SK Ebbs U12 (${item.round})\nEND:VEVENT\nEND:VCALENDAR`;
+                const singleHref = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(icsSingle);
 
                 const div = document.createElement("div");
                 div.className = `schedule-row ${cssClass}`;
                 div.innerHTML = `
                     <div class="schedule-header">
-                        <span>${item.round} | ${item.dateStr}</span>
-                        <a href="${gCalUrl}" target="_blank" class="cal-btn">📅 + Kalender</a>
+                        <span>${item.round}</span>
+                        <span>${item.dateStr}</span>
                     </div>
                     <div class="schedule-body">
                         <div class="schedule-team-home">
@@ -458,6 +480,7 @@
                         <div class="schedule-score-box">
                             ${scoreText}
                             <div>${badgeHtml}</div>
+                            <a class="cal-btn" href="${singleHref}" download="${item.match.replace(/[^a-zA-Z0-9]/g, '_')}.ics">📅 + Kalender</a>
                         </div>
                     </div>
                 `;
