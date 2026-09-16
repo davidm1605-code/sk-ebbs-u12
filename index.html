@@ -19,7 +19,10 @@
         .filter-chip { background: #334155; color: #94a3b8; border: none; padding: 4px 10px; border-radius: 16px; cursor: pointer; font-size: 0.7rem; font-weight: bold; }
         .filter-chip.active { background: #38bdf8; color: #0f172a; }
         
-        .team-filter-select { width: 100%; background: #0f172a; color: #38bdf8; border: 1px solid #475569; padding: 6px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; margin-bottom: 12px; }
+        .filters-top-row { display: flex; gap: 8px; margin-bottom: 12px; }
+        .team-filter-select { width: 100%; background: #0f172a; color: #38bdf8; border: 1px solid #475569; padding: 6px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: bold; box-sizing: border-box; }
+        .filter-group-box { flex: 1; min-width: 0; }
+        .filter-label { font-size: 0.65rem; color: #94a3b8; margin-bottom: 3px; font-weight: bold; display: block; }
 
         /* Spiel-Zeile im Bearbeitungs-Tab (optimiert für Smartphones) */
         .match { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #334155; font-size: 0.75rem; gap: 2px; }
@@ -134,21 +137,30 @@
                 <button class="filter-chip" onclick="filterGroup('gespielt', 'gruen', this)">Gruppe Grün</button>
             </div>
 
+            <div class="filters-top-row">
+                <div class="filter-group-box">
+                    <span class="filter-label">Filter Gruppe Weiß:</span>
+                    <select id="select-team-gespielt-weiss" class="team-filter-select" onchange="renderAll()">
+                        <option value="">-- Alle Weiß --</option>
+                    </select>
+                </div>
+                <div class="filter-group-box">
+                    <span class="filter-label">Filter Gruppe Grün:</span>
+                    <select id="select-team-gespielt-gruen" class="team-filter-select" onchange="renderAll()">
+                        <option value="">-- Alle Grün --</option>
+                    </select>
+                </div>
+            </div>
+
             <div id="section-gespielt-weiss">
                 <h2>Gruppe WEISS - Berechnete Ergebnisse</h2>
                 <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px; font-style: italic;">Diese Spiele fließen bereits in die Wertung ein.</div>
-                <select id="select-team-gespielt-weiss" class="team-filter-select" onchange="renderAll()">
-                    <option value="">-- Alle Vereine in Gruppe Weiß anzeigen --</option>
-                </select>
                 <div id="matches-weiss-played"></div>
             </div>
 
             <div id="section-gespielt-gruen" style="margin-top: 15px;">
                 <h2>Gruppe GRÜN - Berechnete Ergebnisse</h2>
                 <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px; font-style: italic;">Diese Spiele fließen bereits in die Wertung ein.</div>
-                <select id="select-team-gespielt-gruen" class="team-filter-select" onchange="renderAll()">
-                    <option value="">-- Alle Vereine in Gruppe Grün anzeigen --</option>
-                </select>
                 <div id="matches-gruen-played"></div>
             </div>
         </div>
@@ -165,21 +177,30 @@
                 <button class="filter-chip" onclick="filterGroup('offen', 'gruen', this)">Gruppe Grün</button>
             </div>
 
+            <div class="filters-top-row">
+                <div class="filter-group-box">
+                    <span class="filter-label">Filter Gruppe Weiß:</span>
+                    <select id="select-team-offen-weiss" class="team-filter-select" onchange="renderAll()">
+                        <option value="">-- Alle Weiß --</option>
+                    </select>
+                </div>
+                <div class="filter-group-box">
+                    <span class="filter-label">Filter Gruppe Grün:</span>
+                    <select id="select-team-offen-gruen" class="team-filter-select" onchange="renderAll()">
+                        <option value="">-- Alle Grün --</option>
+                    </select>
+                </div>
+            </div>
+
             <div id="section-offen-weiss">
                 <h2>Gruppe WEISS - Noch offene Spiele</h2>
                 <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px; font-style: italic;">Trage hier die Tore ein, sobald die Partien absolviert sind.</div>
-                <select id="select-team-offen-weiss" class="team-filter-select" onchange="renderAll()">
-                    <option value="">-- Nach Verein filtern (Gruppe Weiß) --</option>
-                </select>
                 <div id="matches-weiss-open"></div>
             </div>
 
             <div id="section-offen-gruen" style="margin-top: 15px;">
                 <h2>Gruppe GRÜN - Noch offene Spiele</h2>
                 <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px; font-style: italic;">Trage hier die Tore ein, sobald die Partien absolviert sind.</div>
-                <select id="select-team-offen-gruen" class="team-filter-select" onchange="renderAll()">
-                    <option value="">-- Nach Verein filtern (Gruppe Grün) --</option>
-                </select>
                 <div id="matches-gruen-open"></div>
             </div>
         </div>
@@ -332,18 +353,16 @@
         let dataGruen = { teams: teamsGruen, matches: populateMatches(teamsGruen, initialGruenResults) };
 
         function initSelectOptions() {
-            populateSelectOptions('select-team-gespielt-weiss', teamsWeiss);
-            populateSelectOptions('select-team-gespielt-gruen', teamsGruen);
-            populateSelectOptions('select-team-offen-weiss', teamsWeiss);
-            populateSelectOptions('select-team-offen-gruen', teamsGruen);
+            populateSelectOptions('select-team-gespielt-weiss', teamsWeiss, '-- Alle Weiß --');
+            populateSelectOptions('select-team-gespielt-gruen', teamsGruen, '-- Alle Grün --');
+            populateSelectOptions('select-team-offen-weiss', teamsWeiss, '-- Alle Weiß --');
+            populateSelectOptions('select-team-offen-gruen', teamsGruen, '-- Alle Grün --');
         }
 
-        function populateSelectOptions(elementId, teams) {
+        function populateSelectOptions(elementId, teams, defaultText) {
             const select = document.getElementById(elementId);
             if (!select) return;
             const currentVal = select.value;
-            // Erhalte die Standardoption
-            const defaultText = select.options[0] ? select.options[0].text : '-- Verein wählen --';
             select.innerHTML = `<option value="">${defaultText}</option>`;
             teams.forEach(team => {
                 const opt = document.createElement('option');
@@ -447,13 +466,13 @@
             renderSchedule("schedule-weiss-list", scheduleWeiss, dataWeiss);
             renderSchedule("schedule-gruen-list", scheduleGruen, dataGruen);
             
-            const selectedTeamGespieltWeiss = document.getElementById('select-team-gespielt-weiss').value;
-            const selectedTeamGespieltGruen = document.getElementById('select-team-gespielt-gruen').value;
-            const selectedTeamOffenWeiss = document.getElementById('select-team-offen-weiss').value;
-            const selectedTeamOffenGruen = document.getElementById('select-team-offen-gruen').value;
+            const selGespieltWeiss = document.getElementById('select-team-gespielt-weiss').value;
+            const selGespieltGruen = document.getElementById('select-team-gespielt-gruen').value;
+            const selOffenWeiss = document.getElementById('select-team-offen-weiss').value;
+            const selOffenGruen = document.getElementById('select-team-offen-gruen').value;
 
-            renderGroupContainer("weiss", dataWeiss, selectedTeamGespieltWeiss, selectedTeamOffenWeiss);
-            renderGroupContainer("gruen", dataGruen, selectedTeamGespieltGruen, selectedTeamOffenGruen);
+            renderGroupContainer("weiss", dataWeiss, selGespieltWeiss, selOffenWeiss);
+            renderGroupContainer("gruen", dataGruen, selGespieltGruen, selOffenGruen);
             
             calculateTable("weiss", dataWeiss);
             calculateTable("gruen", dataGruen);
@@ -541,11 +560,10 @@
 
             groupData.matches.forEach((m, index) => {
                 const isPlayed = m.homeGoals !== "" && m.awayGoals !== "";
-                
-                // Filterlogik anwenden
                 const filterTeam = isPlayed ? filterTeamGespielt : filterTeamOffen;
+
                 if (filterTeam && filterTeam !== "" && m.home !== filterTeam && m.away !== filterTeam) {
-                    return; // Überspringen, wenn der Verein nicht passt
+                    return; 
                 }
 
                 if (isPlayed) playedCount++;
@@ -669,20 +687,6 @@
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     const savedData = docSnap.data();
-                    if (savedData.weiss) {
-                        savedData.weiss.forEach((gMatch, idx) => {
-                            if (dataWeiss.matches[idx]) {
-                                dataWeiss.matches[idx].homeGoals = gMatch.homeGoals !== undefined ? gMatch.homeGoals : "";
-                                dataWeiss.matches.forEach((m, i) => {
-                                    if (savedData.weiss[i]) {
-                                        dataWeiss.matches[i].homeGoals = savedData.weiss[i].homeGoals !== undefined ? savedData.weiss[i].homeGoals : "";
-                                        dataWeiss.matches[i].awayGoals = savedData.weiss[i].awayGoals !== undefined ? savedData.weiss[i].awayGoals : "";
-                                    }
-                                });
-                            }
-                        });
-                    }
-                    // Clean re-assign for safety
                     if (savedData.weiss) {
                         savedData.weiss.forEach((gMatch, idx) => {
                             if (dataWeiss.matches[idx]) {
