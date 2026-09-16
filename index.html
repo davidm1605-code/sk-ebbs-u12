@@ -67,7 +67,7 @@
         .badge-finished { background: #ef4444; color: white; font-size: 0.6rem; font-weight: bold; padding: 2px 4px; border-radius: 4px; white-space: nowrap; }
         .badge-live { background: #eab308; color: #0f172a; font-size: 0.6rem; font-weight: bold; padding: 2px 4px; border-radius: 4px; white-space: nowrap; }
         
-        .cal-btn { background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; }
+        .cal-btn { background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
         .cal-btn:hover { background: #38bdf8; color: #0f172a; }
 
         .btn-container { margin-top: 16px; display: flex; gap: 8px; }
@@ -109,7 +109,9 @@
                     <h3>SK Ebbs U12 – Spieltermine (Weiß)</h3>
                     <p>Übersicht der Meisterschaftsspiele inklusive Echtzeit-Ergebnissen.</p>
                 </div>
-                <button class="cal-btn" onclick="downloadICS(scheduleWeiss, 'SK_Ebbs_U12_Weiss.ics')" style="padding: 6px 10px; font-size: 0.75rem;">📅 Alle Spiele in den Kalender</button>
+                <a class="cal-btn" href="https://www.google.com/calendar/render?cid=https%3A%2F%2Fcalendar.google.com%2Fcalendar%2Fical%2Fp86d072d0d23c4a9db738934f5e7ac1d668a85746%2540group.calendar.google.com%2Fpublic%2Fbasic.ics" target="_blank">
+                    📅 Kalenderfeed Gruppe WEISS
+                </a>
             </div>
             <div class="venue-legend">
                 <div>Links: <span>Heimspiel</span></div>
@@ -124,7 +126,9 @@
                     <h3>SK Ebbs U12 – Spieltermine (Grün)</h3>
                     <p>Übersicht der Meisterschaftsspiele inklusive Echtzeit-Ergebnissen.</p>
                 </div>
-                <button class="cal-btn" onclick="downloadICS(scheduleGruen, 'SK_Ebbs_U12_Gruen.ics')" style="padding: 6px 10px; font-size: 0.75rem;">📅 Alle Spiele in den Kalender</button>
+                <a class="cal-btn" href="https://www.google.com/calendar/render?cid=https%3A%2F%2Fcalendar.google.com%2Fcalendar%2Fical%2Fp38f0c160ae445108a82977ac301988024224a70f%2540group.calendar.google.com%2Fpublic%2Fbasic.ics" target="_blank">
+                    📅 Kalenderfeed Gruppe GRÜN
+                </a>
             </div>
             <div class="venue-legend">
                 <div>Links: <span>Heimspiel</span></div>
@@ -370,39 +374,6 @@
                 topBtn.innerHTML = inactiveText;
                 bottomBtn.innerHTML = inactiveText;
             }
-        }
-
-        function formatICSDate(isoString) {
-            const date = new Date(isoString);
-            return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-        }
-
-        window.downloadICS = function(list, filename) {
-            let icsContent = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//SK Ebbs U12//Spielplan//DE\n";
-            list.forEach(item => {
-                const startDate = new Date(item.iso);
-                const endDate = new Date(startDate.getTime() + 60 * 60000); // 1 Stunde Dauer
-                const startStr = formatICSDate(startDate);
-                const endStr = formatICSDate(endDate);
-
-                icsContent += "BEGIN:VEVENT\n";
-                icsContent += `UID:sk-ebbs-u12-${startDate.getTime()}-${item.home.replace(/[^a-zA-Z0-9]/g, '')}\n`;
-                icsContent += `DTSTAMP:${formatICSDate(new Date())}\n`;
-                icsContent += `DTSTART:${startStr}\n`;
-                icsContent += `DTEND:${endStr}\n`;
-                icsContent += `SUMMARY:${item.match}\n`;
-                icsContent += `DESCRIPTION:Meisterschaftsspiel SK Ebbs U12 (${item.round})\n`;
-                icsContent += "END:VEVENT\n";
-            });
-            icsContent += "END:VCALENDAR";
-
-            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-            const link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.setAttribute('download', filename);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
         }
 
         function renderAll() {
