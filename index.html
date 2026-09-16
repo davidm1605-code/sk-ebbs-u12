@@ -43,14 +43,14 @@
         </div>
 
         <div id="tab-termene-weiss" class="tab-content active">
-            <h2>SK Ebbs Weiß – Termine</h2>
-            <div class="info-text">Automatische Markierung nach Ablauf der Spielzeit (Anpfiff + 60 Min.).</div>
+            <h2>SK Ebbs Weiß (U12 B) – Termine</h2>
+            <div class="info-text">Nur Meisterschaftsspiele (60 Min. Spieldauer).</div>
             <div id="schedule-weiss-list"></div>
         </div>
 
         <div id="tab-termene-gruen" class="tab-content">
-            <h2>SK Ebbs Grün – Termine</h2>
-            <div class="info-text">Automatische Markierung nach Ablauf der Spielzeit (Anpfiff + 60 Min.).</div>
+            <h2>SK Ebbs Grün (U12 A) – Termine</h2>
+            <div class="info-text">Nur Meisterschaftsspiele (60 Min. Spieldauer).</div>
             <div id="schedule-gruen-list"></div>
         </div>
 
@@ -114,30 +114,26 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Exakte Termine der Meisterschaft für die neuen Reiter
+        // Exakte Meisterschaftstermine für SK Ebbs WEISS (U12 B)
         const scheduleWeiss = [
-            { round: "1. Rde", dateStr: "Fr, 04.09.2026 | 18:30", iso: "2026-09-04T18:30:00", match: "SKE A vs. St. Johann A (grün)" },
-            { round: "1. Rde", dateStr: "Fr, 04.09.2026 | 18:30", iso: "2026-09-04T18:30:00", match: "SKE B vs. Kufstein (weiß)" },
-            { round: "2. Rde", dateStr: "Sa, 12.09.2026 | 14:00", iso: "2026-09-12T14:00:00", match: "Walchsee vs. SKE A (weiß)" },
-            { round: "3. Rde", dateStr: "Sa, 19.09.2026 | 12:00", iso: "2026-09-19T12:00:00", match: "SKE A vs. Bichlach A in Ebbs (grün)" },
-            { round: "3. Rde", dateStr: "Sa, 19.09.2026 | 12:00", iso: "2026-09-19T12:00:00", match: "SKE B vs. Wörgl in Ebbs (weiß)" },
-            { round: "4. Rde", dateStr: "Fr, 25.09.2026 | 17:00", iso: "2026-09-25T17:00:00", match: "Erl vs. SKE A (weiß)" },
-            { round: "4. Rde", dateStr: "Sa, 26.09.2026 | 13:00", iso: "2026-09-26T13:00:00", match: "Söll vs. SKE B in Söll (grün)" },
-            { round: "5. Rde", dateStr: "Sa, 03.10.2026 | 11:30", iso: "2026-10-03T11:30:00", match: "SKE A vs. Waidring in Ebbs (grün)" },
-            { round: "5. Rde", dateStr: "Sa, 03.10.2026 | 11:30", iso: "2026-10-03T11:30:00", match: "SKE B vs. Bichlach B in Ebbs (weiß)" },
-            { round: "6. Rde", dateStr: "Mo, 05.10.2026 | 18:00", iso: "2026-10-05T18:00:00", match: "SPG Bichlach B in Ebbs vs. ... (weiß)" },
-            { round: "6. Rde", dateStr: "Sa, 10.10.2026 | 12:00", iso: "2026-10-10T12:00:00", match: "SKE B vs. Pillerseetal in Ebbs (grün)" },
-            { round: "6. Rde", dateStr: "So, 11.10.2026 | 14:30", iso: "2026-10-11T14:30:00", match: "Schwoich vs. SKE A in Schwoich (weiß)" },
-            { round: "7. Rde", dateStr: "Sa, 17.10.2026 | 11:30", iso: "2026-10-17T11:30:00", match: "U11: Kirchberg vs. SKE in Kirchberg (grün)" },
-            { round: "7. Rde", dateStr: "Sa, 17.10.2026 | 12:30", iso: "2026-10-17T12:30:00", match: "SKE vs. Niederndorf in Niederndorf (weiß)" },
-            { round: "8. Rde", dateStr: "Sa, 24.10.2026 | 12:00", iso: "2026-10-24T12:00:00", match: "Kössen vs. SKE A in Kössen (grün)" },
-            { round: "8. Rde", dateStr: "Sa, 24.10.2026 | 12:00", iso: "2026-10-24T12:00:00", match: "SKE B vs. St. Johann B in Ebbs (weiß)" },
-            { round: "9. Rde", dateStr: "Do, 29.10.2026 | 17:00", iso: "2026-10-29T17:00:00", match: "SKE A vs. Bruckhäusl in Ebbs (grün)" },
-            { round: "9. Rde", dateStr: "Fr, 30.10.2026 | 17:00", iso: "2026-10-30T17:00:00", match: "Bad Häring vs. SKE B in Bad Häring (weiß)" },
-            { round: "Zusatz", dateStr: "Sa, 31.10.2026 | 12:00", iso: "2026-10-31T12:00:00", match: "U11: Westendorf vs. SKE" }
+            { round: "1. Spiel", dateStr: "Sa, 19.09.2026 | 12:00", iso: "2026-09-19T12:00:00", match: "SV Wörgl in Ebbs (WEISS)" },
+            { round: "2. Spiel", dateStr: "Fr, 25.09.2026 | 17:00", iso: "2026-09-25T17:00:00", match: "SVG Erl in Erl (WEISS)" },
+            { round: "3. Spiel", dateStr: "Mo, 05.10.2026 | 18:00", iso: "2026-10-05T18:00:00", match: "SPG Bichlach B in Ebbs (WEISS)" },
+            { round: "4. Spiel", dateStr: "So, 11.10.2026 | 14:30", iso: "2026-10-11T14:30:00", match: "FC Schwoich in Schwoich (WEISS)" },
+            { round: "5. Spiel", dateStr: "Sa, 17.10.2026 | 12:30", iso: "2026-10-17T12:30:00", match: "SV Niederndorf in Niederndorf (WEISS)" },
+            { round: "6. Spiel", dateStr: "Sa, 24.10.2026 | 12:00", iso: "2026-10-24T12:00:00", match: "SK St. Johann B in Ebbs (WEISS)" },
+            { round: "7. Spiel", dateStr: "Fr, 30.10.2026 | 17:00", iso: "2026-10-30T17:00:00", match: "SV Bad Häring in Bad Häring (WEISS)" }
         ];
 
-        const scheduleGruen = scheduleWeiss;
+        // Exakte Meisterschaftstermine für SK Ebbs GRÜN (U12 A)
+        const scheduleGruen = [
+            { round: "1. Spiel", dateStr: "Sa, 19.09.2026 | 12:00", iso: "2026-09-19T12:00:00", match: "SPG Bichlach A in Ebbs (GRÜN)" },
+            { round: "2. Spiel", dateStr: "Sa, 26.09.2026 | 13:00", iso: "2026-09-26T13:00:00", match: "FC Söll in Söll (GRÜN)" },
+            { round: "3. Spiel", dateStr: "Sa, 03.10.2026 | 11:30", iso: "2026-10-03T11:30:00", match: "SK Waidring in Ebbs (GRÜN)" },
+            { round: "4. Spiel", dateStr: "Sa, 10.10.2026 | 12:00", iso: "2026-10-10T12:00:00", match: "SK Pillerseetal in Ebbs (GRÜN)" },
+            { round: "5. Spiel", dateStr: "Sa, 24.10.2026 | 12:00", iso: "2026-10-24T12:00:00", match: "FC Kössen in Kössen (GRÜN)" },
+            { round: "6. Spiel", dateStr: "Do, 29.10.2026 | 17:00", iso: "2026-10-29T17:00:00", match: "SV Bruckhäusl in Ebbs (GRÜN)" }
+        ];
 
         function generateAllMatches(teams) {
             const matches = [];
@@ -219,7 +215,7 @@
 
             list.forEach(item => {
                 const kickoff = new Date(item.iso);
-                const matchEnd = new Date(kickoff.getTime() + 60 * 60000); // 60 Min nach Anpfiff (U12 Spieldauer)
+                const matchEnd = new Date(kickoff.getTime() + 60 * 60000); // 60 Min U12 Spieldauer
                 
                 let cssClass = "";
                 let badgeHtml = "";
