@@ -54,7 +54,7 @@
         .schedule-row.finished { background: rgba(239, 68, 68, 0.15); border-left: 4px solid #ef4444; color: #fca5a5; }
         .schedule-row.live { background: rgba(234, 179, 8, 0.15); border-left: 4px solid #eab308; }
         
-        .schedule-header { display: flex; justify-content: space-between; width: 100%; font-size: 0.7rem; color: #94a3b8; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 3px; }
+        .schedule-header { display: flex; justify-content: space-between; width: 100%; font-size: 0.7rem; color: #94a3b8; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 3px; align-items: center; }
         .schedule-body { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 2px; }
         
         /* Feste Breiten für Heim- und Auswärtsteam, damit die Logos exakt fluchten */
@@ -67,6 +67,10 @@
         .badge-finished { background: #ef4444; color: white; font-size: 0.6rem; font-weight: bold; padding: 2px 4px; border-radius: 4px; white-space: nowrap; }
         .badge-live { background: #eab308; color: #0f172a; font-size: 0.6rem; font-weight: bold; padding: 2px 4px; border-radius: 4px; white-space: nowrap; }
         
+        /* Kalender-Button im Termin-Header */
+        .cal-btn { background: #334155; color: #38bdf8; border: 1px solid #475569; padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 3px; }
+        .cal-btn:hover { background: #38bdf8; color: #0f172a; border-color: #38bdf8; }
+
         .btn-container { margin-top: 16px; display: flex; gap: 8px; }
         button.action-btn { background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 50%; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 6px; }
         button.action-btn:hover { background: #38bdf8; color: #0f172a; }
@@ -323,7 +327,6 @@
         }
 
         window.filterGroup = function(tabName, groupType, btn) {
-            // Aktiven Button in der Filter-Leiste umschalten
             const container = btn.parentElement;
             container.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
@@ -426,12 +429,23 @@
                 const homeLogo = getTeamLogoHtml(item.home);
                 const awayLogo = getTeamLogoHtml(item.away);
 
+                // Google Calendar Link generieren
+                const title = encodeURIComponent(`SK Ebbs U12: ${item.match}`);
+                const details = encodeURIComponent(`Meisterschaftsspiel U12 Gruppe\nBegegnung: ${item.match}`);
+                const location = encodeURIComponent(item.home.includes("SK Ebbs") ? "Sportplatz Ebbs" : item.home);
+                
+                const startIso = item.iso.replace(/[-:]/g, '');
+                const endDate = new Date(kickoff.getTime() + 90 * 60000);
+                const endIso = endDate.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+                
+                const gCalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startIso}/${endIso}&details=${details}&location=${location}`;
+
                 const div = document.createElement("div");
                 div.className = `schedule-row ${cssClass}`;
                 div.innerHTML = `
                     <div class="schedule-header">
-                        <span>${item.round}</span>
-                        <span>${item.dateStr}</span>
+                        <span>${item.round} | ${item.dateStr}</span>
+                        <a href="${gCalUrl}" target="_blank" class="cal-btn">📅 + Kalender</a>
                     </div>
                     <div class="schedule-body">
                         <div class="schedule-team-home">
