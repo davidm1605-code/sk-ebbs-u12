@@ -395,13 +395,17 @@
             });
             icsContent += "END:VCALENDAR";
 
-            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+            // Auf Mobilgeräten (iOS/Android) erzwingen wir den Download über eine Data-URI
+            const encodedUri = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(icsContent);
             const link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
+            link.setAttribute('href', encodedUri);
             link.setAttribute('download', filename);
             document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            
+            setTimeout(() => {
+                link.click();
+                document.body.removeChild(link);
+            }, 50);
         }
 
         function renderAll() {
