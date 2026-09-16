@@ -13,17 +13,22 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         h2 { border-bottom: 2px solid #38bdf8; padding-bottom: 8px; margin-top: 24px; color: #38bdf8; font-size: 1.2rem; }
-        .match { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #334155; font-size: 0.9rem; }
-        .match input { width: 35px; text-align: center; background: #0f172a; border: 1px solid #475569; color: white; border-radius: 4px; padding: 4px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
-        th, td { padding: 8px; text-align: left; border-bottom: 1px solid #334155; }
-        th { background: #334155; color: #38bdf8; }
         
-        /* Feste Ausrichtung für Heim- und Auswärtsteams */
+        /* Spiel-Zeile im Bearbeitungs-Tab mit festem Raster */
+        .match { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #334155; font-size: 0.9rem; }
+        
+        /* Feste Breiten für absolute Geradlinigkeit */
+        .round { font-size: 0.8rem; color: #94a3b8; width: 60px; flex-shrink: 0; }
         .team-home { width: 140px; display: flex; align-items: center; gap: 6px; text-align: left; }
         .team-away { width: 140px; display: flex; align-items: center; justify-content: flex-end; gap: 6px; text-align: right; }
         
-        .round { font-size: 0.8rem; color: #94a3b8; width: 70px; flex-shrink: 0; }
+        /* Container für die Eingabefelder in der Mitte */
+        .score-inputs { display: flex; align-items: center; justify-content: center; gap: 6px; width: 90px; flex-shrink: 0; }
+        .match input { width: 35px; height: 28px; text-align: center; background: #0f172a; border: 1px solid #475569; color: white; border-radius: 4px; padding: 2px; font-size: 0.9rem; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
+        th, td { padding: 8px; text-align: left; border-bottom: 1px solid #334155; }
+        th { background: #334155; color: #38bdf8; }
         
         /* Echte Wappen-Form (oben abgerundet, unten spitz) */
         .team-shield { 
@@ -352,8 +357,11 @@
                 div.innerHTML = `
                     <span class="round">${m.round}</span>
                     <div class="team-home">${homeLogo} <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.home}</span></div>
-                    <input type="text" id="${groupKey}-h-${index}" value="${m.homeGoals}" oninput="syncAndUpdate()"> : 
-                    <input type="text" id="${groupKey}-a-${index}" value="${m.awayGoals}" oninput="syncAndUpdate()">
+                    <div class="score-inputs">
+                        <input type="text" id="${groupKey}-h-${index}" value="${m.homeGoals}" oninput="syncAndUpdate()"> 
+                        <span>:</span> 
+                        <input type="text" id="${groupKey}-a-${index}" value="${m.awayGoals}" oninput="syncAndUpdate()">
+                    </div>
                     <div class="team-away"><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.away}</span> ${awayLogo}</div>
                 `;
                 targetContainer.appendChild(div);
