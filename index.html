@@ -3,655 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SK Ebbs U12 - Spielplan & Tabelle</title>
+    <title>Jugendfussball Spielplan & Tabelle</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #0f172a; color: #f8fafc; margin: 0; padding: 8px; box-sizing: border-box; }
-        .container { max-width: 600px; margin: 0 auto; background: #1e293b; padding: 12px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); box-sizing: border-box; overflow: hidden; }
-        .tabs { display: flex; gap: 4px; margin-bottom: 12px; border-bottom: 2px solid #334155; padding-bottom: 8px; flex-wrap: wrap; }
-        .tab-btn { background: #334155; color: #94a3b8; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.75rem; flex-grow: 1; text-align: center; }
-        .tab-btn.active { background: #38bdf8; color: #0f172a; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        h2 { border-bottom: 2px solid #38bdf8; padding-bottom: 6px; margin-top: 20px; color: #38bdf8; font-size: 1rem; }
-        
-        /* Filter-Chips für Gespielt / Offen Tabs */
-        .filter-chips { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
-        .filter-chip { background: #334155; color: #94a3b8; border: none; padding: 4px 10px; border-radius: 16px; cursor: pointer; font-size: 0.7rem; font-weight: bold; }
-        .filter-chip.active { background: #38bdf8; color: #0f172a; }
-
-        /* Spiel-Zeile im Bearbeitungs-Tab (optimiert für Smartphones) */
-        .match { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #334155; font-size: 0.75rem; gap: 2px; }
-        .match .round { width: 42px; font-size: 0.7rem; color: #94a3b8; flex-shrink: 0; }
-        .match .team-home { flex: 1; display: flex; align-items: center; gap: 3px; text-align: left; overflow: hidden; min-width: 0; }
-        .match .team-away { flex: 1; display: flex; align-items: center; justify-content: flex-end; gap: 3px; text-align: right; overflow: hidden; min-width: 0; }
-        .score-inputs { display: flex; align-items: center; justify-content: center; gap: 2px; width: 65px; flex-shrink: 0; }
-        .match input { width: 26px; height: 24px; text-align: center; background: #0f172a; border: 1px solid #475569; color: white; border-radius: 4px; font-size: 0.8rem; padding: 0; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.75rem; }
-        th, td { padding: 5px; text-align: left; border-bottom: 1px solid #334155; }
-        th { background: #334155; color: #38bdf8; }
-        
-        /* Echte Wappen-Form */
-        .team-shield { 
-            width: 18px; 
-            height: 22px; 
-            display: inline-flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 0.45rem; 
-            font-weight: bold; 
-            color: white; 
-            flex-shrink: 0; 
-            box-shadow: 0 1px 3px rgba(0,0,0,0.4); 
-            text-transform: uppercase; 
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 3px 3px 8px 8px; 
-            padding-bottom: 2px;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
         }
-        
-        /* Spieltermine-Zeile (mit festen Spalten für perfekte Ausrichtung) */
-        .schedule-row { display: flex; flex-direction: column; padding: 8px; border-bottom: 1px solid #334155; font-size: 0.8rem; border-radius: 6px; margin-bottom: 6px; background: rgba(255,255,255,0.02); gap: 4px; }
-        .schedule-row.finished { background: rgba(239, 68, 68, 0.15); border-left: 4px solid #ef4444; color: #fca5a5; }
-        .schedule-row.live { background: rgba(234, 179, 8, 0.15); border-left: 4px solid #eab308; }
-        
-        .schedule-header { display: flex; justify-content: space-between; width: 100%; font-size: 0.7rem; color: #94a3b8; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 3px; }
-        .schedule-body { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 2px; }
-        
-        /* Feste Breiten für Heim- und Auswärtsteam, damit die Logos exakt fluchten */
-        .schedule-team-home { display: flex; align-items: center; gap: 3px; width: 42%; overflow: hidden; min-width: 0; text-align: left; }
-        .schedule-vs { color: #94a3b8; flex-shrink: 0; text-align: center; width: 20px; font-size: 0.75rem; }
-        .schedule-team-away { display: flex; align-items: center; justify-content: flex-end; gap: 3px; width: 42%; overflow: hidden; min-width: 0; text-align: right; }
-        
-        .schedule-score-box { display: flex; align-items: center; justify-content: flex-end; gap: 6px; width: 100px; flex-shrink: 0; text-align: right; }
-        
-        .badge-finished { background: #ef4444; color: white; font-size: 0.6rem; font-weight: bold; padding: 2px 4px; border-radius: 4px; white-space: nowrap; }
-        .badge-live { background: #eab308; color: #0f172a; font-size: 0.6rem; font-weight: bold; padding: 2px 4px; border-radius: 4px; white-space: nowrap; }
-        
-        .cal-btn { background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; padding: 6px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; width: 100%; justify-content: center; margin-bottom: 10px; box-sizing: border-box; }
-        .cal-btn:hover { background: #38bdf8; color: #0f172a; }
-
-        .btn-container { margin-top: 16px; display: flex; gap: 8px; }
-        button.action-btn { background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 50%; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 6px; }
-        button.action-btn:hover { background: #38bdf8; color: #0f172a; }
-        
-        /* Schreibmodus Steuerung */
-        .editable-mode .match input { pointer-events: auto; background: #0f172a; border-color: #38bdf8; }
-        .readonly-mode .match input { pointer-events: none; background: #1e293b; border-color: #334155; color: #94a3b8; }
-        
-        .info-box { background: rgba(56, 189, 248, 0.1); border-left: 4px solid #38bdf8; padding: 8px; border-radius: 6px; margin-bottom: 8px; }
-        .info-box h3 { margin: 0 0 3px 0; color: #38bdf8; font-size: 0.9rem; }
-        .info-box p { margin: 0; font-size: 0.75rem; color: #94a3b8; }
-        
-        /* Legende für Heim / Auswärts */
-        .venue-legend { display: flex; justify-content: space-between; font-size: 0.7rem; color: #94a3b8; padding: 0 4px 8px 4px; margin-bottom: 6px; border-bottom: 1px dashed #334155; }
-        .venue-legend span { font-weight: bold; color: #38bdf8; }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #0056b3;
+        }
+        .filter-section {
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .filter-section label {
+            font-weight: bold;
+        }
+        .filter-section select {
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #0056b3;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
     </style>
 </head>
-<body class="readonly-mode">
-    <div class="container">
-        <div class="tabs">
-            <button class="tab-btn" onclick="switchTab('termene-weiss', event)">Termine weiß</button>
-            <button class="tab-btn" onclick="switchTab('termene-gruen', event)">Termine grün</button>
-            <button class="tab-btn active" onclick="switchTab('gespielt', event)">Gespielt</button>
-            <button class="tab-btn" onclick="switchTab('offen', event)">Offen</button>
-            <button class="tab-btn" onclick="switchTab('tabelle', event)">Tabelle</button>
-        </div>
+<body>
 
-        <div id="tab-termene-weiss" class="tab-content">
-            <div class="info-box">
-                <h3>SK Ebbs U12 – Spieltermine (Weiß)</h3>
-                <p>Übersicht der Meisterschaftsspiele inklusive Echtzeit-Ergebnissen.</p>
-            </div>
-            <button class="cal-btn" onclick="downloadICS('weiss')">
-                📅 Alle Termine Gruppe WEISS in den Kalender laden
-            </button>
-            <div class="venue-legend">
-                <div>Links: <span>Heimspiel</span></div>
-                <div>Rechts: <span>Auswärtsspiel</span></div>
-            </div>
-            <div id="schedule-weiss-list"></div>
-        </div>
-
-        <div id="tab-termene-gruen" class="tab-content">
-            <div class="info-box">
-                <h3>SK Ebbs U12 – Spieltermine (Grün)</h3>
-                <p>Übersicht der Meisterschaftsspiele inklusive Echtzeit-Ergebnissen.</p>
-            </div>
-            <button class="cal-btn" onclick="downloadICS('gruen')">
-                📅 Alle Termine Gruppe GRÜN in den Kalender laden
-            </button>
-            <div class="venue-legend">
-                <div>Links: <span>Heimspiel</span></div>
-                <div>Rechts: <span>Auswärtsspiel</span></div>
-            </div>
-            <div id="schedule-gruen-list"></div>
-        </div>
-
-        <div id="tab-gespielt" class="tab-content active">
-            <div class="btn-container" style="margin-top: 0; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 2px solid #334155;">
-                <button class="action-btn" id="toggle-btn-top-gespielt" onclick="toggleEditMode()">🔒 Schreibmodus Aus</button>
-                <button class="action-btn" onclick="triggerUpdate()" style="border-color: #22c55e; color: #22c55e;">💾 Speichern</button>
-            </div>
-
-            <div class="filter-chips">
-                <button class="filter-chip active" onclick="filterGroup('gespielt', 'all', this)">Alle</button>
-                <button class="filter-chip" onclick="filterGroup('gespielt', 'weiss', this)">Gruppe Weiß</button>
-                <button class="filter-chip" onclick="filterGroup('gespielt', 'gruen', this)">Gruppe Grün</button>
-            </div>
-            <div id="section-gespielt-weiss">
-                <h2>Gruppe WEISS - Berechnete Ergebnisse</h2>
-                <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 8px; font-style: italic;">Diese Spiele fließen bereits in die Wertung ein.</div>
-                <div id="matches-weiss-played"></div>
-            </div>
-
-            <div id="section-gespielt-gruen" style="margin-top: 15px;">
-                <h2>Gruppe GRÜN - Berechnete Ergebnisse</h2>
-                <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 8px; font-style: italic;">Diese Spiele fließen bereits in die Wertung ein.</div>
-                <div id="matches-gruen-played"></div>
-            </div>
-        </div>
-
-        <div id="tab-offen" class="tab-content">
-            <div class="btn-container" style="margin-top: 0; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 2px solid #334155;">
-                <button class="action-btn" id="toggle-btn-top-offen" onclick="toggleEditMode()">🔒 Schreibmodus Aus</button>
-                <button class="action-btn" onclick="triggerUpdate()" style="border-color: #22c55e; color: #22c55e;">💾 Speichern</button>
-            </div>
-
-            <div class="filter-chips">
-                <button class="filter-chip active" onclick="filterGroup('offen', 'all', this)">Alle</button>
-                <button class="filter-chip" onclick="filterGroup('offen', 'weiss', this)">Gruppe Weiß</button>
-                <button class="filter-chip" onclick="filterGroup('offen', 'gruen', this)">Gruppe Grün</button>
-            </div>
-            <div id="section-offen-weiss">
-                <h2>Gruppe WEISS - Noch offene Spiele</h2>
-                <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 8px; font-style: italic;">Trage hier die Tore ein, sobald die Partien absolviert sind.</div>
-                <div id="matches-weiss-open"></div>
-            </div>
-
-            <div id="section-offen-gruen" style="margin-top: 15px;">
-                <h2>Gruppe GRÜN - Noch offene Spiele</h2>
-                <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 8px; font-style: italic;">Trage hier die Tore ein, sobald die Partien absolviert sind.</div>
-                <div id="matches-gruen-open"></div>
-            </div>
-        </div>
-
-        <div id="tab-tabelle" class="tab-content">
-            <h2>Tabelle Gruppe WEISS</h2>
-            <table>
-                <thead>
-                    <tr><th>#</th><th>TEAM</th><th>SP</th><th>TORE</th><th>PKT</th></tr>
-                </thead>
-                <tbody id="table-weiss"></tbody>
-            </table>
-
-            <h2>Tabelle Gruppe GRÜN</h2>
-            <table>
-                <thead>
-                    <tr><th>#</th><th>TEAM</th><th>SP</th><th>TORE</th><th>PKT</th></tr>
-                </thead>
-                <tbody id="table-gruen"></tbody>
-            </table>
-        </div>
-
-        <div class="btn-container">
-            <button class="action-btn" id="toggle-btn-bottom" onclick="toggleEditMode()">🔒 Schreibmodus Aus</button>
-            <button class="action-btn" onclick="triggerUpdate()" style="border-color: #22c55e; color: #22c55e;">💾 Speichern</button>
-        </div>
+<div class="container">
+    <h1>Jugendfussball Spielplan</h1>
+    
+    <!-- Team-Filter Leiste -->
+    <div class="filter-section">
+        <label for="teamFilter">Nach Mannschaft filtern:</label>
+        <select id="teamFilter" onchange="filterMatches()">
+            <option value="alle">Alle Mannschaften anzeigen</option>
+            <!-- Optionen werden dynamisch per JavaScript gefüllt oder können ergänzt werden -->
+        </select>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    <!-- Spielplan Tabelle -->
+    <table id="matchTable">
+        <thead>
+            <tr>
+                <th>Zeit / Datum</th>
+                <th>Heimteam</th>
+                <th>Gastteam</th>
+                <th>Ergebnis</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Beispiel-Einträge (Hier kommen deine echten Spieldaten rein) -->
+            <tr>
+                <td>10:00</td>
+                <td>SK Ebbs</td>
+                <td>FC Kufstein</td>
+                <td>- : -</td>
+            </tr>
+            <tr>
+                <td>11:00</td>
+                <td>FC Kufstein</td>
+                <td>Team C</td>
+                <td>- : -</td>
+            </tr>
+            <tr>
+                <td>12:00</td>
+                <td>Team D</td>
+                <td>SK Ebbs</td>
+                <td>- : -</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDlkQPYaygg7CDYpNYfvFJUq83ylMGfAoo",
-            authDomain: "sk-ebbs-u12.firebaseapp.com",
-            projectId: "sk-ebbs-u12",
-            storageBucket: "sk-ebbs-u12.firebasestorage.app",
-            messagingSenderId: "1066194709918",
-            appId: "1:1066194709918:web:e20e84524f4fc12c6a3a8f",
-            measurementId: "G-Q7PZ4HCBZ6"
-        };
+<script>
+    // Funktion zum Extrahieren aller Mannschaften und Füllen des Dropdowns
+    function populateTeamFilter() {
+        const table = document.getElementById('matchTable');
+        const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+        const teamSelect = document.getElementById('teamFilter');
+        const teams = new Set();
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        const teamConfigs = {
-            "SK Ebbs": { label: "SKE", color: "#15803d" },
-            "Waidring": { label: "WAI", color: "#b91c1c" },
-            "Pillerseetal": { label: "PIL", color: "#2563eb" },
-            "Kirchberg (U11)": { label: "KIR", color: "#eab308" },
-            "Bruckhäusl": { label: "BRU", color: "#1d4ed8" },
-            "Söll": { label: "SÖL", color: "#ca8a04" },
-            "Walchsee": { label: "WAL", color: "#eab308" },
-            "Kufstein": { label: "KUF", color: "#0284c7" },
-            "Kössen": { label: "KÖS", color: "#1e293b" },
-            "Bad Häring sv.": { label: "HÄR", color: "#eab308" },
-            "Schwoich": { label: "SCH", color: "#dc2626" },
-            "Erl": { label: "ERL", color: "#b91c1c" },
-            "Oberndorf": { label: "OBE", color: "#0f172a" },
-            "Niederndorf": { label: "NIE", color: "#b91c1c" },
-            "Kundl/Breitenbach": { label: "KUB", color: "#2563eb" },
-            "Wörgl": { label: "WÖG", color: "#475569" },
-            "Bichlach A": { label: "BIA", color: "#047857" },
-            "Bichlach B": { label: "BIB", color: "#047857" },
-            "St.Johann A": { label: "STA", color: "#1d4ed8" },
-            "St.Johann B": { label: "STB", color: "#1d4ed8" }
-        };
-
-        function getTeamLogoHtml(teamName) {
-            const conf = teamConfigs[teamName] || { label: teamName.substring(0, 3).toUpperCase(), color: "#334155" };
-            return `<div class="team-shield" style="background-color: ${conf.color};">${conf.label}</div>`;
+        for (let row of rows) {
+            const homeTeam = row.cells[1].innerText.trim();
+            const awayTeam = row.cells[2].innerText.trim();
+            if (homeTeam) teams.add(homeTeam);
+            if (awayTeam) teams.add(awayTeam);
         }
 
-        const scheduleWeiss = [
-            { round: "1. Rde", dateStr: "Fr, 04.09.2026 | 18:30", iso: "2026-09-04T18:30:00", match: "SK Ebbs vs. Kufstein", home: "SK Ebbs", away: "Kufstein" },
-            { round: "2. Rde", dateStr: "Sa, 12.09.2026 | 14:00", iso: "2026-09-12T14:00:00", match: "Walchsee vs. SK Ebbs", home: "Walchsee", away: "SK Ebbs" },
-            { round: "3. Rde", dateStr: "Sa, 19.09.2026 | 12:00", iso: "2026-09-19T12:00:00", match: "SK Ebbs vs. SV Wörgl", home: "SK Ebbs", away: "Wörgl" },
-            { round: "4. Rde", dateStr: "Fr, 25.09.2026 | 17:00", iso: "2026-09-25T17:00:00", match: "SVG Erl vs. SK Ebbs", home: "Erl", away: "SK Ebbs" },
-            { round: "5. Rde", dateStr: "Mo, 05.10.2026 | 18:00", iso: "2026-10-05T18:00:00", match: "SK Ebbs vs. Bichlach B", home: "SK Ebbs", away: "Bichlach B" },
-            { round: "6. Rde", dateStr: "So, 11.10.2026 | 14:30", iso: "2026-10-11T14:30:00", match: "FC Schwoich vs. SK Ebbs", home: "Schwoich", away: "SK Ebbs" },
-            { round: "7. Rde", dateStr: "Sa, 17.10.2026 | 12:30", iso: "2026-10-17T12:30:00", match: "SV Niederndorf vs. SK Ebbs", home: "Niederndorf", away: "SK Ebbs" },
-            { round: "8. Rde", dateStr: "Sa, 24.10.2026 | 12:00", iso: "2026-10-24T12:00:00", match: "SK Ebbs vs. St. Johann B", home: "SK Ebbs", away: "St.Johann B" },
-            { round: "9. Rde", dateStr: "Fr, 30.10.2026 | 17:00", iso: "2026-10-30T17:00:00", match: "FC Bad Häring vs. SK Ebbs", home: "Bad Häring sv.", away: "SK Ebbs" }
-        ];
+        // Teams alphabetisch sortieren und als Optionen hinzufügen
+        Array.from(teams).sort().forEach(team => {
+            const option = document.createElement('option');
+            option.value = team;
+            option.textContent = team;
+            teamSelect.appendChild(option);
+        });
+    }
 
-        const scheduleGruen = [
-            { round: "1. Rde", dateStr: "Fr, 04.09.2026 | 18:30", iso: "2026-09-04T18:30:00", match: "SK Ebbs vs. St. Johann A", home: "SK Ebbs", away: "St.Johann A" },
-            { round: "2. Rde", dateStr: "Fr, 11.09.2026 | 17:00", iso: "2026-09-11T17:00:00", match: "Kundl/Breitenbach vs. SK Ebbs", home: "Kundl/Breitenbach", away: "SK Ebbs" },
-            { round: "3. Rde", dateStr: "Sa, 19.09.2026 | 12:00", iso: "2026-09-19T12:00:00", match: "SK Ebbs vs. Bichlach A", home: "SK Ebbs", away: "Bichlach A" },
-            { round: "4. Rde", dateStr: "Sa, 26.09.2026 | 13:00", iso: "2026-09-26T13:00:00", match: "FC Söll vs. SK Ebbs", home: "Söll", away: "SK Ebbs" },
-            { round: "5. Rde", dateStr: "Sa, 03.10.2026 | 11:30", iso: "2026-10-03T11:30:00", match: "SK Ebbs vs. SK Waidring", home: "SK Ebbs", away: "Waidring" },
-            { round: "6. Rde", dateStr: "Sa, 10.10.2026 | 12:00", iso: "2026-10-10T12:00:00", match: "SK Ebbs vs. SK Pillerseetal", home: "SK Ebbs", away: "Pillerseetal" },
-            { round: "7. Rde", dateStr: "Sa, 17.10.2026 | 11:30", iso: "2026-10-17T11:30:00", match: "SC Kirchberg vs. SK Ebbs", home: "Kirchberg (U11)", away: "SK Ebbs" },
-            { round: "8. Rde", dateStr: "Sa, 24.10.2026 | 12:00", iso: "2026-10-24T12:00:00", match: "FC Kössen vs. SK Ebbs", home: "Kössen", away: "SK Ebbs" },
-            { round: "9. Rde", dateStr: "Do, 29.10.2026 | 17:00", iso: "2026-10-29T17:00:00", match: "SK Ebbs vs. SV Bruckhäusl", home: "SK Ebbs", away: "Bruckhäusl" }
-        ];
+    // Filter-Funktion, wenn eine Mannschaft ausgewählt wird
+    function filterMatches() {
+        const selectedTeam = document.getElementById('teamFilter').value;
+        const table = document.getElementById('matchTable');
+        const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
 
-        function generateAllMatches(teams) {
-            const matches = [];
-            let roundCounter = 1;
-            for (let i = 0; i < teams.length; i++) {
-                for (let j = i + 1; j < teams.length; j++) {
-                    matches.push({
-                        round: `${roundCounter}. Rde`,
-                        home: teams[i],
-                        away: teams[j],
-                        homeGoals: "",
-                        awayGoals: ""
-                    });
-                    roundCounter++;
-                }
-            }
-            return matches;
-        }
+        for (let row of rows) {
+            const homeTeam = row.cells[1].innerText.trim();
+            const awayTeam = row.cells[2].innerText.trim();
 
-        const teamsWeiss = ["SK Ebbs", "Wörgl", "Erl", "Schwoich", "Niederndorf", "Bad Häring sv.", "St.Johann B", "Walchsee", "Kufstein", "Bichlach B"];
-        const teamsGruen = ["SK Ebbs", "Bichlach A", "Bruckhäusl", "Kirchberg (U11)", "Kössen", "Pillerseetal", "Söll", "Waidring", "Kundl/Breitenbach", "St.Johann A"];
-
-        const initialWeissResults = {
-            "SK Ebbs-Kufstein": { h: "7", a: "3" },
-            "Walchsee-SK Ebbs": { h: "1", a: "4" },
-            "Niederndorf-Bichlach B": { h: "4", a: "2" },
-            "Erl-Niederndorf": { h: "7", a: "2" },
-            "Schwoich-Erl": { h: "2", a: "1" },
-            "Wörgl-Bichlach B": { h: "8", a: "1" }
-        };
-
-        const initialGruenResults = {
-            "SK Ebbs-St.Johann A": { h: "8", a: "2" },
-            "Kundl/Breitenbach-SK Ebbs": { h: "1", a: "4" }
-        };
-
-        function populateMatches(teams, initialResults) {
-            const generated = generateAllMatches(teams);
-            return generated.map(m => {
-                const key1 = `${m.home}-${m.away}`;
-                const key2 = `${m.away}-${m.home}`;
-                if (initialResults[key1]) {
-                    m.homeGoals = initialResults[key1].h;
-                    m.awayGoals = initialResults[key1].a;
-                } else if (initialResults[key2]) {
-                    m.homeGoals = initialResults[key2].a;
-                    m.awayGoals = initialResults[key2].h;
-                }
-                return m;
-            });
-        }
-
-        let dataWeiss = { teams: teamsWeiss, matches: populateMatches(teamsWeiss, initialWeissResults) };
-        let dataGruen = { teams: teamsGruen, matches: populateMatches(teamsGruen, initialGruenResults) };
-
-        window.switchTab = function(tabId, evt) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById(`tab-${tabId}`).classList.add('active');
-            if (evt && evt.target) {
-                evt.target.classList.add('active');
-            }
-        }
-
-        window.filterGroup = function(tabName, groupType, btn) {
-            const container = btn.parentElement;
-            container.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            const secWeiss = document.getElementById(`section-${tabName}-weiss`);
-            const secGruen = document.getElementById(`section-${tabName}-gruen`);
-
-            if (groupType === 'all') {
-                secWeiss.style.display = 'block';
-                secGruen.style.display = 'block';
-            } else if (groupType === 'weiss') {
-                secWeiss.style.display = 'block';
-                secGruen.style.display = 'none';
-            } else if (groupType === 'gruen') {
-                secWeiss.style.display = 'none';
-                secGruen.style.display = 'block';
-            }
-        }
-
-        window.toggleEditMode = function() {
-            const body = document.body;
-            const topGespieltBtn = document.getElementById("toggle-btn-top-gespielt");
-            const topOffenBtn = document.getElementById("toggle-btn-top-offen");
-            const bottomBtn = document.getElementById("toggle-btn-bottom");
-            
-            if (body.classList.contains("readonly-mode")) {
-                body.classList.remove("readonly-mode");
-                body.classList.add("editable-mode");
-                const activeText = "🔓 Schreibmodus Ein";
-                if (topGespieltBtn) topGespieltBtn.innerHTML = activeText;
-                if (topOffenBtn) topOffenBtn.innerHTML = activeText;
-                bottomBtn.innerHTML = activeText;
+            if (selectedTeam === 'alle' || homeTeam === selectedTeam || awayTeam === selectedTeam) {
+                row.style.display = '';
             } else {
-                body.classList.remove("editable-mode");
-                body.classList.add("readonly-mode");
-                const inactiveText = "🔒 Schreibmodus Aus";
-                if (topGespieltBtn) topGespieltBtn.innerHTML = inactiveText;
-                if (topOffenBtn) topOffenBtn.innerHTML = inactiveText;
-                bottomBtn.innerHTML = inactiveText;
+                row.style.display = 'none';
             }
         }
+    }
 
-        window.downloadICS = function(group) {
-            const list = group === 'weiss' ? scheduleWeiss : scheduleGruen;
-            const groupName = group === 'weiss' ? 'WEISS' : 'GRÜN';
-            
-            let icsContent = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//SK Ebbs U12//Spielplan//DE\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\n";
-            
-            list.forEach(item => {
-                const startDate = new Date(item.iso);
-                const endDate = new Date(startDate.getTime() + 90 * 60000);
-                
-                function formatICSDate(date) {
-                    return date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
-                }
+    // Beim Laden der Seite die Dropdown-Liste initialisieren
+    window.onload = function() {
+        populateTeamFilter();
+    };
+</script>
 
-                icsContent += "BEGIN:VEVENT\n";
-                icsContent += `UID:sk-ebbs-u12-${group}-${item.round.replace(/[^a-zA-Z0-9]/g, "")}@skebbs.local\n`;
-                icsContent += `DTSTAMP:${formatICSDate(new Date())}\n`;
-                icsContent += `DTSTART:${formatICSDate(startDate)}\n`;
-                icsContent += `DTEND:${formatICSDate(endDate)}\n`;
-                icsContent += `SUMMARY:SK Ebbs U12 (${groupName}) - ${item.match}\n`;
-                icsContent += `DESCRIPTION:Meisterschaftsspiel U12 Gruppe ${groupName}\\nRunde: ${item.round}\n`;
-                icsContent += "END:VEVENT\n";
-            });
-            
-            icsContent += "END:VCALENDAR";
-
-            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `SK_Ebbs_U12_Gruppe_${groupName}.ics`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-        }
-
-        function renderAll() {
-            renderSchedule("schedule-weiss-list", scheduleWeiss, dataWeiss);
-            renderSchedule("schedule-gruen-list", scheduleGruen, dataGruen);
-            renderGroupContainer("weiss", dataWeiss);
-            renderGroupContainer("gruen", dataGruen);
-            calculateTable("weiss", dataWeiss);
-            calculateTable("gruen", dataGruen);
-        }
-
-        function findMatchGoals(groupData, homeTeam, awayTeam) {
-            const match = groupData.matches.find(m => 
-                (m.home === homeTeam && m.away === awayTeam) || 
-                (m.home === awayTeam && m.away === homeTeam)
-            );
-            if (!match) return null;
-            if (match.home === homeTeam) {
-                return { h: match.homeGoals, a: match.awayGoals };
-            } else {
-                return { h: match.awayGoals, a: match.homeGoals };
-            }
-        }
-
-        function renderSchedule(containerId, list, groupData) {
-            const container = document.getElementById(containerId);
-            container.innerHTML = "";
-            const now = new Date();
-
-            list.forEach(item => {
-                const kickoff = new Date(item.iso);
-                const matchEnd = new Date(kickoff.getTime() + 60 * 60000);
-                
-                let cssClass = "";
-                let badgeHtml = "";
-                let scoreText = "";
-
-                const goals = findMatchGoals(groupData, item.home, item.away);
-                const hasScore = goals && goals.h !== "" && goals.a !== "";
-
-                if (hasScore || now >= matchEnd) {
-                    cssClass = "finished";
-                    badgeHtml = '<span class="badge-finished">BEENDET</span>';
-                    if (hasScore) {
-                        scoreText = `<span style="font-weight: bold; font-size: 0.8rem; color: #f8fafc;">${goals.h}:${goals.a}</span>`;
-                    }
-                } else if (now >= kickoff && now < matchEnd) {
-                    cssClass = "live";
-                    badgeHtml = '<span class="badge-live">LÄUFT</span>';
-                    if (hasScore) {
-                        scoreText = `<span style="font-weight: bold; font-size: 0.8rem; color: #f8fafc;">${goals.h}:${goals.a}</span>`;
-                    }
-                }
-
-                const homeLogo = getTeamLogoHtml(item.home);
-                const awayLogo = getTeamLogoHtml(item.away);
-
-                const div = document.createElement("div");
-                div.className = `schedule-row ${cssClass}`;
-                div.innerHTML = `
-                    <div class="schedule-header">
-                        <span>${item.round}</span>
-                        <span>${item.dateStr}</span>
-                    </div>
-                    <div class="schedule-body">
-                        <div class="schedule-team-home">
-                            ${homeLogo} <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${item.home}</span>
-                        </div>
-                        <div class="schedule-vs">vs.</div>
-                        <div class="schedule-team-away">
-                            <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${item.away}</span> ${awayLogo}
-                        </div>
-                        <div class="schedule-score-box">
-                            ${scoreText}
-                            <div>${badgeHtml}</div>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        function renderGroupContainer(groupKey, groupData) {
-            const playedContainer = document.getElementById(`matches-${groupKey}-played`);
-            const openContainer = document.getElementById(`matches-${groupKey}-open`);
-            playedContainer.innerHTML = "";
-            openContainer.innerHTML = "";
-
-            groupData.matches.forEach((m, index) => {
-                const isPlayed = m.homeGoals !== "" && m.awayGoals !== "";
-                const targetContainer = isPlayed ? playedContainer : openContainer;
-
-                const homeLogo = getTeamLogoHtml(m.home);
-                const awayLogo = getTeamLogoHtml(m.away);
-
-                const div = document.createElement("div");
-                div.className = "match";
-                div.innerHTML = `
-                    <span class="round">${m.round}</span>
-                    <div class="team-home">${homeLogo} <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.home}</span></div>
-                    <div class="score-inputs">
-                        <input type="text" id="${groupKey}-h-${index}" value="${m.homeGoals}" oninput="syncAndUpdate()"> 
-                        <span>:</span> 
-                        <input type="text" id="${groupKey}-a-${index}" value="${m.awayGoals}" oninput="syncAndUpdate()">
-                    </div>
-                    <div class="team-away"><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.away}</span> ${awayLogo}</div>
-                `;
-                targetContainer.appendChild(div);
-            });
-        }
-
-        function collectValues(groupKey, groupData) {
-            groupData.matches.forEach((m, index) => {
-                const hInput = document.getElementById(`${groupKey}-h-${index}`);
-                const aInput = document.getElementById(`${groupKey}-a-${index}`);
-                if (hInput && aInput) {
-                    m.homeGoals = hInput.value.trim();
-                    m.awayGoals = aInput.value.trim();
-                }
-            });
-        }
-
-        window.syncAndUpdate = function() {
-            collectValues("weiss", dataWeiss);
-            collectValues("gruen", dataGruen);
-            renderSchedule("schedule-weiss-list", scheduleWeiss, dataWeiss);
-            renderSchedule("schedule-gruen-list", scheduleGruen, dataGruen);
-            calculateTable("weiss", dataWeiss);
-            calculateTable("gruen", dataGruen);
-        }
-
-        function calculateTable(groupKey, groupData) {
-            const stats = {};
-            groupData.teams.forEach(team => {
-                stats[team] = { sp: 0, goalsFor: 0, goalsAgainst: 0, pts: 0 };
-            });
-
-            groupData.matches.forEach((m) => {
-                const hVal = m.homeGoals;
-                const aVal = m.awayGoals;
-
-                if (hVal !== "" && aVal !== "" && !isNaN(hVal) && !isNaN(aVal)) {
-                    const hG = parseInt(hVal);
-                    const aG = parseInt(aVal);
-
-                    if (stats[m.home]) {
-                        stats[m.home].sp += 1;
-                        stats[m.home].goalsFor += hG;
-                        stats[m.home].goalsAgainst += aG;
-                    }
-                    if (stats[m.away]) {
-                        stats[m.away].sp += 1;
-                        stats[m.away].goalsFor += aG;
-                        stats[m.away].goalsAgainst += hG;
-                    }
-
-                    if (hG > aG) {
-                        if (stats[m.home]) stats[m.home].pts += 3;
-                    } else if (hG < aG) {
-                        if (stats[m.away]) stats[m.away].pts += 3;
-                    } else {
-                        if (stats[m.home]) stats[m.home].pts += 1;
-                        if (stats[m.away]) stats[m.away].pts += 1;
-                    }
-                }
-            });
-
-            const sortedTeams = [...groupData.teams].sort((a, b) => {
-                const sA = stats[a];
-                const sB = stats[b];
-                if (sB.pts !== sA.pts) return sB.pts - sA.pts;
-                const diffA = sA.goalsFor - sA.goalsAgainst;
-                const diffB = sB.goalsFor - sB.goalsAgainst;
-                if (diffB !== diffA) return diffB - diffA;
-                if (sB.goalsFor !== sA.goalsFor) return sB.goalsFor - sA.goalsFor;
-                return a.localeCompare(b);
-            });
-
-            const tbody = document.getElementById(`table-${groupKey}`);
-            tbody.innerHTML = "";
-
-            sortedTeams.forEach((team, idx) => {
-                const s = stats[team];
-                const logoHtml = getTeamLogoHtml(team);
-                const tr = document.createElement("tr");
-                tr.innerHTML = `
-                    <td>${idx + 1}</td>
-                    <td><div style="display: flex; align-items: center; gap: 4px; overflow: hidden;">${logoHtml} <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${team}</span></div></td>
-                    <td>${s.sp}</td>
-                    <td>${s.goalsFor}:${s.goalsAgainst}</td>
-                    <td><strong>${s.pts}</strong></td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        async function loadFromFirebase() {
-            try {
-                const docRef = doc(db, "matchdata", "seasons");
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    const savedData = docSnap.data();
-                    if (savedData.weiss) {
-                        savedData.weiss.forEach((gMatch, idx) => {
-                            if (dataWeiss.matches[idx]) {
-                                dataWeiss.matches[idx].homeGoals = gMatch.homeGoals !== undefined ? gMatch.homeGoals : "";
-                                dataWeiss.matches[idx].awayGoals = gMatch.awayGoals !== undefined ? gMatch.awayGoals : "";
-                            }
-                        });
-                    }
-                    if (savedData.gruen) {
-                        savedData.gruen.forEach((gMatch, idx) => {
-                            if (dataGruen.matches[idx]) {
-                                dataGruen.matches[idx].homeGoals = gMatch.homeGoals !== undefined ? gMatch.homeGoals : "";
-                                dataGruen.matches[idx].awayGoals = gMatch.awayGoals !== undefined ? gMatch.awayGoals : "";
-                            }
-                        });
-                    }
-                }
-            } catch (e) {
-                console.error("Fehler beim Laden aus Firebase: ", e);
-            }
-            renderAll();
-        }
-
-        window.triggerUpdate = async function() {
-            collectValues("weiss", dataWeiss);
-            collectValues("gruen", dataGruen);
-            renderAll();
-
-            try {
-                await setDoc(doc(db, "matchdata", "seasons"), {
-                    weiss: dataWeiss.matches.map(m => ({ homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
-                    gruen: dataGruen.matches.map(m => ({ homeGoals: m.homeGoals, awayGoals: m.awayGoals }))
-                });
-                alert("Erfolge erfolgreich in der Cloud (Firebase) gespeichert!");
-            } catch (e) {
-                console.error("Fehler beim Speichern: ", e);
-                alert("Fehler beim Speichern in Firebase.");
-            }
-        }
-
-        loadFromFirebase();
-    </script>
 </body>
 </html>
