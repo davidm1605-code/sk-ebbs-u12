@@ -135,8 +135,7 @@
             </div>
 
             <div class="filter-chips">
-                <button class="filter-chip active" onclick="filterGroup('gespielt', 'all', this)">Alle Gruppen</button>
-                <button class="filter-chip" onclick="filterGroup('gespielt', 'weiss', this)">Gruppe Weiß</button>
+                <button class="filter-chip active" onclick="filterGroup('gespielt', 'weiss', this)">Gruppe Weiß</button>
                 <button class="filter-chip" onclick="filterGroup('gespielt', 'gruen', this)">Gruppe Grün</button>
             </div>
 
@@ -146,7 +145,7 @@
                 <div id="matches-weiss-played"></div>
             </div>
 
-            <div id="section-gespielt-gruen" style="margin-top: 15px;">
+            <div id="section-gespielt-gruen" style="margin-top: 15px; display: none;">
                 <h2>Gruppe GRÜN - Berechnete Ergebnisse</h2>
                 <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px; font-style: italic;">Diese Spiele fließen bereits in die Wertung ein.</div>
                 <div id="matches-gruen-played"></div>
@@ -160,18 +159,20 @@
             </div>
 
             <div class="filter-chips">
-                <button class="filter-chip active" onclick="filterGroup('offen', 'all', this)">Alle Gruppen</button>
-                <button class="filter-chip" onclick="filterGroup('offen', 'weiss', this)">Gruppe Weiß</button>
+                <button class="filter-chip active" onclick="filterGroup('offen', 'weiss', this)">Gruppe Weiß</button>
                 <button class="filter-chip" onclick="filterGroup('offen', 'gruen', this)">Gruppe Grün</button>
             </div>
 
-            <div class="filter-row">
+            <div class="filter-row" id="filter-row-weiss">
                 <div class="filter-group">
                     <label style="font-size: 0.7rem; color: #94a3b8; display: block; margin-bottom: 3px;">Filter Gruppe Weiß:</label>
                     <select id="select-team-offen-weiss" class="team-filter-select">
                         <option value="">-- Alle Weiß --</option>
                     </select>
                 </div>
+            </div>
+
+            <div class="filter-row" id="filter-row-gruen" style="display: none;">
                 <div class="filter-group">
                     <label style="font-size: 0.7rem; color: #94a3b8; display: block; margin-bottom: 3px;">Filter Gruppe Grün:</label>
                     <select id="select-team-offen-gruen" class="team-filter-select">
@@ -193,12 +194,12 @@
             </div>
 
             <!-- Schnellansicht für gefilterte offene Spiele (Gruppe Grün) -->
-            <div id="filtered-quick-view-gruen" class="filtered-quick-view">
+            <div id="filtered-quick-view-gruen" class="filtered-quick-view" style="display: none;">
                 <h3 id="quick-view-title-gruen">Ergebnisse für Filter</h3>
                 <div id="filtered-quick-list-gruen"></div>
             </div>
 
-            <div id="section-offen-gruen" style="margin-top: 15px;">
+            <div id="section-offen-gruen" style="margin-top: 15px; display: none;">
                 <h2>Gruppe GRÜN - Noch offene Spiele</h2>
                 <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px; font-style: italic;">Trage hier die Tore ein, sobald die Partien absolviert sind.</div>
                 <div id="matches-gruen-open"></div>
@@ -402,21 +403,22 @@
             const secGruen = document.getElementById(`section-${tabName}-gruen`);
             const quickWeiss = document.getElementById(`filtered-quick-view-weiss`);
             const quickGruen = document.getElementById(`filtered-quick-view-gruen`);
+            const rowWeiss = document.getElementById(`filter-row-weiss`);
+            const rowGruen = document.getElementById(`filter-row-gruen`);
 
-            if (groupType === 'all') {
+            if (groupType === 'weiss') {
                 if(secWeiss) secWeiss.style.display = 'block';
-                if(secGruen) secGruen.style.display = 'block';
-                if(quickWeiss) quickWeiss.style.display = document.getElementById('select-team-offen-weiss').value ? 'block' : 'none';
-                if(quickGruen) quickGruen.style.display = document.getElementById('select-team-offen-gruen').value ? 'block' : 'none';
-            } else if (groupType === 'weiss') {
-                if(secWeiss) secWeiss.style.display = 'block';
-                if(quickWeiss) quickWeiss.style.display = document.getElementById('select-team-offen-weiss').value ? 'block' : 'none';
                 if(secGruen) secGruen.style.display = 'none';
+                if(rowWeiss) rowWeiss.style.display = 'flex';
+                if(rowGruen) rowGruen.style.display = 'none';
+                if(quickWeiss) quickWeiss.style.display = document.getElementById('select-team-offen-weiss').value ? 'block' : 'none';
                 if(quickGruen) quickGruen.style.display = 'none';
             } else if (groupType === 'gruen') {
                 if(secWeiss) secWeiss.style.display = 'none';
-                if(quickWeiss) quickWeiss.style.display = 'none';
                 if(secGruen) secGruen.style.display = 'block';
+                if(rowWeiss) rowWeiss.style.display = 'none';
+                if(rowGruen) rowGruen.style.display = 'flex';
+                if(quickWeiss) quickWeiss.style.display = 'none';
                 if(quickGruen) quickGruen.style.display = document.getElementById('select-team-offen-gruen').value ? 'block' : 'none';
             }
         }
@@ -625,7 +627,6 @@
                         <div class="team-away"><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.away}</span> ${awayLogo}</div>
                     `;
 
-                    // Schnellansicht befüllen, wenn Filter aktiv ist
                     if (hasActiveFilter && (m.home === filterTeamOffen || m.away === filterTeamOffen)) {
                         const qDiv = document.createElement("div");
                         qDiv.className = "match";
@@ -645,7 +646,6 @@
                 }
             });
 
-            // Quick-View Steuerung für beide Gruppen identisch sicherstellen
             if (quickView && quickList && quickTitle) {
                 if (hasActiveFilter) {
                     quickView.style.display = 'block';
