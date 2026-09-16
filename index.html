@@ -18,9 +18,12 @@
         table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
         th, td { padding: 8px; text-align: left; border-bottom: 1px solid #334155; }
         th { background: #334155; color: #38bdf8; }
-        .team-name { flex: 1; text-align: left; display: flex; align-items: center; gap: 6px; }
-        .team-right { flex: 1; text-align: right; display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
-        .round { font-size: 0.8rem; color: #94a3b8; width: 70px; }
+        
+        /* Feste Ausrichtung für Heim- und Auswärtsteams */
+        .team-home { width: 140px; display: flex; align-items: center; gap: 6px; text-align: left; }
+        .team-away { width: 140px; display: flex; align-items: center; justify-content: flex-end; gap: 6px; text-align: right; }
+        
+        .round { font-size: 0.8rem; color: #94a3b8; width: 70px; flex-shrink: 0; }
         
         /* Echte Wappen-Form (oben abgerundet, unten spitz) */
         .team-shield { 
@@ -317,10 +320,10 @@
                         <span class="round">${item.round}</span><br>
                         <small style="color: #94a3b8;">${item.dateStr}</small>
                     </div>
-                    <div style="flex: 2; padding-left: 10px;">
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <span>${homeLogo} ${item.home}</span> vs. <span>${awayLogo} ${item.away}</span>
-                        </div>
+                    <div style="display: flex; align-items: center; gap: 4px;">
+                        <div class="team-home">${homeLogo} <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${item.home}</span></div>
+                        <span style="color: #94a3b8; padding: 0 4px;">vs.</span>
+                        <div class="team-away"><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${item.away}</span> ${awayLogo}</div>
                     </div>
                     <div style="display: flex; align-items: center; gap: 8px;">
                         ${scoreText}
@@ -348,10 +351,10 @@
                 div.className = "match";
                 div.innerHTML = `
                     <span class="round">${m.round}</span>
-                    <span class="team-name">${homeLogo} <span>${m.home}</span></span>
+                    <div class="team-home">${homeLogo} <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.home}</span></div>
                     <input type="text" id="${groupKey}-h-${index}" value="${m.homeGoals}" oninput="syncAndUpdate()"> : 
                     <input type="text" id="${groupKey}-a-${index}" value="${m.awayGoals}" oninput="syncAndUpdate()">
-                    <span class="team-right"><span>${m.away}</span> ${awayLogo}</span>
+                    <div class="team-away"><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.away}</span> ${awayLogo}</div>
                 `;
                 targetContainer.appendChild(div);
             });
