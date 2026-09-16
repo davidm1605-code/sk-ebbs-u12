@@ -121,7 +121,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Vereinslogos Mapping (falls die Bilder in einem Unterordner liegen, z.B. "logos/", hier anpassen)
+        // Vereinslogos Mapping
         const teamLogos = {
             "SK Ebbs": "35647.png",
             "Waidring": "35716.jpg",
@@ -144,8 +144,9 @@
         function getTeamLogoHtml(teamName) {
             const fileName = teamLogos[teamName];
             if (fileName) {
-                // Falls sich die Bilder in einem Unterordner befinden, passe den Pfad hier an (z. B. `logos/${fileName}`)
-                return `<img src="${fileName}" alt="${teamName}" class="team-logo" onerror="this.style.display='none'">`;
+                // HIER PFAD ANPASSEN: Falls die Bilder in einem Ordner "logos" liegen: `logos/${fileName}`
+                // Falls sie direkt im Hauptverzeichnis liegen, ändere es zu `src="${fileName}"`
+                return `<img src="logos/${fileName}" alt="${teamName}" class="team-logo" onerror="this.style.display='none'">`;
             }
             return "";
         }
