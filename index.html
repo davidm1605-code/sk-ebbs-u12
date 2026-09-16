@@ -21,7 +21,7 @@
         .team-name { flex: 1; text-align: left; display: flex; align-items: center; gap: 6px; }
         .team-right { flex: 1; text-align: right; display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
         .round { font-size: 0.8rem; color: #94a3b8; width: 70px; }
-        .team-logo { width: 20px; height: 20px; object-fit: contain; vertical-align: middle; border-radius: 3px; }
+        .team-logo { width: 22px; height: 22px; object-fit: contain; vertical-align: middle; border-radius: 3px; flex-shrink: 0; }
         .schedule-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-bottom: 1px solid #334155; font-size: 0.85rem; border-radius: 6px; margin-bottom: 6px; background: rgba(255,255,255,0.02); }
         .schedule-row.finished { background: rgba(239, 68, 68, 0.15); border-left: 4px solid #ef4444; color: #fca5a5; }
         .schedule-row.live { background: rgba(234, 179, 8, 0.15); border-left: 4px solid #eab308; }
@@ -121,7 +121,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Vereinslogos Mapping inkl. der neu hinzugefügten Logos
+        // Vereinslogos Mapping (falls die Bilder in einem Unterordner liegen, z.B. "logos/", hier anpassen)
         const teamLogos = {
             "SK Ebbs": "35647.png",
             "Waidring": "35716.jpg",
@@ -144,7 +144,8 @@
         function getTeamLogoHtml(teamName) {
             const fileName = teamLogos[teamName];
             if (fileName) {
-                return `<img src="${fileName}" alt="${teamName}" class="team-logo">`;
+                // Falls sich die Bilder in einem Unterordner befinden, passe den Pfad hier an (z. B. `logos/${fileName}`)
+                return `<img src="${fileName}" alt="${teamName}" class="team-logo" onerror="this.style.display='none'">`;
             }
             return "";
         }
@@ -291,7 +292,6 @@
 
                 const homeLogo = getTeamLogoHtml(item.home);
                 const awayLogo = getTeamLogoHtml(item.away);
-                const matchFormatted = `${homeLogo} ${item.home} vs. ${awayLogo} ${item.away}`;
 
                 const div = document.createElement("div");
                 div.className = `schedule-row ${cssClass}`;
@@ -301,7 +301,9 @@
                         <small style="color: #94a3b8;">${item.dateStr}</small>
                     </div>
                     <div style="flex: 2; padding-left: 10px;">
-                        <strong style="display: flex; align-items: center; gap: 6px;">${matchFormatted}</strong>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span>${homeLogo} ${item.home}</span> vs. <span>${awayLogo} ${item.away}</span>
+                        </div>
                     </div>
                     <div style="display: flex; align-items: center; gap: 8px;">
                         ${scoreText}
@@ -329,10 +331,10 @@
                 div.className = "match";
                 div.innerHTML = `
                     <span class="round">${m.round}</span>
-                    <span class="team-name">${homeLogo} ${m.home}</span>
+                    <span class="team-name">${homeLogo} <span>${m.home}</span></span>
                     <input type="text" id="${groupKey}-h-${index}" value="${m.homeGoals}" oninput="syncAndUpdate()"> : 
                     <input type="text" id="${groupKey}-a-${index}" value="${m.awayGoals}" oninput="syncAndUpdate()">
-                    <span class="team-right">${m.away} ${awayLogo}</span>
+                    <span class="team-right"><span>${m.away}</span> ${awayLogo}</span>
                 `;
                 targetContainer.appendChild(div);
             });
@@ -364,6 +366,7 @@
                 stats[team] = { sp: 0, goalsFor: 0, goalsAgainst: 0, pts: 0 };
             });
 
+            groupData.matches.matches = groupData.matches || [];
             groupData.matches.forEach((m) => {
                 const hVal = m.homeGoals;
                 const aVal = m.awayGoals;
@@ -414,7 +417,7 @@
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
                     <td>${idx + 1}</td>
-                    <td><div style="display: flex; align-items: center; gap: 6px;">${logoHtml} ${team}</div></td>
+                    <td><div style="display: flex; align-items: center; gap: 6px;">${logoHtml} <span>${team}</span></div></td>
                     <td>${s.sp}</td>
                     <td>${s.goalsFor}:${s.goalsAgainst}</td>
                     <td><strong>${s.pts}</strong></td>
