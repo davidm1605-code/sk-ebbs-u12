@@ -611,7 +611,6 @@
                     div.innerHTML = divHtml;
                     playedContainer.appendChild(div);
                 } else {
-                    // Offene Spiele
                     const homeLogo = getTeamLogoHtml(m.home);
                     const awayLogo = getTeamLogoHtml(m.away);
 
@@ -626,7 +625,7 @@
                         <div class="team-away"><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.away}</span> ${awayLogo}</div>
                     `;
 
-                    // Wenn Filter aktiv ist und das Spiel diesen Verein betrifft, auch oben in die Schnellansicht packen
+                    // Schnellansicht befüllen, wenn Filter aktiv ist
                     if (hasActiveFilter && (m.home === filterTeamOffen || m.away === filterTeamOffen)) {
                         const qDiv = document.createElement("div");
                         qDiv.className = "match";
@@ -634,7 +633,6 @@
                         if(quickList) quickList.appendChild(qDiv);
                     }
 
-                    // Filter für die normale offene Liste darunter anwenden
                     if (hasActiveFilter && m.home !== filterTeamOffen && m.away !== filterTeamOffen) {
                         return; 
                     }
@@ -647,7 +645,7 @@
                 }
             });
 
-            // Quick-View Steuerung
+            // Quick-View Steuerung für beide Gruppen identisch sicherstellen
             if (quickView && quickList && quickTitle) {
                 if (hasActiveFilter) {
                     quickView.style.display = 'block';
