@@ -19,7 +19,9 @@
         .filter-chip { background: #334155; color: #94a3b8; border: none; padding: 4px 10px; border-radius: 16px; cursor: pointer; font-size: 0.7rem; font-weight: bold; }
         .filter-chip.active { background: #38bdf8; color: #0f172a; }
         
-        .team-filter-select { width: 100%; background: #0f172a; color: #38bdf8; border: 1px solid #475569; padding: 6px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; margin-bottom: 12px; box-sizing: border-box; }
+        .filter-row { display: flex; gap: 8px; margin-bottom: 12px; }
+        .filter-group { flex: 1; min-width: 0; }
+        .team-filter-select { width: 100%; background: #0f172a; color: #38bdf8; border: 1px solid #475569; padding: 6px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; box-sizing: border-box; }
 
         /* Spiel-Zeile im Bearbeitungs-Tab (optimiert für Smartphones) */
         .match { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #334155; font-size: 0.75rem; gap: 2px; }
@@ -91,8 +93,8 @@
         <div class="tabs">
             <button class="tab-btn" onclick="switchTab('termene-weiss', event)">Termine weiß</button>
             <button class="tab-btn" onclick="switchTab('termene-gruen', event)">Termine grün</button>
-            <button class="tab-btn" onclick="switchTab('gespielt', event)">Gespielt</button>
-            <button class="tab-btn active" onclick="switchTab('offen', event)">Offen</button>
+            <button class="tab-btn active" onclick="switchTab('gespielt', event)">Gespielt</button>
+            <button class="tab-btn" onclick="switchTab('offen', event)">Offen</button>
             <button class="tab-btn" onclick="switchTab('tabelle', event)">Tabelle</button>
         </div>
 
@@ -122,7 +124,7 @@
             <div id="schedule-gruen-list"></div>
         </div>
 
-        <div id="tab-gespielt" class="tab-content">
+        <div id="tab-gespielt" class="tab-content active">
             <div class="btn-container" style="margin-top: 0; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 2px solid #334155;">
                 <button class="action-btn" id="toggle-btn-top-gespielt" onclick="toggleEditMode()">🔒 Schreibmodus Aus</button>
                 <button class="action-btn" onclick="triggerUpdate()" style="border-color: #22c55e; color: #22c55e;">💾 Speichern</button>
@@ -147,7 +149,7 @@
             </div>
         </div>
 
-        <div id="tab-offen" class="tab-content active">
+        <div id="tab-offen" class="tab-content">
             <div class="btn-container" style="margin-top: 0; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 2px solid #334155;">
                 <button class="action-btn" id="toggle-btn-top-offen" onclick="toggleEditMode()">🔒 Schreibmodus Aus</button>
                 <button class="action-btn" onclick="triggerUpdate()" style="border-color: #22c55e; color: #22c55e;">💾 Speichern</button>
@@ -159,23 +161,30 @@
                 <button class="filter-chip" onclick="filterGroup('offen', 'gruen', this)">Gruppe Grün</button>
             </div>
 
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label style="font-size: 0.7rem; color: #94a3b8; display: block; margin-bottom: 3px;">Filter Gruppe Weiß:</label>
+                    <select id="select-team-offen-weiss" class="team-filter-select" onchange="renderAll()">
+                        <option value="">-- Alle Weiß --</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label style="font-size: 0.7rem; color: #94a3b8; display: block; margin-bottom: 3px;">Filter Gruppe Grün:</label>
+                    <select id="select-team-offen-gruen" class="team-filter-select" onchange="renderAll()">
+                        <option value="">-- Alle Grün --</option>
+                    </select>
+                </div>
+            </div>
+
             <div id="section-offen-weiss">
                 <h2>Gruppe WEISS - Noch offene Spiele</h2>
                 <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px; font-style: italic;">Trage hier die Tore ein, sobald die Partien absolviert sind.</div>
-                <label style="font-size: 0.7rem; color: #94a3b8; display: block; margin-bottom: 3px; margin-top: 8px;">Filter Team (Weiß):</label>
-                <select id="select-team-offen-weiss" class="team-filter-select" onchange="renderAll()">
-                    <option value="">-- Alle Weiß --</option>
-                </select>
                 <div id="matches-weiss-open"></div>
             </div>
 
             <div id="section-offen-gruen" style="margin-top: 15px;">
                 <h2>Gruppe GRÜN - Noch offene Spiele</h2>
                 <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px; font-style: italic;">Trage hier die Tore ein, sobald die Partien absolviert sind.</div>
-                <label style="font-size: 0.7rem; color: #94a3b8; display: block; margin-bottom: 3px; margin-top: 8px;">Filter Team (Grün):</label>
-                <select id="select-team-offen-gruen" class="team-filter-select" onchange="renderAll()">
-                    <option value="">-- Alle Grün --</option>
-                </select>
                 <div id="matches-gruen-open"></div>
             </div>
         </div>
@@ -539,31 +548,46 @@
             groupData.matches.forEach((m, index) => {
                 const isPlayed = m.homeGoals !== "" && m.awayGoals !== "";
                 
-                // Filter nur auf offene Spiele anwenden, wenn ein Team ausgewählt ist
-                if (!isPlayed && filterTeamOffen && filterTeamOffen !== "" && m.home !== filterTeamOffen && m.away !== filterTeamOffen) {
-                    return; 
+                if (isPlayed) {
+                    playedCount++;
+                    const homeLogo = getTeamLogoHtml(m.home);
+                    const awayLogo = getTeamLogoHtml(m.away);
+
+                    const div = document.createElement("div");
+                    div.className = "match";
+                    div.innerHTML = `
+                        <span class="round">${m.round}</span>
+                        <div class="team-home">${homeLogo} <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.home}</span></div>
+                        <div class="score-inputs">
+                            <input type="text" id="${groupKey}-h-${index}" value="${m.homeGoals}" oninput="syncAndUpdate()"> 
+                            <span>:</span> 
+                            <input type="text" id="${groupKey}-a-${index}" value="${m.awayGoals}" oninput="syncAndUpdate()">
+                        </div>
+                        <div class="team-away"><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.away}</span> ${awayLogo}</div>
+                    `;
+                    playedContainer.appendChild(div);
+                } else {
+                    if (filterTeamOffen && filterTeamOffen !== "" && m.home !== filterTeamOffen && m.away !== filterTeamOffen) {
+                        return; 
+                    }
+                    openCount++;
+                    const homeLogo = getTeamLogoHtml(m.home);
+                    const awayLogo = getTeamLogoHtml(m.away);
+
+                    const div = document.createElement("div");
+                    div.className = "match";
+                    div.innerHTML = `
+                        <span class="round">${m.round}</span>
+                        <div class="team-home">${homeLogo} <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.home}</span></div>
+                        <div class="score-inputs">
+                            <input type="text" id="${groupKey}-h-${index}" value="${m.homeGoals}" oninput="syncAndUpdate()"> 
+                            <span>:</span> 
+                            <input type="text" id="${groupKey}-a-${index}" value="${m.awayGoals}" oninput="syncAndUpdate()">
+                        </div>
+                        <div class="team-away"><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.away}</span> ${awayLogo}</div>
+                    `;
+                    openContainer.appendChild(div);
                 }
-
-                if (isPlayed) playedCount++;
-                else openCount++;
-
-                const targetContainer = isPlayed ? playedContainer : openContainer;
-                const homeLogo = getTeamLogoHtml(m.home);
-                const awayLogo = getTeamLogoHtml(m.away);
-
-                const div = document.createElement("div");
-                div.className = "match";
-                div.innerHTML = `
-                    <span class="round">${m.round}</span>
-                    <div class="team-home">${homeLogo} <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.home}</span></div>
-                    <div class="score-inputs">
-                        <input type="text" id="${groupKey}-h-${index}" value="${m.homeGoals}" oninput="syncAndUpdate()"> 
-                        <span>:</span> 
-                        <input type="text" id="${groupKey}-a-${index}" value="${m.awayGoals}" oninput="syncAndUpdate()">
-                    </div>
-                    <div class="team-away"><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.away}</span> ${awayLogo}</div>
-                `;
-                targetContainer.appendChild(div);
             });
 
             if (playedCount === 0) {
@@ -675,7 +699,7 @@
                         });
                     }
                     if (savedData.gruen) {
-                        savedData.gruen.forEach((gMatch, idx) => {
+                        savedData.gruen.matches.forEach((gMatch, idx) => {
                             if (dataGruen.matches[idx]) {
                                 dataGruen.matches[idx].homeGoals = gMatch.homeGoals !== undefined ? gMatch.homeGoals : "";
                                 dataGruen.matches[idx].awayGoals = gMatch.awayGoals !== undefined ? gMatch.awayGoals : "";
