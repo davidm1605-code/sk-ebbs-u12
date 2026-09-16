@@ -35,14 +35,14 @@
 <body>
     <div class="container">
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('termene-weiss', event)">SK Ebbs Weiß</button>
+            <button class="tab-btn" onclick="switchTab('termene-weiss', event)">SK Ebbs Weiß</button>
             <button class="tab-btn" onclick="switchTab('termene-gruen', event)">SK Ebbs Grün</button>
-            <button class="tab-btn" onclick="switchTab('gespielt', event)">Bereits gespielt</button>
+            <button class="tab-btn active" onclick="switchTab('gespielt', event)">Bereits gespielt</button>
             <button class="tab-btn" onclick="switchTab('offen', event)">Noch offen</button>
             <button class="tab-btn" onclick="switchTab('tabelle', event)">Tabellen</button>
         </div>
 
-        <div id="tab-termene-weiss" class="tab-content active">
+        <div id="tab-termene-weiss" class="tab-content">
             <h2>SK Ebbs Weiß (U12 B) – Termine</h2>
             <div class="info-text">Nur Meisterschaftsspiele (60 Min. Spieldauer).</div>
             <div id="schedule-weiss-list"></div>
@@ -54,7 +54,7 @@
             <div id="schedule-gruen-list"></div>
         </div>
 
-        <div id="tab-gespielt" class="tab-content">
+        <div id="tab-gespielt" class="tab-content active">
             <h2>Gruppe WEISS - Berechnete Ergebnisse</h2>
             <div class="info-text">Diese Spiele fließen bereits in die Wertung ein.</div>
             <div id="matches-weiss-played"></div>
@@ -114,10 +114,8 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Meisterschaftstermine für SK Ebbs WEISS (U12 B) inkl. nachtgetragener Spiele
+        // Exakte Meisterschaftstermine für SK Ebbs WEISS (U12 B)
         const scheduleWeiss = [
-            { round: "1. Runde", dateStr: "Fr, 04.09.2026 | 18:30", iso: "2026-09-04T18:30:00", match: "SKE B vs. Kufstein", score: "7 : 3" },
-            { round: "2. Runde", dateStr: "Sa, 12.09.2026 | 14:00", iso: "2026-09-12T14:00:00", match: "Walchsee vs. SKE A (SK Ebbs)", score: "1 : 4" },
             { round: "1. Spiel", dateStr: "Sa, 19.09.2026 | 12:00", iso: "2026-09-19T12:00:00", match: "vs. SV Wörgl in Ebbs (U12 B)" },
             { round: "2. Spiel", dateStr: "Fr, 25.09.2026 | 17:00", iso: "2026-09-25T17:00:00", match: "vs. SVG Erl in Erl (U12 A)" },
             { round: "3. Spiel", dateStr: "Mo, 05.10.2026 | 18:00", iso: "2026-10-05T18:00:00", match: "vs. SPG Bichlach B in Ebbs (U12 B)" },
@@ -128,10 +126,8 @@
             { round: "8. Spiel", dateStr: "Sa, 31.10.2026 | 12:00", iso: "2026-10-31T12:00:00", match: "vs. SV Westendorf U11 in Westendorf (statt U10) (ALLE) (U11 A)" }
         ];
 
-        // Meisterschaftstermine für SK Ebbs GRÜN (U12 A) inkl. nachtgetragener Spiele
+        // Exakte Meisterschaftstermine für SK Ebbs GRÜN (U12 A)
         const scheduleGruen = [
-            { round: "1. Runde", dateStr: "Fr, 04.09.2026 | 18:30", iso: "2026-09-04T18:30:00", match: "SKE A vs. St.Johann A", score: "8 : 3" },
-            { round: "2. Runde", dateStr: "Fr, 11.09.2026 | 17:00", iso: "2026-09-11T17:00:00", match: "Kundl/Breitenbach vs. SKE B (SK Ebbs)", score: "1 : 4" },
             { round: "1. Spiel", dateStr: "Sa, 19.09.2026 | 12:00", iso: "2026-09-19T12:00:00", match: "vs. SPG Bichlach A in Ebbs (U12 A)" },
             { round: "2. Spiel", dateStr: "Sa, 26.09.2026 | 13:00", iso: "2026-09-26T13:00:00", match: "vs. FC Söll in Söll (U12 B)" },
             { round: "3. Spiel", dateStr: "Sa, 03.10.2026 | 11:30", iso: "2026-10-03T11:30:00", match: "vs. SK Waidring in Ebbs (U12 A)" },
@@ -207,58 +203,29 @@
         }
 
         function renderAll() {
-            renderSchedule("schedule-weiss-list", scheduleWeiss, "weiss");
-            renderSchedule("schedule-gruen-list", scheduleGruen, "gruen");
+            renderSchedule("schedule-weiss-list", scheduleWeiss);
+            renderSchedule("schedule-gruen-list", scheduleGruen);
             renderGroupContainer("weiss", dataWeiss);
             renderGroupContainer("gruen", dataGruen);
             calculateTable("weiss", dataWeiss);
             calculateTable("gruen", dataGruen);
         }
 
-        function renderSchedule(containerId, list, groupKey) {
+        function renderSchedule(containerId, list) {
             const container = document.getElementById(containerId);
             container.innerHTML = "";
             const now = new Date();
 
             list.forEach(item => {
                 const kickoff = new Date(item.iso);
-                const matchEnd = new Date(kickoff.getTime() + 60 * 60000); // 60 Min Spieldauer
+                const matchEnd = new Date(kickoff.getTime() + 60 * 60000); // 60 Min U12 Spieldauer
                 
                 let cssClass = "";
                 let badgeHtml = "";
-                let scoreText = "";
 
-                // Prüfen ob es ein manuell eingetragenes/festes Ergebnis im Schedule-Array gibt
-                let currentScore = item.score;
-
-                // Falls es ein SK Ebbs Spiel ist, prüfen wir dynamisch, ob im Tabellenteil ein Ergebnis eingetragen wurde
-                if (!currentScore && item.match.includes("SKE")) {
-                    // Automatischer Abgleich mit den eingetragenen Ergebnissen aus dataWeiss / dataGruen
-                    const groupData = groupKey === 'weiss' ? dataWeiss : dataGruen;
-                    // Versuche das entsprechende Match in den Spieldaten zu finden
-                    groupData.matches.forEach(m => {
-                        // Einfacher Abgleich nach Teamnamen im Match-String
-                        if (item.match.includes("Kufstein") && m.home === "SK Ebbs" && m.away === "Kufstein" && m.homeGoals !== "" && m.awayGoals !== "") {
-                            currentScore = `${m.homeGoals} : ${m.awayGoals}`;
-                        }
-                        if (item.match.includes("Walchsee") && m.home === "Walchsee" && m.away === "SK Ebbs" && m.homeGoals !== "" && m.awayGoals !== "") {
-                            currentScore = `${m.homeGoals} : ${m.awayGoals}`;
-                        }
-                        if (item.match.includes("St.Johann A") && m.home === "SK Ebbs" && m.away === "St.Johann A" && m.homeGoals !== "" && m.awayGoals !== "") {
-                            currentScore = `${m.homeGoals} : ${m.awayGoals}`;
-                        }
-                        if (item.match.includes("Kundl") && m.home === "Kundl/Breitenbach" && m.away === "SK Ebbs" && m.homeGoals !== "" && m.awayGoals !== "") {
-                            currentScore = `${m.homeGoals} : ${m.awayGoals}`;
-                        }
-                    });
-                }
-
-                if (now >= matchEnd || currentScore) {
+                if (now >= matchEnd) {
                     cssClass = "finished";
                     badgeHtml = '<span class="badge-finished">BEENDET</span>';
-                    if (currentScore) {
-                        badgeHtml += `<span style="margin-left: 10px; font-weight: bold; color: #f8fafc;">(${currentScore})</span>`;
-                    }
                 } else if (now >= kickoff && now < matchEnd) {
                     cssClass = "live";
                     badgeHtml = '<span class="badge-live">LÄUFT</span>';
