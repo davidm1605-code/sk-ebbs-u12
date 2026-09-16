@@ -21,7 +21,7 @@
         
         .team-filter-select { width: 100%; background: #0f172a; color: #38bdf8; border: 1px solid #475569; padding: 6px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; margin-bottom: 12px; }
 
-        /* Spiel-Zeile im Bearbeitungs-Tab (optimiert für Smartphones) */
+        /* Spiel-Zeile */
         .match { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #334155; font-size: 0.75rem; gap: 2px; }
         .match .round { width: 42px; font-size: 0.7rem; color: #94a3b8; flex-shrink: 0; }
         .match .team-home { flex: 1; display: flex; align-items: center; gap: 3px; text-align: left; overflow: hidden; min-width: 0; }
@@ -33,7 +33,6 @@
         th, td { padding: 5px; text-align: left; border-bottom: 1px solid #334155; }
         th { background: #334155; color: #38bdf8; }
         
-        /* Echte Wappen-Form */
         .team-shield { 
             width: 18px; 
             height: 22px; 
@@ -51,7 +50,6 @@
             padding-bottom: 2px;
         }
         
-        /* Spieltermine-Zeile */
         .schedule-row { display: flex; flex-direction: column; padding: 8px; border-bottom: 1px solid #334155; font-size: 0.8rem; border-radius: 6px; margin-bottom: 6px; background: rgba(255,255,255,0.02); gap: 4px; }
         .schedule-row.finished { background: rgba(239, 68, 68, 0.15); border-left: 4px solid #ef4444; color: #fca5a5; }
         .schedule-row.live { background: rgba(234, 179, 8, 0.15); border-left: 4px solid #eab308; }
@@ -539,10 +537,14 @@
             groupData.matches.forEach((m, index) => {
                 const isPlayed = m.homeGoals !== "" && m.awayGoals !== "";
                 
-                // Filtern nur auf den jeweiligen Bereich anwenden
-                const filterTeam = isPlayed ? filterTeamGespielt : filterTeamOffen;
-                if (filterTeam && filterTeam !== "" && m.home !== filterTeam && m.away !== filterTeam) {
+                // Korrekter Filter für offene Spiele anhand von Team-Auswahl
+                if (!isPlayed && filterTeamOffen && filterTeamOffen !== "" && m.home !== filterTeamOffen && m.away !== filterTeamOffen) {
                     return; 
+                }
+                
+                // Korrekter Filter für gespielte Spiele
+                if (isPlayed && filterTeamGespielt && filterTeamGespielt !== "" && m.home !== filterTeamGespielt && m.away !== filterTeamGespielt) {
+                    return;
                 }
 
                 if (isPlayed) playedCount++;
