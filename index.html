@@ -1,169 +1,3 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SK Ebbs U12 - Spielplan & Tabelle</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #0f172a; color: #f8fafc; margin: 0; padding: 8px; box-sizing: border-box; }
-        .container { max-width: 600px; margin: 0 auto; background: #1e293b; padding: 12px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); box-sizing: border-box; overflow: hidden; }
-        .tabs { display: flex; gap: 4px; margin-bottom: 12px; border-bottom: 2px solid #334155; padding-bottom: 8px; flex-wrap: wrap; }
-        .tab-btn { background: #334155; color: #94a3b8; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.75rem; flex-grow: 1; text-align: center; }
-        .tab-btn.active { background: #38bdf8; color: #0f172a; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        h2 { border-bottom: 2px solid #38bdf8; padding-bottom: 6px; margin-top: 20px; color: #38bdf8; font-size: 1rem; }
-        
-        /* Spiel-Zeile im Bearbeitungs-Tab (optimiert für Smartphones) */
-        .match { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #334155; font-size: 0.75rem; gap: 2px; }
-        .match .round { width: 42px; font-size: 0.7rem; color: #94a3b8; flex-shrink: 0; }
-        .match .team-home { flex: 1; display: flex; align-items: center; gap: 3px; text-align: left; overflow: hidden; min-width: 0; }
-        .match .team-away { flex: 1; display: flex; align-items: center; justify-content: flex-end; gap: 3px; text-align: right; overflow: hidden; min-width: 0; }
-        .score-inputs { display: flex; align-items: center; justify-content: center; gap: 2px; width: 65px; flex-shrink: 0; }
-        .match input { width: 26px; height: 24px; text-align: center; background: #0f172a; border: 1px solid #475569; color: white; border-radius: 4px; font-size: 0.8rem; padding: 0; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.75rem; }
-        th, td { padding: 5px; text-align: left; border-bottom: 1px solid #334155; }
-        th { background: #334155; color: #38bdf8; }
-        
-        /* Echte Wappen-Form */
-        .team-shield { 
-            width: 18px; 
-            height: 22px; 
-            display: inline-flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 0.45rem; 
-            font-weight: bold; 
-            color: white; 
-            flex-shrink: 0; 
-            box-shadow: 0 1px 3px rgba(0,0,0,0.4); 
-            text-transform: uppercase; 
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 3px 3px 8px 8px; 
-            padding-bottom: 2px;
-        }
-        
-        /* Spieltermine-Zeile (mit festen Spalten für perfekte Ausrichtung) */
-        .schedule-row { display: flex; flex-direction: column; padding: 8px; border-bottom: 1px solid #334155; font-size: 0.8rem; border-radius: 6px; margin-bottom: 6px; background: rgba(255,255,255,0.02); gap: 4px; }
-        .schedule-row.finished { background: rgba(239, 68, 68, 0.15); border-left: 4px solid #ef4444; color: #fca5a5; }
-        .schedule-row.live { background: rgba(234, 179, 8, 0.15); border-left: 4px solid #eab308; }
-        
-        .schedule-header { display: flex; justify-content: space-between; width: 100%; font-size: 0.7rem; color: #94a3b8; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 3px; }
-        .schedule-body { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 2px; }
-        
-        /* Feste Breiten für Heim- und Auswärtsteam, damit die Logos exakt fluchten */
-        .schedule-team-home { display: flex; align-items: center; gap: 3px; width: 38%; overflow: hidden; min-width: 0; text-align: left; }
-        .schedule-vs { color: #94a3b8; flex-shrink: 0; text-align: center; width: 20px; font-size: 0.75rem; }
-        .schedule-team-away { display: flex; align-items: center; justify-content: flex-end; gap: 3px; width: 38%; overflow: hidden; min-width: 0; text-align: right; }
-        
-        .schedule-score-box { display: flex; align-items: center; justify-content: flex-end; gap: 4px; width: 120px; flex-shrink: 0; text-align: right; }
-        
-        .badge-finished { background: #ef4444; color: white; font-size: 0.6rem; font-weight: bold; padding: 2px 4px; border-radius: 4px; white-space: nowrap; }
-        .badge-live { background: #eab308; color: #0f172a; font-size: 0.6rem; font-weight: bold; padding: 2px 4px; border-radius: 4px; white-space: nowrap; }
-        
-        .btn-container { margin-top: 16px; display: flex; gap: 8px; }
-        button.action-btn { background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 50%; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 6px; }
-        button.action-btn:hover { background: #38bdf8; color: #0f172a; }
-        
-        /* Schreibmodus Steuerung */
-        .editable-mode .match input { pointer-events: auto; background: #0f172a; border-color: #38bdf8; }
-        .readonly-mode .match input { pointer-events: none; background: #1e293b; border-color: #334155; color: #94a3b8; }
-        
-        .info-box { background: rgba(56, 189, 248, 0.1); border-left: 4px solid #38bdf8; padding: 8px; border-radius: 6px; margin-bottom: 8px; }
-        .info-box h3 { margin: 0 0 3px 0; color: #38bdf8; font-size: 0.9rem; }
-        .info-box p { margin: 0; font-size: 0.75rem; color: #94a3b8; }
-        
-        /* Legende für Heim / Auswärts */
-        .venue-legend { display: flex; justify-content: space-between; font-size: 0.7rem; color: #94a3b8; padding: 0 4px 8px 4px; margin-bottom: 6px; border-bottom: 1px dashed #334155; }
-        .venue-legend span { font-weight: bold; color: #38bdf8; }
-    </style>
-</head>
-<body class="readonly-mode">
-    <div class="container">
-        <div class="tabs">
-            <button class="tab-btn" onclick="switchTab('termene-weiss', event)">Termine weiß</button>
-            <button class="tab-btn" onclick="switchTab('termene-gruen', event)">Termine grün</button>
-            <button class="tab-btn active" onclick="switchTab('gespielt', event)">Gespielt</button>
-            <button class="tab-btn" onclick="switchTab('offen', event)">Offen</button>
-            <button class="tab-btn" onclick="switchTab('tabelle', event)">Tabelle</button>
-        </div>
-
-        <!-- OBERE AKTIONSLISTE (Neu hinzugefügt unter den Tabs) -->
-        <div class="btn-container" style="margin-top: 0; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 2px solid #334155;">
-            <button class="action-btn" id="toggle-btn-top" onclick="toggleEditMode()">🔒 Schreibmodus Aus</button>
-            <button class="action-btn" onclick="triggerUpdate()" style="border-color: #22c55e; color: #22c55e;">💾 Speichern</button>
-        </div>
-
-        <div id="tab-termene-weiss" class="tab-content">
-            <div class="info-box">
-                <h3>SK Ebbs U12 – Spieltermine (Weiß)</h3>
-                <p>Übersicht der Meisterschaftsspiele inklusive Echtzeit-Ergebnissen.</p>
-            </div>
-            <div class="venue-legend">
-                <div>Links: <span>Heimspiel</span></div>
-                <div>Rechts: <span>Auswärtsspiel</span></div>
-            </div>
-            <div id="schedule-weiss-list"></div>
-        </div>
-
-        <div id="tab-termene-gruen" class="tab-content">
-            <div class="info-box">
-                <h3>SK Ebbs U12 – Spieltermine (Grün)</h3>
-                <p>Übersicht der Meisterschaftsspiele inklusive Echtzeit-Ergebnissen.</p>
-            </div>
-            <div class="venue-legend">
-                <div>Links: <span>Heimspiel</span></div>
-                <div>Rechts: <span>Auswärtsspiel</span></div>
-            </div>
-            <div id="schedule-gruen-list"></div>
-        </div>
-
-        <div id="tab-gespielt" class="tab-content active">
-            <h2>Gruppe WEISS - Berechnete Ergebnisse</h2>
-            <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 8px; font-style: italic;">Diese Spiele fließen bereits in die Wertung ein.</div>
-            <div id="matches-weiss-played"></div>
-
-            <h2>Gruppe GRÜN - Berechnete Ergebnisse</h2>
-            <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 8px; font-style: italic;">Diese Spiele fließen bereits in die Wertung ein.</div>
-            <div id="matches-gruen-played"></div>
-        </div>
-
-        <div id="tab-offen" class="tab-content">
-            <h2>Gruppe WEISS - Noch offene Spiele</h2>
-            <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 8px; font-style: italic;">Trage hier die Tore ein, sobald die Partien absolviert sind.</div>
-            <div id="matches-weiss-open"></div>
-
-            <h2>Gruppe GRÜN - Noch offene Spiele</h2>
-            <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 8px; font-style: italic;">Trage hier die Tore ein, sobald die Partien absolviert sind.</div>
-            <div id="matches-gruen-open"></div>
-        </div>
-
-        <div id="tab-tabelle" class="tab-content">
-            <h2>Tabelle Gruppe WEISS</h2>
-            <table>
-                <thead>
-                    <tr><th>#</th><th>TEAM</th><th>SP</th><th>TORE</th><th>PKT</th></tr>
-                </thead>
-                <tbody id="table-weiss"></tbody>
-            </table>
-
-            <h2>Tabelle Gruppe GRÜN</h2>
-            <table>
-                <thead>
-                    <tr><th>#</th><th>TEAM</th><th>SP</th><th>TORE</th><th>PKT</th></tr>
-                </thead>
-                <tbody id="table-gruen"></tbody>
-            </table>
-        </div>
-
-        <!-- UNTERE AKTIONSLISTE -->
-        <div class="btn-container">
-            <button class="action-btn" id="toggle-btn-bottom" onclick="toggleEditMode()">🔒 Schreibmodus Aus</button>
-            <button class="action-btn" onclick="triggerUpdate()" style="border-color: #22c55e; color: #22c55e;">💾 Speichern</button>
-        </div>
-    </div>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -308,20 +142,12 @@
                 const activeText = "🔓 Schreibmodus Ein";
                 topBtn.innerHTML = activeText;
                 bottomBtn.innerHTML = activeText;
-                topBtn.style.borderColor = "#38bdf8";
-                topBtn.style.color = "#38bdf8";
-                bottomBtn.style.borderColor = "#38bdf8";
-                bottomBtn.style.color = "#38bdf8";
             } else {
                 body.classList.remove("editable-mode");
                 body.classList.add("readonly-mode");
                 const inactiveText = "🔒 Schreibmodus Aus";
                 topBtn.innerHTML = inactiveText;
                 bottomBtn.innerHTML = inactiveText;
-                topBtn.style.borderColor = "#38bdf8";
-                topBtn.style.color = "#38bdf8";
-                bottomBtn.style.borderColor = "#38bdf8";
-                bottomBtn.style.color = "#38bdf8";
             }
         }
 
@@ -535,9 +361,9 @@
                     }
                     if (savedData.gruen) {
                         savedData.gruen.forEach((gMatch, idx) => {
-                            if (dataGruen.matches[idx]) {
+                            if (dataGruen.matches[idx]) { // <-- HIER WAR DER FEHLER (vorher stand hier .matches.match[idx])
                                 dataGruen.matches[idx].homeGoals = gMatch.homeGoals !== undefined ? gMatch.homeGoals : "";
-                                dataGruen.matches.match[idx].awayGoals = gMatch.awayGoals !== undefined ? gMatch.awayGoals : "";
+                                dataGruen.matches[idx].awayGoals = gMatch.awayGoals !== undefined ? gMatch.awayGoals : "";
                             }
                         });
                     }
@@ -567,5 +393,3 @@
 
         loadFromFirebase();
     </script>
-</body>
-</html>
