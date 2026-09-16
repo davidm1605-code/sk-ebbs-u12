@@ -23,6 +23,10 @@
         .filter-group { flex: 1; min-width: 0; }
         .team-filter-select { width: 100%; background: #0f172a; color: #38bdf8; border: 1px solid #475569; padding: 6px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; box-sizing: border-box; }
 
+        /* Schnellansicht-Box für Filter */
+        .filtered-quick-view { display: none; margin-bottom: 15px; background: rgba(56, 189, 248, 0.05); border: 1px solid #38bdf8; border-radius: 8px; padding: 10px; }
+        .filtered-quick-view h3 { margin: 0 0 8px 0; color: #38bdf8; font-size: 0.85rem; }
+
         /* Spiel-Zeile im Bearbeitungs-Tab (optimiert für Smartphones) */
         .match { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #334155; font-size: 0.75rem; gap: 2px; }
         .match .round { width: 42px; font-size: 0.7rem; color: #94a3b8; flex-shrink: 0; }
@@ -176,10 +180,22 @@
                 </div>
             </div>
 
+            <!-- Schnellansicht für gefilterte offene Spiele (Gruppe Weiß) -->
+            <div id="filtered-quick-view-weiss" class="filtered-quick-view">
+                <h3 id="quick-view-title-weiss">Ergebnisse für Filter</h3>
+                <div id="filtered-quick-list-weiss"></div>
+            </div>
+
             <div id="section-offen-weiss">
                 <h2>Gruppe WEISS - Noch offene Spiele</h2>
                 <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px; font-style: italic;">Trage hier die Tore ein, sobald die Partien absolviert sind.</div>
                 <div id="matches-weiss-open"></div>
+            </div>
+
+            <!-- Schnellansicht für gefilterte offene Spiele (Gruppe Grün) -->
+            <div id="filtered-quick-view-gruen" class="filtered-quick-view">
+                <h3 id="quick-view-title-gruen">Ergebnisse für Filter</h3>
+                <div id="filtered-quick-list-gruen"></div>
             </div>
 
             <div id="section-offen-gruen" style="margin-top: 15px;">
@@ -340,7 +356,6 @@
             populateSelectOptions('select-team-offen-weiss', teamsWeiss, '-- Alle Weiß --');
             populateSelectOptions('select-team-offen-gruen', teamsGruen, '-- Alle Grün --');
             
-            // Event-Listener direkt im JavaScript registrieren, um Aussetzer zu verhindern
             const selWeiss = document.getElementById('select-team-offen-weiss');
             const selGruen = document.getElementById('select-team-offen-gruen');
             
@@ -357,7 +372,7 @@
         function populateSelectOptions(elementId, teams, defaultText) {
             const select = document.getElementById(elementId);
             if (!select) return;
-            const currentVal = select.value; // Aktuellen Wert zwischenspeichern
+            const currentVal = select.value;
             select.innerHTML = `<option value="">${defaultText}</option>`;
             teams.forEach(team => {
                 const opt = document.createElement('option');
@@ -385,16 +400,24 @@
 
             const secWeiss = document.getElementById(`section-${tabName}-weiss`);
             const secGruen = document.getElementById(`section-${tabName}-gruen`);
+            const quickWeiss = document.getElementById(`filtered-quick-view-weiss`);
+            const quickGruen = document.getElementById(`filtered-quick-view-gruen`);
 
             if (groupType === 'all') {
-                secWeiss.style.display = 'block';
-                secGruen.style.display = 'block';
+                if(secWeiss) secWeiss.style.display = 'block';
+                if(secGruen) secGruen.style.display = 'block';
+                if(quickWeiss) quickWeiss.style.display = document.getElementById('select-team-offen-weiss').value ? 'block' : 'none';
+                if(quickGruen) quickGruen.style.display = document.getElementById('select-team-offen-gruen').value ? 'block' : 'none';
             } else if (groupType === 'weiss') {
-                secWeiss.style.display = 'block';
-                secGruen.style.display = 'none';
+                if(secWeiss) secWeiss.style.display = 'block';
+                if(quickWeiss) quickWeiss.style.display = document.getElementById('select-team-offen-weiss').value ? 'block' : 'none';
+                if(secGruen) secGruen.style.display = 'none';
+                if(quickGruen) quickGruen.style.display = 'none';
             } else if (groupType === 'gruen') {
-                secWeiss.style.display = 'none';
-                secGruen.style.display = 'block';
+                if(secWeiss) secWeiss.style.display = 'none';
+                if(quickWeiss) quickWeiss.style.display = 'none';
+                if(secGruen) secGruen.style.display = 'block';
+                if(quickGruen) quickGruen.style.display = document.getElementById('select-team-offen-gruen').value ? 'block' : 'none';
             }
         }
 
@@ -459,7 +482,6 @@
         }
 
         function renderAll() {
-            // Werte der Filter vor dem Neu-Rendern sichern, damit sie erhalten bleiben
             const filterOffenWeissEl = document.getElementById('select-team-offen-weiss');
             const filterOffenGruenEl = document.getElementById('select-team-offen-gruen');
             
@@ -551,25 +573,33 @@
         function renderGroupContainer(groupKey, groupData, filterTeamOffen) {
             const playedContainer = document.getElementById(`matches-${groupKey}-played`);
             const openContainer = document.getElementById(`matches-${groupKey}-open`);
+            const quickView = document.getElementById(`filtered-quick-view-${groupKey}`);
+            const quickList = document.getElementById(`filtered-quick-list-${groupKey}`);
+            const quickTitle = document.getElementById(`quick-view-title-${groupKey}`);
+
             if (!playedContainer || !openContainer) return;
 
             playedContainer.innerHTML = "";
             openContainer.innerHTML = "";
+            if(quickList) quickList.innerHTML = "";
 
             let playedCount = 0;
             let openCount = 0;
+            let hasActiveFilter = filterTeamOffen && filterTeamOffen !== "";
 
             groupData.matches.forEach((m, index) => {
                 const isPlayed = m.homeGoals !== "" && m.awayGoals !== "";
                 
+                if (groupKey === 'gespielt') {
+                    // Für den "Gespielt"-Tab (wird über getrennte Container gesteuert, hier nur zur Sicherheit)
+                }
+
                 if (isPlayed) {
                     playedCount++;
                     const homeLogo = getTeamLogoHtml(m.home);
                     const awayLogo = getTeamLogoHtml(m.away);
 
-                    const div = document.createElement("div");
-                    div.className = "match";
-                    div.innerHTML = `
+                    const divHtml = `
                         <span class="round">${m.round}</span>
                         <div class="team-home">${homeLogo} <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.home}</span></div>
                         <div class="score-inputs">
@@ -579,18 +609,17 @@
                         </div>
                         <div class="team-away"><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.away}</span> ${awayLogo}</div>
                     `;
-                    playedContainer.appendChild(div);
-                } else {
-                    if (filterTeamOffen && filterTeamOffen !== "" && m.home !== filterTeamOffen && m.away !== filterTeamOffen) {
-                        return; 
-                    }
-                    openCount++;
-                    const homeLogo = getTeamLogoHtml(m.home);
-                    const awayLogo = getTeamLogoHtml(m.away);
 
                     const div = document.createElement("div");
                     div.className = "match";
-                    div.innerHTML = `
+                    div.innerHTML = divHtml;
+                    playedContainer.appendChild(div);
+                } else {
+                    // Offene Spiele
+                    const homeLogo = getTeamLogoHtml(m.home);
+                    const awayLogo = getTeamLogoHtml(m.away);
+
+                    const matchHtml = `
                         <span class="round">${m.round}</span>
                         <div class="team-home">${homeLogo} <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.home}</span></div>
                         <div class="score-inputs">
@@ -600,15 +629,43 @@
                         </div>
                         <div class="team-away"><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.away}</span> ${awayLogo}</div>
                     `;
+
+                    // Wenn Filter aktiv ist und das Spiel diesen Verein betrifft, auch oben in die Schnellansicht packen
+                    if (hasActiveFilter && (m.home === filterTeamOffen || m.away === filterTeamOffen)) {
+                        const qDiv = document.createElement("div");
+                        qDiv.className = "match";
+                        qDiv.innerHTML = matchHtml;
+                        if(quickList) quickList.appendChild(qDiv);
+                    }
+
+                    // Filter für die normale offene Liste darunter anwenden
+                    if (hasActiveFilter && m.home !== filterTeamOffen && m.away !== filterTeamOffen) {
+                        return; 
+                    }
+
+                    openCount++;
+                    const div = document.createElement("div");
+                    div.className = "match";
+                    div.innerHTML = matchHtml;
                     openContainer.appendChild(div);
                 }
             });
 
-            if (playedCount === 0) {
-                playedContainer.innerHTML = `<div style="font-size: 0.75rem; color: #64748b; font-style: italic; padding: 6px 0;">Keine gespielten Spiele vorhanden.</div>`;
+            // Quick-View Steuerung
+            if (quickView && quickList && quickTitle) {
+                if (hasActiveFilter) {
+                    quickView.style.display = 'block';
+                    quickTitle.textContent = `Offene Spiele für: ${filterTeamOffen}`;
+                    if (quickList.children.length === 0) {
+                        quickList.innerHTML = `<div style="font-size: 0.75rem; color: #64748b; font-style: italic; padding: 4px 0;">Keine offenen Spiele für diesen Filter.</div>`;
+                    }
+                } else {
+                    quickView.style.display = 'none';
+                }
             }
-            if (openCount === 0) {
-                openContainer.innerHTML = `<div style="font-size: 0.75rem; color: #64748b; font-style: italic; padding: 6px 0;">Keine offenen Spiele für diesen Filter vorhanden.</div>`;
+
+            if (openCount === 0 && !hasActiveFilter) {
+                openContainer.innerHTML = `<div style="font-size: 0.75rem; color: #64748b; font-style: italic; padding: 6px 0;">Keine offenen Spiele vorhanden.</div>`;
             }
         }
 
@@ -627,7 +684,6 @@
             collectValues("weiss", dataWeiss);
             collectValues("gruen", dataGruen);
             
-            // Nur Spielpläne und Tabellen live updaten, um das Neuladen der offenen Container und Dropdowns beim Tippen zu verhindern
             renderSchedule("schedule-weiss-list", scheduleWeiss, dataWeiss);
             renderSchedule("schedule-gruen-list", scheduleGruen, dataGruen);
             calculateTable("weiss", dataWeiss);
