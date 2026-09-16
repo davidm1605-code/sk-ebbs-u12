@@ -18,9 +18,10 @@
         table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
         th, td { padding: 8px; text-align: left; border-bottom: 1px solid #334155; }
         th { background: #334155; color: #38bdf8; }
-        .team-name { flex: 1; text-align: left; }
-        .team-right { flex: 1; text-align: right; }
+        .team-name { flex: 1; text-align: left; display: flex; align-items: center; gap: 6px; }
+        .team-right { flex: 1; text-align: right; display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
         .round { font-size: 0.8rem; color: #94a3b8; width: 70px; }
+        .team-logo { width: 20px; height: 20px; object-fit: contain; vertical-align: middle; border-radius: 3px; }
         .schedule-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-bottom: 1px solid #334155; font-size: 0.85rem; border-radius: 6px; margin-bottom: 6px; background: rgba(255,255,255,0.02); }
         .schedule-row.finished { background: rgba(239, 68, 68, 0.15); border-left: 4px solid #ef4444; color: #fca5a5; }
         .schedule-row.live { background: rgba(234, 179, 8, 0.15); border-left: 4px solid #eab308; }
@@ -120,7 +121,34 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Exakte Meisterschaftstermine inklusive der gespielten Partien aus den Screenshots
+        // Vereinslogos Mapping inkl. der neu hinzugefügten Logos
+        const teamLogos = {
+            "SK Ebbs": "35647.png",
+            "Waidring": "35716.jpg",
+            "Pillerseetal": "35715.png",
+            "Kirchberg (U11)": "35714.png",
+            "Bruckhäusl": "35713.png",
+            "Söll": "35712.png",
+            "Walchsee": "35711.png",
+            "Kufstein": "35710.png",
+            "Kössen": "35708.png",
+            "Bad Häring sv.": "35707.png",
+            "Schwoich": "35704.png",
+            "Erl": "35703.png",
+            "Oberndorf": "35702.png",
+            "Wörgl": "35699.png",
+            "Kundl/Breitenbach": "35700.png",
+            "Niederndorf": "35701.png"
+        };
+
+        function getTeamLogoHtml(teamName) {
+            const fileName = teamLogos[teamName];
+            if (fileName) {
+                return `<img src="${fileName}" alt="${teamName}" class="team-logo">`;
+            }
+            return "";
+        }
+
         const scheduleWeiss = [
             { round: "1. Rde", dateStr: "Fr, 04.09.2026 | 18:30", iso: "2026-09-04T18:30:00", match: "SK Ebbs vs. Kufstein", home: "SK Ebbs", away: "Kufstein" },
             { round: "2. Rde", dateStr: "Sa, 12.09.2026 | 14:00", iso: "2026-09-12T14:00:00", match: "Walchsee vs. SK Ebbs", home: "Walchsee", away: "SK Ebbs" },
@@ -238,7 +266,7 @@
 
             list.forEach(item => {
                 const kickoff = new Date(item.iso);
-                const matchEnd = new Date(kickoff.getTime() + 60 * 60000); // 60 Min Spieldauer
+                const matchEnd = new Date(kickoff.getTime() + 60 * 60000);
                 
                 let cssClass = "";
                 let badgeHtml = "";
@@ -261,6 +289,10 @@
                     }
                 }
 
+                const homeLogo = getTeamLogoHtml(item.home);
+                const awayLogo = getTeamLogoHtml(item.away);
+                const matchFormatted = `${homeLogo} ${item.home} vs. ${awayLogo} ${item.away}`;
+
                 const div = document.createElement("div");
                 div.className = `schedule-row ${cssClass}`;
                 div.innerHTML = `
@@ -269,7 +301,7 @@
                         <small style="color: #94a3b8;">${item.dateStr}</small>
                     </div>
                     <div style="flex: 2; padding-left: 10px;">
-                        <strong>${item.match}</strong>
+                        <strong style="display: flex; align-items: center; gap: 6px;">${matchFormatted}</strong>
                     </div>
                     <div style="display: flex; align-items: center; gap: 8px;">
                         ${scoreText}
@@ -290,14 +322,17 @@
                 const isPlayed = m.homeGoals !== "" && m.awayGoals !== "";
                 const targetContainer = isPlayed ? playedContainer : openContainer;
 
+                const homeLogo = getTeamLogoHtml(m.home);
+                const awayLogo = getTeamLogoHtml(m.away);
+
                 const div = document.createElement("div");
                 div.className = "match";
                 div.innerHTML = `
                     <span class="round">${m.round}</span>
-                    <span class="team-name">${m.home}</span>
+                    <span class="team-name">${homeLogo} ${m.home}</span>
                     <input type="text" id="${groupKey}-h-${index}" value="${m.homeGoals}" oninput="syncAndUpdate()"> : 
                     <input type="text" id="${groupKey}-a-${index}" value="${m.awayGoals}" oninput="syncAndUpdate()">
-                    <span class="team-right">${m.away}</span>
+                    <span class="team-right">${m.away} ${awayLogo}</span>
                 `;
                 targetContainer.appendChild(div);
             });
@@ -375,10 +410,11 @@
 
             sortedTeams.forEach((team, idx) => {
                 const s = stats[team];
+                const logoHtml = getTeamLogoHtml(team);
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
                     <td>${idx + 1}</td>
-                    <td>${team}</td>
+                    <td><div style="display: flex; align-items: center; gap: 6px;">${logoHtml} ${team}</div></td>
                     <td>${s.sp}</td>
                     <td>${s.goalsFor}:${s.goalsAgainst}</td>
                     <td><strong>${s.pts}</strong></td>
