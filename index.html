@@ -44,23 +44,23 @@
             padding-bottom: 2px;
         }
         
-        /* Spieltermine-Zeile (perfekt gefesselt in feste Spalten) */
+        /* Spieltermine-Zeile (mit festen Spalten für perfekte Ausrichtung) */
         .schedule-row { display: flex; flex-direction: column; padding: 8px; border-bottom: 1px solid #334155; font-size: 0.8rem; border-radius: 6px; margin-bottom: 6px; background: rgba(255,255,255,0.02); gap: 4px; }
         .schedule-row.finished { background: rgba(239, 68, 68, 0.15); border-left: 4px solid #ef4444; color: #fca5a5; }
         .schedule-row.live { background: rgba(234, 179, 8, 0.15); border-left: 4px solid #eab308; }
         
         .schedule-header { display: flex; justify-content: space-between; width: 100%; font-size: 0.7rem; color: #94a3b8; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 3px; }
-        .schedule-body { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 4px; }
+        .schedule-body { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 2px; }
         
-        /* Feste Spaltenaufteilung für absolute Ausrichtung der Logos */
-        .schedule-team-home { display: flex; align-items: center; gap: 4px; width: 42%; overflow: hidden; min-width: 0; }
-        .schedule-vs { color: #94a3b8; flex-shrink: 0; text-align: center; width: 22px; font-size: 0.75rem; }
-        .schedule-team-away { display: flex; align-items: center; justify-content: flex-end; gap: 4px; width: 42%; overflow: hidden; min-width: 0; text-align: right; }
+        /* Feste Breiten für Heim- und Auswärtsteam, damit die Logos exakt fluchten */
+        .schedule-team-home { display: flex; align-items: center; gap: 3px; width: 38%; overflow: hidden; min-width: 0; text-align: left; }
+        .schedule-vs { color: #94a3b8; flex-shrink: 0; text-align: center; width: 20px; font-size: 0.75rem; }
+        .schedule-team-away { display: flex; align-items: center; justify-content: flex-end; gap: 3px; width: 38%; overflow: hidden; min-width: 0; text-align: right; }
         
-        .schedule-score-box { display: flex; align-items: center; justify-content: flex-end; gap: 6px; width: 115px; flex-shrink: 0; text-align: right; }
+        .schedule-score-box { display: flex; align-items: center; justify-content: flex-end; gap: 4px; width: 120px; flex-shrink: 0; text-align: right; }
         
-        .badge-finished { background: #ef4444; color: white; font-size: 0.6rem; font-weight: bold; padding: 2px 4px; border-radius: 4px; }
-        .badge-live { background: #eab308; color: #0f172a; font-size: 0.6rem; font-weight: bold; padding: 2px 4px; border-radius: 4px; }
+        .badge-finished { background: #ef4444; color: white; font-size: 0.6rem; font-weight: bold; padding: 2px 4px; border-radius: 4px; white-space: nowrap; }
+        .badge-live { background: #eab308; color: #0f172a; font-size: 0.6rem; font-weight: bold; padding: 2px 4px; border-radius: 4px; white-space: nowrap; }
         
         .btn-container { margin-top: 16px; text-align: center; }
         button.action-btn { background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 0.9rem; }
@@ -314,13 +314,13 @@
                     cssClass = "finished";
                     badgeHtml = '<span class="badge-finished">BEENDET</span>';
                     if (hasScore) {
-                        scoreText = `<span style="font-weight: bold; font-size: 0.85rem; color: #f8fafc;">${goals.h} : ${goals.a}</span>`;
+                        scoreText = `<span style="font-weight: bold; font-size: 0.8rem; color: #f8fafc;">${goals.h}:${goals.a}</span>`;
                     }
                 } else if (now >= kickoff && now < matchEnd) {
                     cssClass = "live";
                     badgeHtml = '<span class="badge-live">LÄUFT</span>';
                     if (hasScore) {
-                        scoreText = `<span style="font-weight: bold; font-size: 0.85rem; color: #f8fafc;">${goals.h} : ${goals.a}</span>`;
+                        scoreText = `<span style="font-weight: bold; font-size: 0.8rem; color: #f8fafc;">${goals.h}:${goals.a}</span>`;
                     }
                 }
 
@@ -451,7 +451,7 @@
             const tbody = document.getElementById(`table-${groupKey}`);
             tbody.innerHTML = "";
 
-        sortedTeams.forEach((team, idx) => {
+            sortedTeams.forEach((team, idx) => {
                 const s = stats[team];
                 const logoHtml = getTeamLogoHtml(team);
                 const tr = document.createElement("tr");
