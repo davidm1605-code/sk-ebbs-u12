@@ -707,12 +707,26 @@
                 const docSnap = await getDoc(doc(db, "matchdata", "seasons"));
                 if (docSnap.exists()) {
                     const saved = docSnap.data();
-                    if (saved.weissHerbst) saved.weissHerbst.forEach((m, i) => { if(dataWeissHerbst[i]) { dataWeissHerbst[i].homeGoals = m.homeGoals; dataWeissHerbst[i].awayGoals = m.awayGoals; } });
-                    if (saved.weissFruehjahr) saved.weissFruehjahr.forEach((m, i) => { if(dataWeissFruehjahr[i]) { dataWeissFruehjahr[i].homeGoals = m.homeGoals; dataWeissFruehjahr[i].awayGoals = m.awayGoals; } });
-                    if (saved.gruenHerbst) saved.gruenHerbst.forEach((m, i) => { if(dataGruenHerbst[i]) { dataGruenHerbst[i].homeGoals = m.homeGoals; dataGruenHerbst[i].awayGoals = m.awayGoals; } });
-                    if (saved.gruenFruehjahr) saved.gruenFruehjahr.forEach((m, i) => { if(dataGruenFruehjahr[i]) { dataGruenFruehjahr[i].homeGoals = m.homeGoals; dataGruenFruehjahr[i].awayGoals = m.awayGoals; } });
+                    
+                    const applySavedData = (targetList, savedList) => {
+                        if (!savedList) return;
+                        savedList.forEach(savedItem => {
+                            const match = targetList.find(m => m.round === savedItem.round && m.home === savedItem.home && m.away === savedItem.away);
+                            if (match) {
+                                match.homeGoals = savedItem.homeGoals;
+                                match.awayGoals = savedItem.awayGoals;
+                            }
+                        });
+                    };
+
+                    applySavedData(dataWeissHerbst, saved.weissHerbst);
+                    applySavedData(dataWeissFruehjahr, saved.weissFruehjahr);
+                    applySavedData(dataGruenHerbst, saved.gruenHerbst);
+                    applySavedData(dataGruenFruehjahr, saved.gruenFruehjahr);
                 }
-            } catch (e) { console.error("Firebase ladefehler:", e); }
+            } catch (e) { 
+                console.error("Firebase Ladefehler:", e); 
+            }
             initSelectOptions();
             renderAll();
         }
@@ -721,13 +735,16 @@
             syncAndUpdate();
             try {
                 await setDoc(doc(db, "matchdata", "seasons"), {
-                    weissHerbst: dataWeissHerbst.map(m => ({ homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
-                    weissFruehjahr: dataWeissFruehjahr.map(m => ({ homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
-                    gruenHerbst: dataGruenHerbst.map(m => ({ homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
-                    gruenFruehjahr: dataGruenFruehjahr.map(m => ({ homeGoals: m.homeGoals, awayGoals: m.awayGoals }))
+                    weissHerbst: dataWeissHerbst.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
+                    weissFruehjahr: dataWeissFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
+                    gruenHerbst: dataGruenHerbst.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
+                    gruenFruehjahr: dataGruenFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals }))
                 });
                 alert("Erfolgreich in Firebase gespeichert!");
-            } catch (e) { alert("Fehler beim Speichern."); }
+            } catch (e) { 
+                console.error("Fehler beim Speichern:", e);
+                alert("Fehler beim Speichern."); 
+            }
         }
 
         initSelectOptions();
