@@ -245,19 +245,21 @@
         const teamConfigs = {
             "SK Ebbs A": { label: "SKE A", color: "#15803d" },
             "SK Ebbs B": { label: "SKE B", color: "#15803d" },
-            "SPG Unterland": { label: "UNT", color: "#eab308" },
-            "FC Kufstein": { label: "KUF", color: "#0284c7" },
-            "SV Wörgl": { label: "WÖG", color: "#475569" },
+            "Bad Häring sv.": { label: "HÄR", color: "#eab308" },
+            "Bichlach B": { label: "BIC", color: "#047857" },
+            "Bichlach A": { label: "BIC", color: "#047857" },
             "SVG Erl": { label: "ERL", color: "#b91c1c" },
-            "FC Schwoich": { label: "SCH", color: "#dc2626" },
             "SV Niederndorf": { label: "NIE", color: "#b91c1c" },
+            "FC Schwoich": { label: "SCH", color: "#dc2626" },
+            "St.Johann B": { label: "STJ", color: "#1d4ed8" },
+            "St.Johann A": { label: "STJ", color: "#1d4ed8" },
             "FC Walchsee": { label: "WAL", color: "#eab308" },
-            "SPG Bichlach": { label: "BIC", color: "#047857" },
-            "FC St. Johann": { label: "STJ", color: "#1d4ed8" },
-            "SC Kundl": { label: "KUN", color: "#2563eb" },
+            "SV Wörgl": { label: "WÖG", color: "#475569" },
+            "FC Kufstein": { label: "KUF", color: "#0284c7" },
             "SV Bruckhäusl": { label: "BRU", color: "#1d4ed8" },
-            "SC Kirchberg": { label: "KIR", color: "#eab308" },
+            "Kirchberg (U11)": { label: "KIR", color: "#eab308" },
             "FC Kössen": { label: "KÖS", color: "#1e293b" },
+            "Kundl/Breitenbach": { label: "KUN", color: "#2563eb" },
             "SK Pillerseetal": { label: "PIL", color: "#2563eb" },
             "FC Söll": { label: "SÖL", color: "#ca8a04" },
             "SK Waidring": { label: "WAI", color: "#b91c1c" }
@@ -268,28 +270,28 @@
             return `<div class="team-shield" style="background-color: ${conf.color};">${conf.label}</div>`;
         }
 
-        // Offizieller TFV Spielplan U12 Gruppe Weiß (mit SK Ebbs A)
+        // Offizieller TFV Spielplan U12 Gruppe Weiß (SK Ebbs A)
         const scheduleWeiss = [
             { round: "1. Rde", dateStr: "Fr, 04.09.2026 | 18:30", iso: "2026-09-04T18:30:00", match: "SK Ebbs A vs. FC Kufstein", home: "SK Ebbs A", away: "FC Kufstein" },
             { round: "2. Rde", dateStr: "Sa, 12.09.2026 | 14:00", iso: "2026-09-12T14:00:00", match: "FC Walchsee vs. SK Ebbs A", home: "FC Walchsee", away: "SK Ebbs A" },
             { round: "3. Rde", dateStr: "Sa, 19.09.2026 | 12:00", iso: "2026-09-19T12:00:00", match: "SK Ebbs A vs. SV Wörgl", home: "SK Ebbs A", away: "SV Wörgl" },
             { round: "4. Rde", dateStr: "Fr, 25.09.2026 | 17:00", iso: "2026-09-25T17:00:00", match: "SVG Erl vs. SK Ebbs A", home: "SVG Erl", away: "SK Ebbs A" },
-            { round: "5. Rde", dateStr: "Mo, 05.10.2026 | 18:00", iso: "2026-10-05T18:00:00", match: "SK Ebbs A vs. SPG Bichlach", home: "SK Ebbs A", away: "SPG Bichlach" },
+            { round: "5. Rde", dateStr: "Mo, 05.10.2026 | 18:00", iso: "2026-10-05T18:00:00", match: "SK Ebbs A vs. Bichlach B", home: "SK Ebbs A", away: "Bichlach B" },
             { round: "6. Rde", dateStr: "So, 11.10.2026 | 14:30", iso: "2026-10-11T14:30:00", match: "FC Schwoich vs. SK Ebbs A", home: "FC Schwoich", away: "SK Ebbs A" },
             { round: "7. Rde", dateStr: "Sa, 17.10.2026 | 12:30", iso: "2026-10-17T12:30:00", match: "SV Niederndorf vs. SK Ebbs A", home: "SV Niederndorf", away: "SK Ebbs A" },
-            { round: "8. Rde", dateStr: "Sa, 24.10.2026 | 12:00", iso: "2026-10-24T12:00:00", match: "SK Ebbs A vs. FC St. Johann", home: "SK Ebbs A", away: "FC St. Johann" },
-            { round: "9. Rde", dateStr: "Fr, 30.10.2026 | 17:00", iso: "2026-10-30T17:00:00", match: "SPG Unterland vs. SK Ebbs A", home: "SPG Unterland", away: "SK Ebbs A" }
+            { round: "8. Rde", dateStr: "Sa, 24.10.2026 | 12:00", iso: "2026-10-24T12:00:00", match: "SK Ebbs A vs. St.Johann B", home: "SK Ebbs A", away: "St.Johann B" },
+            { round: "9. Rde", dateStr: "Fr, 30.10.2026 | 17:00", iso: "2026-10-30T17:00:00", match: "Bad Häring sv. vs. SK Ebbs A", home: "Bad Häring sv.", away: "SK Ebbs A" }
         ];
 
-        // Offizieller TFV Spielplan U12 Gruppe Grün (mit SK Ebbs B)
+        // Offizieller TFV Spielplan U12 Gruppe Grün (SK Ebbs B)
         const scheduleGruen = [
-            { round: "1. Rde", dateStr: "Fr, 04.09.2026 | 18:30", iso: "2026-09-04T18:30:00", match: "SK Ebbs B vs. FC St. Johann", home: "SK Ebbs B", away: "FC St. Johann" },
-            { round: "2. Rde", dateStr: "Fr, 11.09.2026 | 17:00", iso: "2026-09-11T17:00:00", match: "SC Kundl vs. SK Ebbs B", home: "SC Kundl", away: "SK Ebbs B" },
-            { round: "3. Rde", dateStr: "Sa, 19.09.2026 | 12:00", iso: "2026-09-19T12:00:00", match: "SK Ebbs B vs. SPG Bichlach", home: "SK Ebbs B", away: "SPG Bichlach" },
+            { round: "1. Rde", dateStr: "Fr, 04.09.2026 | 18:30", iso: "2026-09-04T18:30:00", match: "SK Ebbs B vs. St.Johann A", home: "SK Ebbs B", away: "St.Johann A" },
+            { round: "2. Rde", dateStr: "Fr, 11.09.2026 | 17:00", iso: "2026-09-11T17:00:00", match: "Kundl/Breitenbach vs. SK Ebbs B", home: "Kundl/Breitenbach", away: "SK Ebbs B" },
+            { round: "3. Rde", dateStr: "Sa, 19.09.2026 | 12:00", iso: "2026-09-19T12:00:00", match: "SK Ebbs B vs. Bichlach A", home: "SK Ebbs B", away: "Bichlach A" },
             { round: "4. Rde", dateStr: "Sa, 26.09.2026 | 13:00", iso: "2026-09-26T13:00:00", match: "FC Söll vs. SK Ebbs B", home: "FC Söll", away: "SK Ebbs B" },
             { round: "5. Rde", dateStr: "Sa, 03.10.2026 | 11:30", iso: "2026-10-03T11:30:00", match: "SK Ebbs B vs. SK Waidring", home: "SK Ebbs B", away: "SK Waidring" },
             { round: "6. Rde", dateStr: "Sa, 10.10.2026 | 12:00", iso: "2026-10-10T12:00:00", match: "SK Ebbs B vs. SK Pillerseetal", home: "SK Ebbs B", away: "SK Pillerseetal" },
-            { round: "7. Rde", dateStr: "Sa, 17.10.2026 | 11:30", iso: "2026-10-17T11:30:00", match: "SC Kirchberg vs. SK Ebbs B", home: "SC Kirchberg", away: "SK Ebbs B" },
+            { round: "7. Rde", dateStr: "Sa, 17.10.2026 | 11:30", iso: "2026-10-17T11:30:00", match: "Kirchberg (U11) vs. SK Ebbs B", home: "Kirchberg (U11)", away: "SK Ebbs B" },
             { round: "8. Rde", dateStr: "Sa, 24.10.2026 | 12:00", iso: "2026-10-24T12:00:00", match: "FC Kössen vs. SK Ebbs B", home: "FC Kössen", away: "SK Ebbs B" },
             { round: "9. Rde", dateStr: "Do, 29.10.2026 | 17:00", iso: "2026-10-29T17:00:00", match: "SK Ebbs B vs. SV Bruckhäusl", home: "SK Ebbs B", away: "SV Bruckhäusl" }
         ];
@@ -312,8 +314,8 @@
             return matches;
         }
 
-        const teamsWeiss = ["SK Ebbs A", "SV Wörgl", "SVG Erl", "FC Schwoich", "SV Niederndorf", "SPG Unterland", "FC St. Johann", "FC Walchsee", "FC Kufstein", "SPG Bichlach"];
-        const teamsGruen = ["SK Ebbs B", "SPG Bichlach", "SV Bruckhäusl", "SC Kirchberg", "FC Kössen", "SK Pillerseetal", "FC Söll", "SK Waidring", "SC Kundl", "FC St. Johann"];
+        const teamsWeiss = ["SK Ebbs A", "Bad Häring sv.", "Bichlach B", "SVG Erl", "SV Niederndorf", "FC Schwoich", "St.Johann B", "FC Walchsee", "SV Wörgl", "FC Kufstein"];
+        const teamsGruen = ["SK Ebbs B", "Bichlach A", "SV Bruckhäusl", "Kirchberg (U11)", "FC Kössen", "Kundl/Breitenbach", "SK Pillerseetal", "St.Johann A", "FC Söll", "SK Waidring"];
 
         const initialWeissResults = {
             "SK Ebbs A-FC Kufstein": { h: "7", a: "3" },
@@ -321,8 +323,8 @@
         };
 
         const initialGruenResults = {
-            "SK Ebbs B-FC St. Johann": { h: "8", a: "2" },
-            "SC Kundl-SK Ebbs B": { h: "1", a: "4" }
+            "SK Ebbs B-St.Johann A": { h: "8", a: "2" },
+            "Kundl/Breitenbach-SK Ebbs B": { h: "1", a: "4" }
         };
 
         function populateMatches(teams, initialResults) {
