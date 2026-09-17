@@ -277,7 +277,6 @@
             return `<div class="team-shield" style="background-color: ${conf.color};">${conf.label}</div>`;
         }
 
-        // Exakte Original-Termine Gruppe Weiß (laut Screenshot 35855.png)
         const scheduleWeiss = [
             { round: "1. Rde", dateStr: "Fr, 04.09.2026 | 18:30", iso: "2026-09-04T18:30:00", match: "SK Ebbs vs. Kufstein", home: "SK Ebbs", away: "Kufstein" },
             { round: "2. Rde", dateStr: "Sa, 12.09.2026 | 14:00", iso: "2026-09-12T14:00:00", match: "Walchsee vs. SK Ebbs", home: "Walchsee", away: "SK Ebbs" },
@@ -290,7 +289,6 @@
             { round: "9. Rde", dateStr: "Fr, 30.10.2026 | 17:00", iso: "2026-10-30T17:00:00", match: "Bad Häring sv. vs. SK Ebbs", home: "Bad Häring sv.", away: "SK Ebbs" }
         ];
 
-        // Exakte Original-Termine Gruppe Grün (laut Screenshot 35856.png)
         const scheduleGruen = [
             { round: "1. Rde", dateStr: "Fr, 04.09.2026 | 18:30", iso: "2026-09-04T18:30:00", match: "SK Ebbs vs. St.Johann A", home: "SK Ebbs", away: "St.Johann A" },
             { round: "2. Rde", dateStr: "Fr, 11.09.2026 | 17:00", iso: "2026-09-11T17:00:00", match: "Kundl/Breiten... vs. SK Ebbs", home: "Kundl/Breiten...", away: "SK Ebbs" },
@@ -306,7 +304,6 @@
         const teamsWeiss = ["SK Ebbs A", "Erl", "Kössen", "Niederndorf", "SPG Bichlach A", "Bad Häring B", "Schwoich", "St.Johann A", "Waidring", "Walchsee"];
         const teamsGruen = ["SK Ebbs B", "Kufstein", "Pillerseetal", "SPG Bichlach B", "SPG Breitenbach / Kundl", "Bad Häring A", "St.Johann B", "Söll A", "Wörgl"];
 
-        // Feste Verknüpfung der Spiele anhand der exakten Spielplan-Termine (verhindert Verrutschen)
         let matchesWeiss = scheduleWeiss.map(s => ({
             round: s.round,
             home: s.home.replace("SK Ebbs", "SK Ebbs A"),
@@ -564,7 +561,7 @@
             let hasActiveFilter = filterTeamOffen && filterTeamOffen !== "";
 
             groupData.matches.forEach((m, index) => {
-                const isPlayed = m.homeGoals !== "" && m.awayGoals !== "";
+                const isPlayed = m.homeGoals !== "" && m.homeGoals !== undefined && m.awayGoals !== "" && m.awayGoals !== undefined;
 
                 if (isPlayed) {
                     playedCount++;
@@ -594,9 +591,9 @@
                         <span class="round">${m.round}</span>
                         <div class="team-home">${homeLogo} <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.home}</span></div>
                         <div class="score-inputs">
-                            <input type="text" id="${groupKey}-h-${index}" value="${m.homeGoals}" oninput="syncAndUpdate()"> 
+                            <input type="text" id="${groupKey}-h-${index}" value="${m.homeGoals !== undefined ? m.homeGoals : ''}" oninput="syncAndUpdate()"> 
                             <span>:</span> 
-                            <input type="text" id="${groupKey}-a-${index}" value="${m.awayGoals}" oninput="syncAndUpdate()">
+                            <input type="text" id="${groupKey}-a-${index}" value="${m.awayGoals !== undefined ? m.awayGoals : ''}" oninput="syncAndUpdate()">
                         </div>
                         <div class="team-away"><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.away}</span> ${awayLogo}</div>
                     `;
@@ -668,7 +665,7 @@
                 const hVal = m.homeGoals;
                 const aVal = m.awayGoals;
 
-                if (hVal !== "" && aVal !== "" && !isNaN(hVal) && !isNaN(aVal)) {
+                if (hVal !== "" && hVal !== undefined && aVal !== "" && aVal !== undefined && !isNaN(hVal) && !isNaN(aVal)) {
                     const hG = parseInt(hVal);
                     const aG = parseInt(aVal);
 
@@ -733,18 +730,21 @@
                     if (savedData.weiss) {
                         savedData.weiss.forEach((gMatch, idx) => {
                             if (dataWeiss.matches[idx]) {
-                                dataWeiss.matches[idx].homeGoals = gMatch.homeGoals !== undefined ? gMatch.homeGoals : "";
-                                dataWeiss.matches[idx].awayGoals = gMatch.awayGoals !== undefined ? gMatch.awayGoals : "";
+                                if (gMatch.homeGoals !== undefined) dataWeiss.matches[idx].homeGoals = gMatch.homeGoals;
+                                if (gMatch.awayGoals !== undefined) dataWeiss.matches[idx].awayGoals = gMatch.awayGoals;
                             }
                         });
                     }
-                    if (savedData.gruen && savedData.gruen.matches) {
-                        savedData.gruen.matches.forEach((gMatch, idx) => {
-                            if (dataGruen.matches[idx]) {
-                                dataGruen.matches[idx].homeGoals = gMatch.homeGoals !== undefined ? gMatch.homeGoals : "";
-                                dataGruen.matches[idx].awayGoals = gMatch.awayGoals !== undefined ? gMatch.awayGoals : "";
-                            }
-                        });
+                    if (savedData.gruen) {
+                        const gruenMatches = Array.isArray(savedData.gruen) ? savedData.gruen : savedData.gruen.matches;
+                        if (gruenMatches) {
+                            gruenMatches.forEach((gMatch, idx) => {
+                                if (dataGruen.matches[idx]) {
+                                    if (gMatch.homeGoals !== undefined) dataGruen.matches[idx].homeGoals = gMatch.homeGoals;
+                                    if (gMatch.awayGoals !== undefined) dataGruen.matches.forEach ? dataGruen.matches[idx].awayGoals = gMatch.awayGoals : null;
+                                }
+                            });
+                        }
                     }
                 }
             } catch (e) {
@@ -762,7 +762,7 @@
             try {
                 await setDoc(doc(db, "matchdata", "seasons"), {
                     weiss: dataWeiss.matches.map(m => ({ homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
-                    gruen: { matches: dataGruen.matches.map(m => ({ homeGoals: m.homeGoals, awayGoals: m.awayGoals })) }
+                    gruen: dataGruen.matches.map(m => ({ homeGoals: m.homeGoals, awayGoals: m.awayGoals }))
                 });
                 alert("Erfolge erfolgreich in der Cloud (Firebase) gespeichert!");
             } catch (e) {
