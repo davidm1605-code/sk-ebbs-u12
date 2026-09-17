@@ -95,8 +95,8 @@
 <body class="readonly-mode">
     <div class="container">
         <div class="tabs">
-            <button class="tab-btn" onclick="switchTab('termene-weiss', event)">Termine SK Ebbs A</button>
-            <button class="tab-btn" onclick="switchTab('termene-gruen', event)">Termine SK Ebbs B</button>
+            <button class="tab-btn" onclick="switchTab('termene-weiss', event)">Termine SK Ebbs A (Weiß)</button>
+            <button class="tab-btn" onclick="switchTab('termene-gruen', event)">Termine SK Ebbs B (Grün)</button>
             <button class="tab-btn active" onclick="switchTab('gespielt', event)">Gespielt</button>
             <button class="tab-btn" onclick="switchTab('offen', event)">Offen</button>
             <button class="tab-btn" onclick="switchTab('tabelle', event)">Tabelle</button>
@@ -104,7 +104,7 @@
 
         <div id="tab-termene-weiss" class="tab-content">
             <div class="info-box">
-                <h3>SK Ebbs A – Spieltermine (Gruppe 1)</h3>
+                <h3>SK Ebbs A – Spieltermine (Gruppe A / Weiß)</h3>
                 <p>Übersicht der offiziellen Meisterschaftsspiele inklusive Echtzeit-Ergebnissen.</p>
             </div>
             <button class="cal-btn" onclick="downloadICS('weiss')">📅 Alle Termine SK Ebbs A in den Kalender laden</button>
@@ -117,7 +117,7 @@
 
         <div id="tab-termene-gruen" class="tab-content">
             <div class="info-box">
-                <h3>SK Ebbs B – Spieltermine (Gruppe 2 / B)</h3>
+                <h3>SK Ebbs B – Spieltermine (Gruppe B / Grün)</h3>
                 <p>Übersicht der offiziellen Meisterschaftsspiele inklusive Echtzeit-Ergebnissen.</p>
             </div>
             <button class="cal-btn" onclick="downloadICS('gruen')">📅 Alle Termine SK Ebbs B in den Kalender laden</button>
@@ -135,19 +135,19 @@
             </div>
 
             <div class="filter-chips">
-                <button class="filter-chip" onclick="filterGroup('gespielt', 'weiss', this)">SK Ebbs A</button>
-                <button class="filter-chip" onclick="filterGroup('gespielt', 'gruen', this)">SK Ebbs B</button>
+                <button class="filter-chip" onclick="filterGroup('gespielt', 'weiss', this)">SK Ebbs A (Weiß)</button>
+                <button class="filter-chip" onclick="filterGroup('gespielt', 'gruen', this)">SK Ebbs B (Grün)</button>
                 <button class="filter-chip active" onclick="filterGroup('gespielt', 'alle', this)">Alle anzeigen</button>
             </div>
 
             <div id="section-gespielt-weiss">
-                <h2>SK Ebbs A (Gruppe 1) - Berechnete Ergebnisse</h2>
+                <h2>SK Ebbs A (Gruppe A / Weiß) - Berechnete Ergebnisse</h2>
                 <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px; font-style: italic;">Diese Spiele fließen bereits in die Wertung ein.</div>
                 <div id="matches-weiss-played"></div>
             </div>
 
             <div id="section-gespielt-gruen" style="margin-top: 15px;">
-                <h2>SK Ebbs B (Gruppe 2) - Berechnete Ergebnisse</h2>
+                <h2>SK Ebbs B (Gruppe B / Grün) - Berechnete Ergebnisse</h2>
                 <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px; font-style: italic;">Diese Spiele fließen bereits in die Wertung ein.</div>
                 <div id="matches-gruen-played"></div>
             </div>
@@ -160,8 +160,8 @@
             </div>
 
             <div class="filter-chips">
-                <button class="filter-chip" onclick="filterGroup('offen', 'weiss', this)">SK Ebbs A</button>
-                <button class="filter-chip" onclick="filterGroup('offen', 'gruen', this)">SK Ebbs B</button>
+                <button class="filter-chip" onclick="filterGroup('offen', 'weiss', this)">SK Ebbs A (Weiß)</button>
+                <button class="filter-chip" onclick="filterGroup('offen', 'gruen', this)">SK Ebbs B (Grün)</button>
                 <button class="filter-chip active" onclick="filterGroup('offen', 'alle', this)">Alle anzeigen</button>
             </div>
 
@@ -189,7 +189,7 @@
             </div>
 
             <div id="section-offen-weiss">
-                <h2>SK Ebbs A (Gruppe 1) - Noch offene Spiele</h2>
+                <h2>SK Ebbs A (Gruppe A / Weiß) - Noch offene Spiele</h2>
                 <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px; font-style: italic;">Trage hier die Tore ein, sobald die Partien absolviert sind.</div>
                 <div id="matches-weiss-open"></div>
             </div>
@@ -200,14 +200,14 @@
             </div>
 
             <div id="section-offen-gruen" style="margin-top: 15px;">
-                <h2>SK Ebbs B (Gruppe 2) - Noch offene Spiele</h2>
+                <h2>SK Ebbs B (Gruppe B / Grün) - Noch offene Spiele</h2>
                 <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px; font-style: italic;">Trage hier die Tore ein, sobald die Partien absolviert sind.</div>
                 <div id="matches-gruen-open"></div>
             </div>
         </div>
 
         <div id="tab-tabelle" class="tab-content">
-            <h2>Tabelle SK Ebbs A (Gruppe 1)</h2>
+            <h2>Tabelle SK Ebbs A (Gruppe A / Weiß)</h2>
             <table>
                 <thead>
                     <tr><th>#</th><th>TEAM</th><th>SP</th><th>TORE</th><th>PKT</th></tr>
@@ -215,7 +215,7 @@
                 <tbody id="table-weiss"></tbody>
             </table>
 
-            <h2>Tabelle SK Ebbs B (Gruppe 2)</h2>
+            <h2>Tabelle SK Ebbs B (Gruppe B / Grün)</h2>
             <table>
                 <thead>
                     <tr><th>#</th><th>TEAM</th><th>SP</th><th>TORE</th><th>PKT</th></tr>
@@ -249,7 +249,8 @@
             "Kössen": { label: "KÖS", color: "#1e293b" },
             "Niederndorf": { label: "NIE", color: "#b91c1c" },
             "SPG Bichlach A": { label: "BIC", color: "#047857" },
-            "SPG Unterland B": { label: "UNT", color: "#eab308" },
+            "Bad Häring B": { label: "HÄRB", color: "#eab308" },
+            "Bad Häring A": { label: "HÄRA", color: "#eab308" },
             "Schwoich": { label: "SCH", color: "#dc2626" },
             "St.Johann A": { label: "STJ", color: "#1d4ed8" },
             "Waidring": { label: "WAI", color: "#b91c1c" },
@@ -258,7 +259,6 @@
             "Pillerseetal": { label: "PIL", color: "#2563eb" },
             "SPG Bichlach B": { label: "BIC", color: "#047857" },
             "SPG Breitenbach / Kundl": { label: "KUN", color: "#2563eb" },
-            "SPG Unterland A": { label: "UNT", color: "#eab308" },
             "St.Johann B": { label: "STJ", color: "#1d4ed8" },
             "Söll A": { label: "SÖL", color: "#ca8a04" },
             "Wörgl": { label: "WÖG", color: "#475569" }
@@ -269,7 +269,7 @@
             return `<div class="team-shield" style="background-color: ${conf.color};">${conf.label}</div>`;
         }
 
-        // Offizieller TFV Spielplan U12 Gruppe 1 (Ebbs A)
+        // Offizieller TFV Spielplan U12 Gruppe A / Weiß (Ebbs A)
         const scheduleWeiss = [
             { round: "1. Rde", dateStr: "Fr, 04.09.2026 | 18:30", iso: "2026-09-04T18:30:00", match: "Ebbs A vs. Schwoich", home: "Ebbs A", away: "Schwoich" },
             { round: "2. Rde", dateStr: "Sa, 12.09.2026 | 14:00", iso: "2026-09-12T14:00:00", match: "Walchsee vs. Ebbs A", home: "Walchsee", away: "Ebbs A" },
@@ -279,10 +279,10 @@
             { round: "6. Rde", dateStr: "So, 11.10.2026 | 14:30", iso: "2026-10-11T14:30:00", match: "Niederndorf vs. Ebbs A", home: "Niederndorf", away: "Ebbs A" },
             { round: "7. Rde", dateStr: "Sa, 17.10.2026 | 12:30", iso: "2026-10-17T12:30:00", match: "St.Johann A vs. Ebbs A", home: "St.Johann A", away: "Ebbs A" },
             { round: "8. Rde", dateStr: "Sa, 24.10.2026 | 12:00", iso: "2026-10-24T12:00:00", match: "Ebbs A vs. Waidring", home: "Ebbs A", away: "Waidring" },
-            { round: "9. Rde", dateStr: "Fr, 30.10.2026 | 17:00", iso: "2026-10-30T17:00:00", match: "SPG Unterland B vs. Ebbs A", home: "SPG Unterland B", away: "Ebbs A" }
+            { round: "9. Rde", dateStr: "Fr, 30.10.2026 | 17:00", iso: "2026-10-30T17:00:00", match: "Bad Häring B vs. Ebbs A", home: "Bad Häring B", away: "Ebbs A" }
         ];
 
-        // Offizieller TFV Spielplan U12 Gruppe 2 / B (Ebbs B)
+        // Offizieller TFV Spielplan U12 Gruppe B / Grün (Ebbs B)
         const scheduleGruen = [
             { round: "1. Rde", dateStr: "Fr, 04.09.2026 | 18:30", iso: "2026-09-04T18:30:00", match: "Ebbs B vs. Kufstein", home: "Ebbs B", away: "Kufstein" },
             { round: "2. Rde", dateStr: "Fr, 11.09.2026 | 17:00", iso: "2026-09-11T17:00:00", match: "SPG Breitenbach / Kundl vs. Ebbs B", home: "SPG Breitenbach / Kundl", away: "Ebbs B" },
@@ -291,7 +291,7 @@
             { round: "5. Rde", dateStr: "Sa, 03.10.2026 | 11:30", iso: "2026-10-03T11:30:00", match: "Ebbs B vs. SPG Bichlach B", home: "Ebbs B", away: "SPG Bichlach B" },
             { round: "6. Rde", dateStr: "Sa, 10.10.2026 | 12:00", iso: "2026-10-10T12:00:00", match: "St.Johann B vs. Ebbs B", home: "St.Johann B", away: "Ebbs B" },
             { round: "7. Rde", dateStr: "Sa, 17.10.2026 | 11:30", iso: "2026-10-17T11:30:00", match: "Wörgl vs. Ebbs B", home: "Wörgl", away: "Ebbs B" },
-            { round: "8. Rde", dateStr: "Sa, 24.10.2026 | 12:00", iso: "2026-10-24T12:00:00", match: "SPG Unterland A vs. Ebbs B", home: "SPG Unterland A", away: "Ebbs B" },
+            { round: "8. Rde", dateStr: "Sa, 24.10.2026 | 12:00", iso: "2026-10-24T12:00:00", match: "Bad Häring A vs. Ebbs B", home: "Bad Häring A", away: "Ebbs B" },
             { round: "9. Rde", dateStr: "Do, 29.10.2026 | 17:00", iso: "2026-10-29T17:00:00", match: "Ebbs B vs. Ebbs B (Freilos)", home: "Ebbs B", away: "Ebbs B" }
         ];
 
@@ -313,8 +313,8 @@
             return matches;
         }
 
-        const teamsWeiss = ["Ebbs A", "Erl", "Kössen", "Niederndorf", "SPG Bichlach A", "SPG Unterland B", "Schwoich", "St.Johann A", "Waidring", "Walchsee"];
-        const teamsGruen = ["Ebbs B", "Kufstein", "Pillerseetal", "SPG Bichlach B", "SPG Breitenbach / Kundl", "SPG Unterland A", "St.Johann B", "Söll A", "Wörgl"];
+        const teamsWeiss = ["Ebbs A", "Erl", "Kössen", "Niederndorf", "SPG Bichlach A", "Bad Häring B", "Schwoich", "St.Johann A", "Waidring", "Walchsee"];
+        const teamsGruen = ["Ebbs B", "Kufstein", "Pillerseetal", "SPG Bichlach B", "SPG Breitenbach / Kundl", "Bad Häring A", "St.Johann B", "Söll A", "Wörgl"];
 
         const initialWeissResults = {
             "Ebbs A-Schwoich": { h: "7", a: "3" },
@@ -444,7 +444,7 @@
 
         window.downloadICS = function(group) {
             const list = group === 'weiss' ? scheduleWeiss : scheduleGruen;
-            const groupName = group === 'weiss' ? 'Ebbs_A' : 'Ebbs_B';
+            const groupName = group === 'weiss' ? 'SK_Ebbs_A_Weiss' : 'SK_Ebbs_B_Gruen';
             
             let icsContent = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//SK Ebbs U12//Spielplan//DE\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\n";
             
@@ -461,7 +461,7 @@
                 icsContent += `DTSTAMP:${formatICSDate(new Date())}\n`;
                 icsContent += `DTSTART:${formatICSDate(startDate)}\n`;
                 icsContent += `DTEND:${formatICSDate(endDate)}\n`;
-                icsContent += `SUMMARY:${group === 'weiss' ? 'Ebbs A' : 'Ebbs B'} - ${item.match}\n`;
+                icsContent += `SUMMARY:${group === 'weiss' ? 'SK Ebbs A' : 'SK Ebbs B'} - ${item.match}\n`;
                 icsContent += `DESCRIPTION:Meisterschaftsspiel\\nRunde: ${item.round}\n`;
                 icsContent += "END:VEVENT\n";
             });
