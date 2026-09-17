@@ -265,7 +265,11 @@
             "Söll A": { label: "SÖL", color: "#ca8a04" },
             "Wörgl": { label: "WÖG", color: "#475569" },
             "Bruckhäusl": { label: "BRU", color: "#1d4ed8" },
-            "Kirchberg (U11)": { label: "KIR", color: "#eab308" }
+            "Kirchberg (U11)": { label: "KIR", color: "#eab308" },
+            "Bichlach B": { label: "BIC", color: "#047857" },
+            "Bichlach A": { label: "BIC", color: "#047857" },
+            "Bad Häring sv.": { label: "HÄRB", color: "#eab308" },
+            "Söll": { label: "SÖL", color: "#ca8a04" }
         };
 
         function getTeamLogoHtml(teamName) {
@@ -299,55 +303,28 @@
             { round: "9. Rde", dateStr: "Do, 29.10.2026 | 17:00", iso: "2026-10-29T17:00:00", match: "SK Ebbs vs. Bruckhäusl", home: "SK Ebbs", away: "Bruckhäusl" }
         ];
 
-        function generateAllMatches(teams) {
-            const matches = [];
-            let roundCounter = 1;
-            for (let i = 0; i < teams.length; i++) {
-                for (let j = i + 1; j < teams.length; j++) {
-                    matches.push({
-                        round: `${roundCounter}. Rde`,
-                        home: teams[i],
-                        away: teams[j],
-                        homeGoals: "",
-                        awayGoals: ""
-                    });
-                    roundCounter++;
-                }
-            }
-            return matches;
-        }
-
         const teamsWeiss = ["SK Ebbs A", "Erl", "Kössen", "Niederndorf", "SPG Bichlach A", "Bad Häring B", "Schwoich", "St.Johann A", "Waidring", "Walchsee"];
         const teamsGruen = ["SK Ebbs B", "Kufstein", "Pillerseetal", "SPG Bichlach B", "SPG Breitenbach / Kundl", "Bad Häring A", "St.Johann B", "Söll A", "Wörgl"];
 
-        const initialWeissResults = {
-            "SK Ebbs A-Kufstein": { h: "7", a: "3" },
-            "Walchsee-SK Ebbs A": { h: "1", a: "4" }
-        };
+        // Feste Verknüpfung der Spiele anhand der exakten Spielplan-Termine (verhindert Verrutschen)
+        let matchesWeiss = scheduleWeiss.map(s => ({
+            round: s.round,
+            home: s.home.replace("SK Ebbs", "SK Ebbs A"),
+            away: s.away,
+            homeGoals: (s.round === "1. Rde" ? "7" : (s.round === "2. Rde" ? "" : "")),
+            awayGoals: (s.round === "1. Rde" ? "3" : (s.round === "2. Rde" ? "" : ""))
+        }));
 
-        const initialGruenResults = {
-            "SK Ebbs-St.Johann A": { h: "8", a: "2" },
-            "Kundl/Breiten...-SK Ebbs": { h: "1", a: "4" }
-        };
+        let matchesGruen = scheduleGruen.map(s => ({
+            round: s.round,
+            home: s.home.replace("SK Ebbs", "SK Ebbs B"),
+            away: s.away.replace("SK Ebbs", "SK Ebbs B"),
+            homeGoals: (s.round === "1. Rde" ? "8" : (s.round === "2. Rde" ? "1" : "")),
+            awayGoals: (s.round === "1. Rde" ? "2" : (s.round === "2. Rde" ? "4" : ""))
+        }));
 
-        function populateMatches(teams, initialResults) {
-            const generated = generateAllMatches(teams);
-            return generated.map(m => {
-                const key1 = `${m.home}-${m.away}`;
-                const key2 = `${m.away}-${m.home}`;
-                if (initialResults[key1]) {
-                    m.homeGoals = initialResults[key1].h;
-                    m.awayGoals = initialResults[key1].a;
-                } else if (initialResults[key2]) {
-                    m.homeGoals = initialResults[key2].a;
-                    m.awayGoals = initialResults[key2].h;
-                }
-                return m;
-            });
-        }
-
-        let dataWeiss = { teams: teamsWeiss, matches: populateMatches(teamsWeiss, initialWeissResults) };
-        let dataGruen = { teams: teamsGruen, matches: populateMatches(teamsGruen, initialGruenResults) };
+        let dataWeiss = { teams: teamsWeiss, matches: matchesWeiss };
+        let dataGruen = { teams: teamsGruen, matches: matchesGruen };
 
         function initSelectOptions() {
             populateSelectOptions('select-team-offen-weiss', teamsWeiss, '-- Alle SK Ebbs A --');
@@ -527,23 +504,14 @@
                 let badgeHtml = "";
                 let scoreText = "";
 
-                // Manuelles Mapping für die ersten 2 gespielten Partien laut Original-Ansicht
-                let forcedScore = null;
-                if (containerId === "schedule-weiss-list") {
-                    if (item.round === "1. Rde") forcedScore = { h: "7", a: "3" };
-                    if (item.round === "2. Rde") forcedScore = { h: "1", a: "4" };
-                } else if (containerId === "schedule-gruen-list") {
-                    if (item.round === "1. Rde") forcedScore = { h: "8", a: "2" };
-                    if (item.round === "2. Rde") forcedScore = { h: "1", a: "4" };
-                }
-
-                const hasScore = forcedScore !== null;
+                const goals = findMatchGoals(groupData, item.home.replace("SK Ebbs", "SK Ebbs A"), item.away);
+                const hasScore = goals && goals.h !== "" && goals.a !== "";
 
                 if (hasScore || now >= matchEnd) {
                     cssClass = "finished";
                     badgeHtml = '<span class="badge-finished">BEENDET</span>';
                     if (hasScore) {
-                        scoreText = `<span style="font-weight: bold; font-size: 0.8rem; color: #f8fafc;">${forcedScore.h}:${forcedScore.a}</span>`;
+                        scoreText = `<span style="font-weight: bold; font-size: 0.8rem; color: #f8fafc;">${goals.h}:${goals.a}</span>`;
                     }
                 } else if (now >= kickoff && now < matchEnd) {
                     cssClass = "live";
@@ -551,7 +519,7 @@
                 }
 
                 const homeLogo = getTeamLogoHtml(item.home.replace("SK Ebbs", "SK Ebbs A"));
-                const awayLogo = getTeamLogoHtml(item.away.replace("SK Ebbs", "SK Ebbs B"));
+                const awayLogo = getTeamLogoHtml(item.away);
 
                 const div = document.createElement("div");
                 div.className = `schedule-row ${cssClass}`;
@@ -794,7 +762,7 @@
             try {
                 await setDoc(doc(db, "matchdata", "seasons"), {
                     weiss: dataWeiss.matches.map(m => ({ homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
-                    gruen: { matches: dataGruen.matches.map(m => ({ homeGoals: m.homeGoals, awayGoals: m.homeGoals })) }
+                    gruen: { matches: dataGruen.matches.map(m => ({ homeGoals: m.homeGoals, awayGoals: m.awayGoals })) }
                 });
                 alert("Erfolge erfolgreich in der Cloud (Firebase) gespeichert!");
             } catch (e) {
