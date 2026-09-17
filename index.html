@@ -135,9 +135,9 @@
             </div>
 
             <div class="filter-chips">
-                <button class="filter-chip active" onclick="filterGroup('gespielt', 'weiss', this)">Gruppe Weiß</button>
+                <button class="filter-chip" onclick="filterGroup('gespielt', 'weiss', this)">Gruppe Weiß</button>
                 <button class="filter-chip" onclick="filterGroup('gespielt', 'gruen', this)">Gruppe Grün</button>
-                <button class="filter-chip" onclick="filterGroup('gespielt', 'alle', this)">Alle anzeigen</button>
+                <button class="filter-chip active" onclick="filterGroup('gespielt', 'alle', this)">Alle anzeigen</button>
             </div>
 
             <div id="section-gespielt-weiss">
@@ -146,7 +146,7 @@
                 <div id="matches-weiss-played"></div>
             </div>
 
-            <div id="section-gespielt-gruen" style="margin-top: 15px; display: none;">
+            <div id="section-gespielt-gruen" style="margin-top: 15px;">
                 <h2>Gruppe GRÜN - Berechnete Ergebnisse</h2>
                 <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px; font-style: italic;">Diese Spiele fließen bereits in die Wertung ein.</div>
                 <div id="matches-gruen-played"></div>
@@ -160,11 +160,12 @@
             </div>
 
             <div class="filter-chips">
-                <button class="filter-chip active" onclick="filterGroup('offen', 'weiss', this)">Gruppe Weiß</button>
+                <button class="filter-chip" onclick="filterGroup('offen', 'weiss', this)">Gruppe Weiß</button>
                 <button class="filter-chip" onclick="filterGroup('offen', 'gruen', this)">Gruppe Grün</button>
+                <button class="filter-chip active" onclick="filterGroup('offen', 'alle', this)">Alle anzeigen</button>
             </div>
 
-            <div class="filter-row" id="filter-row-weiss">
+            <div class="filter-row" id="filter-row-weiss" style="display: none;">
                 <div class="filter-group">
                     <label style="font-size: 0.7rem; color: #94a3b8; display: block; margin-bottom: 3px;">Filter Gruppe Weiß:</label>
                     <select id="select-team-offen-weiss" class="team-filter-select">
@@ -200,7 +201,7 @@
                 <div id="filtered-quick-list-gruen"></div>
             </div>
 
-            <div id="section-offen-gruen" style="margin-top: 15px; display: none;">
+            <div id="section-offen-gruen" style="margin-top: 15px;">
                 <h2>Gruppe GRÜN - Noch offene Spiele</h2>
                 <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px; font-style: italic;">Trage hier die Tore ein, sobald die Partien absolviert sind.</div>
                 <div id="matches-gruen-open"></div>
