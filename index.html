@@ -550,7 +550,7 @@
                 let cssClass = "", badgeHtml = "", scoreText = "";
 
                 const matchObj = groupData.find(m => m.round === item.round || (m.home === item.home && m.away === item.away));
-                const hasScore = matchObj && matchObj.homeGoals !== "" && matchObj.awayGoals !== "";
+                const hasScore = matchObj && matchObj.homeGoals !== "" && matchObj.homeGoals !== undefined && matchObj.awayGoals !== "" && matchObj.awayGoals !== undefined;
 
                 if (hasScore || now >= matchEnd) {
                     cssClass = "finished"; badgeHtml = '<span class="badge-finished">BEENDET</span>';
@@ -593,9 +593,9 @@
                     <span class="round">${m.round}</span>
                     <div class="team-home">${getTeamLogoHtml(m.home)} <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.home}</span></div>
                     <div class="score-inputs">
-                        <input type="text" id="${groupKey}-${seasonKey}-h-${index}" value="${m.homeGoals !== undefined ? m.homeGoals : ''}" oninput="syncAndUpdate()"> 
+                        <input type="text" id="${groupKey}-${seasonKey}-h-${index}" value="${m.homeGoals !== undefined ? m.homeGoals : ''}" onchange="syncAndUpdate()"> 
                         <span>:</span> 
-                        <input type="text" id="${groupKey}-${seasonKey}-a-${index}" value="${m.awayGoals !== undefined ? m.awayGoals : ''}" oninput="syncAndUpdate()">
+                        <input type="text" id="${groupKey}-${seasonKey}-a-${index}" value="${m.awayGoals !== undefined ? m.awayGoals : ''}" onchange="syncAndUpdate()">
                     </div>
                     <div class="team-away"><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.away}</span> ${getTeamLogoHtml(m.away)}</div>
                 `;
