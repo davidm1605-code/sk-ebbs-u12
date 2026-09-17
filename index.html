@@ -301,6 +301,7 @@
             { round: "9. Rde", dateStr: "Do, 29.10.2026 | 17:00", iso: "2026-10-29T17:00:00", match: "SK Ebbs vs. Bruckhäusl", home: "SK Ebbs", away: "Bruckhäusl" }
         ];
 
+        // Korrektur: Kufstein ist in Gruppe Grün (SK Ebbs B) enthalten
         const teamsWeiss = ["SK Ebbs A", "Erl", "Kössen", "Niederndorf", "SPG Bichlach A", "Bad Häring B", "Schwoich", "St.Johann A", "Waidring", "Walchsee"];
         const teamsGruen = ["SK Ebbs B", "Kufstein", "Pillerseetal", "SPG Bichlach B", "SPG Breitenbach / Kundl", "Bad Häring A", "St.Johann B", "Söll A", "Wörgl"];
 
@@ -501,8 +502,9 @@
                 let badgeHtml = "";
                 let scoreText = "";
 
-                const goals = findMatchGoals(groupData, item.home.replace("SK Ebbs", "SK Ebbs A"), item.away);
-                const hasScore = goals && goals.h !== "" && goals.a !== "";
+                const teamToCheck = containerId === "schedule-weiss-list" ? item.home.replace("SK Ebbs", "SK Ebbs A") : item.home.replace("SK Ebbs", "SK Ebbs B");
+                const goals = findMatchGoals(groupData, teamToCheck, item.away);
+                const hasScore = goals && goals.h !== "" && goals.h !== undefined && goals.a !== "" && goals.a !== undefined;
 
                 if (hasScore || now >= matchEnd) {
                     cssClass = "finished";
@@ -515,7 +517,7 @@
                     badgeHtml = '<span class="badge-live">LÄUFT</span>';
                 }
 
-                const homeLogo = getTeamLogoHtml(item.home.replace("SK Ebbs", "SK Ebbs A"));
+                const homeLogo = getTeamLogoHtml(teamToCheck);
                 const awayLogo = getTeamLogoHtml(item.away);
 
                 const div = document.createElement("div");
@@ -741,7 +743,7 @@
                             gruenMatches.forEach((gMatch, idx) => {
                                 if (dataGruen.matches[idx]) {
                                     if (gMatch.homeGoals !== undefined) dataGruen.matches[idx].homeGoals = gMatch.homeGoals;
-                                    if (gMatch.awayGoals !== undefined) dataGruen.matches.forEach ? dataGruen.matches[idx].awayGoals = gMatch.awayGoals : null;
+                                    if (gMatch.awayGoals !== undefined) dataGruen.matches[idx].awayGoals = gMatch.awayGoals;
                                 }
                             });
                         }
