@@ -137,6 +137,7 @@
             <div class="filter-chips">
                 <button class="filter-chip active" onclick="filterGroup('gespielt', 'weiss', this)">Gruppe Weiß</button>
                 <button class="filter-chip" onclick="filterGroup('gespielt', 'gruen', this)">Gruppe Grün</button>
+                <button class="filter-chip" onclick="filterGroup('gespielt', 'alle', this)">Alle anzeigen</button>
             </div>
 
             <div id="section-gespielt-weiss">
@@ -420,6 +421,13 @@
                 if(rowGruen) rowGruen.style.display = 'flex';
                 if(quickWeiss) quickWeiss.style.display = 'none';
                 if(quickGruen) quickGruen.style.display = document.getElementById('select-team-offen-gruen').value ? 'block' : 'none';
+            } else if (groupType === 'alle') {
+                if(secWeiss) secWeiss.style.display = 'block';
+                if(secGruen) secGruen.style.display = 'block';
+                if(rowWeiss) rowWeiss.style.display = 'none';
+                if(rowGruen) rowGruen.style.display = 'none';
+                if(quickWeiss) quickWeiss.style.display = 'none';
+                if(quickGruen) quickGruen.style.display = 'none';
             }
         }
 
