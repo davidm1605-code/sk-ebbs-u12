@@ -78,7 +78,7 @@
         .cal-btn:hover { background: #38bdf8; color: #0f172a; }
 
         .btn-container { margin-top: 16px; display: flex; gap: 8px; }
-        button.action-btn { background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; padding: 5px 8px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 50%; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; gap: 4px; }
+        button.action-btn { background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 50%; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 6px; }
         button.action-btn:hover { background: #38bdf8; color: #0f172a; }
         
         .editable-mode .match input { pointer-events: auto; background: #0f172a; border-color: #38bdf8; }
@@ -224,11 +224,6 @@
                 </thead>
                 <tbody id="table-gruen"></tbody>
             </table>
-        </div>
-
-        <div class="btn-container">
-            <button class="action-btn" id="toggle-btn-bottom" onclick="toggleEditMode()">🔒 Schreibmodus Aus</button>
-            <button class="action-btn" onclick="triggerUpdate()" style="border-color: #22c55e; color: #22c55e;">💾 Speichern</button>
         </div>
     </div>
 
@@ -436,7 +431,6 @@
             const body = document.body;
             const topGespieltBtn = document.getElementById("toggle-btn-top-gespielt");
             const topOffenBtn = document.getElementById("toggle-btn-top-offen");
-            const bottomBtn = document.getElementById("toggle-btn-bottom");
             
             if (body.classList.contains("readonly-mode")) {
                 body.classList.remove("readonly-mode");
@@ -444,14 +438,12 @@
                 const activeText = "🔓 Schreibmodus Ein";
                 if (topGespieltBtn) topGespieltBtn.innerHTML = activeText;
                 if (topOffenBtn) topOffenBtn.innerHTML = activeText;
-                if (bottomBtn) bottomBtn.innerHTML = activeText;
             } else {
                 body.classList.remove("editable-mode");
                 body.classList.add("readonly-mode");
                 const inactiveText = "🔒 Schreibmodus Aus";
                 if (topGespieltBtn) topGespieltBtn.innerHTML = inactiveText;
                 if (topOffenBtn) topOffenBtn.innerHTML = inactiveText;
-                if (bottomBtn) bottomBtn.innerHTML = inactiveText;
             }
         }
 
