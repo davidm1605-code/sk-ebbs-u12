@@ -662,35 +662,32 @@
 
             groupData.forEach((m, index) => {
                 const matchesFilter = !hasFilter || m.home === filterTeam || m.away === filterTeam;
-                
                 const isPlayed = m.homeGoals !== "" && m.homeGoals !== undefined && m.awayGoals !== "" && m.awayGoals !== undefined;
                 
-                const matchHtml = `
-                    <span class="round">${m.round}</span>
-                    <div class="team-home">${getTeamLogoHtml(m.home)} <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.home}</span></div>
-                    <div class="score-inputs">
-                        <input type="text" data-group="${groupKey}" data-season="${seasonKey}" data-index="${index}" data-type="h" value="${m.homeGoals !== undefined ? m.homeGoals : ''}" oninput="syncAndUpdate()"> 
-                        <span>:</span> 
-                        <input type="text" data-group="${groupKey}" data-season="${seasonKey}" data-index="${index}" data-type="a" value="${m.awayGoals !== undefined ? m.awayGoals : ''}" oninput="syncAndUpdate()">
-                    </div>
-                    <div class="team-away"><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.away}</span> ${getTeamLogoHtml(m.away)}</div>
-                `;
-
-                const div = document.createElement("div");
-                div.className = "match"; 
-                div.innerHTML = matchHtml;
+                const createMatchElement = (isQuickView = false) => {
+                    const div = document.createElement("div");
+                    div.className = "match"; 
+                    div.innerHTML = `
+                        <span class="round">${m.round}</span>
+                        <div class="team-home">${getTeamLogoHtml(m.home)} <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.home}</span></div>
+                        <div class="score-inputs">
+                            <input type="text" data-group="${groupKey}" data-season="${seasonKey}" data-index="${index}" data-type="h" value="${m.homeGoals !== undefined ? m.homeGoals : ''}" oninput="syncAndUpdate()"> 
+                            <span>:</span> 
+                            <input type="text" data-group="${groupKey}" data-season="${seasonKey}" data-index="${index}" data-type="a" value="${m.awayGoals !== undefined ? m.awayGoals : ''}" oninput="syncAndUpdate()">
+                        </div>
+                        <div class="team-away"><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.away}</span> ${getTeamLogoHtml(m.away)}</div>
+                    `;
+                    return div;
+                };
 
                 if (isPlayed) {
-                    playedContainer.appendChild(div);
+                    playedContainer.appendChild(createMatchElement());
                 } else {
                     if (matchesFilter) {
-                        openContainer.appendChild(div);
+                        openContainer.appendChild(createMatchElement());
                     }
                     if (hasFilter && matchesFilter) {
-                        const qDiv = document.createElement("div");
-                        qDiv.className = "match"; 
-                        qDiv.innerHTML = matchHtml;
-                        if (quickList) quickList.appendChild(qDiv);
+                        if (quickList) quickList.appendChild(createMatchElement(true));
                     }
                 }
             });
