@@ -251,9 +251,9 @@
         <!-- TAB: TABELLE -->
         <div id="tab-tabelle" class="tab-content">
             <div class="sub-tabs">
-                <button class="sub-tab-btn active" onclick="switchSubTab('tabelle', 'herbst', event)">Herbst 2026</button>
-                <button class="sub-tab-btn" onclick="switchSubTab('tabelle', 'fruehjahr', event)">Frühjahr 2027</button>
-                <button class="sub-tab-btn" onclick="switchSubTab('tabelle', 'gesamt', event)">Gesamt</button>
+                <button class="sub-sub-tab-btn sub-tab-btn active" onclick="switchSubTab('tabelle', 'herbst', event)">Herbst 2026</button>
+                <button class="sub-sub-tab-btn sub-tab-btn" onclick="switchSubTab('tabelle', 'fruehjahr', event)">Frühjahr 2027</button>
+                <button class="sub-sub-tab-btn sub-tab-btn" onclick="switchSubTab('tabelle', 'gesamt', event)">Gesamt</button>
             </div>
             
             <h2>Tabelle SK Ebbs A (Gruppe A / Weiß)</h2>
@@ -289,59 +289,58 @@
             "Kössen": { label: "KÖS", color: "#1e293b" },
             "Niederndorf": { label: "NIE", color: "#b91c1c" },
             "SPG Bichlach A": { label: "BIC", color: "#047857" },
-            "Bad Häring B": { label: "HÄRB", color: "#eab308" },
-            "Bad Häring A": { label: "HÄRA", color: "#eab308" },
+            "SPG Bichlach B": { label: "BIC", color: "#047857" },
+            "Bichlach A": { label: "BIC", color: "#047857" },
+            "Bichlach B": { label: "BIC", color: "#047857" },
             "Schwoich": { label: "SCH", color: "#dc2626" },
+            "St. Johann A": { label: "STJ", color: "#1d4ed8" },
+            "St. Johann B": { label: "STJ", color: "#1d4ed8" },
             "St.Johann A": { label: "STJ", color: "#1d4ed8" },
             "St.Johann B": { label: "STJ", color: "#1d4ed8" },
             "Waidring": { label: "WAI", color: "#b91c1c" },
             "Walchsee": { label: "WAL", color: "#eab308" },
             "Kufstein": { label: "KUF", color: "#0284c7" },
             "Pillerseetal": { label: "PIL", color: "#2563eb" },
-            "SPG Bichlach B": { label: "BIC", color: "#047857" },
             "SPG Breitenbach / Kundl": { label: "KUN", color: "#2563eb" },
-            "Kundl/Breiten...": { label: "KUN", color: "#2563eb" },
+            "SPG Unterland A": { label: "UPA", color: "#475569" },
+            "SPG Unterland B": { label: "UPB", color: "#475569" },
             "Söll A": { label: "SÖL", color: "#ca8a04" },
             "Wörgl": { label: "WÖG", color: "#475569" },
-            "Bruckhäusl": { label: "BRU", color: "#1d4ed8" },
-            "Kirchberg (U11)": { label: "KIR", color: "#eab308" },
-            "Bichlach B": { label: "BIC", color: "#047857" },
-            "Bichlach A": { label: "BIC", color: "#047857" },
-            "Bad Häring sv.": { label: "HÄRB", color: "#eab308" },
-            "Söll": { label: "SÖL", color: "#ca8a04" }
+            "SPG Bichlach A": { label: "BIC", color: "#047857" },
+            "SPG Bichlach B": { label: "BIC", color: "#047857" }
         };
 
         function getTeamLogoHtml(teamName) {
-            const conf = teamConfigs[teamName] || { label: teamName.substring(0, 3).toUpperCase(), color: "#334155" };
+            const conf = teamConfigs[teamName] || { label: teamName ? teamName.substring(0, 3).toUpperCase() : "SKE", color: "#334155" };
             return `<div class="team-shield" style="background-color: ${conf.color};">${conf.label}</div>`;
         }
 
-        // Herbst Termine
+        // Herbst Termine Gruppe A (Weiß)
         const scheduleWeissHerbst = [
-            { round: "1. Rde", dateStr: "Fr, 04.09.2026 | 18:30", iso: "2026-09-04T18:30:00", match: "SK Ebbs vs. Kufstein", home: "SK Ebbs", away: "Kufstein" },
-            { round: "2. Rde", dateStr: "Sa, 12.09.2026 | 14:00", iso: "2026-09-12T14:00:00", match: "Walchsee vs. SK Ebbs", home: "Walchsee", away: "SK Ebbs" },
-            { round: "3. Rde", dateStr: "Sa, 19.09.2026 | 12:00", iso: "2026-09-19T12:00:00", match: "SK Ebbs vs. Wörgl", home: "SK Ebbs", away: "Wörgl" },
-            { round: "4. Rde", dateStr: "Fr, 25.09.2026 | 17:00", iso: "2026-09-25T17:00:00", match: "Erl vs. SK Ebbs", home: "Erl", away: "SK Ebbs" },
-            { round: "5. Rde", dateStr: "Mo, 05.10.2026 | 18:00", iso: "2026-10-05T18:00:00", match: "SK Ebbs vs. Bichlach B", home: "SK Ebbs", away: "Bichlach B" },
-            { round: "6. Rde", dateStr: "So, 11.10.2026 | 14:30", iso: "2026-10-11T14:30:00", match: "Schwoich vs. SK Ebbs", home: "Schwoich", away: "SK Ebbs" },
-            { round: "7. Rde", dateStr: "Sa, 17.10.2026 | 12:30", iso: "2026-10-17T12:30:00", match: "Niederndorf vs. SK Ebbs", home: "Niederndorf", away: "SK Ebbs" },
-            { round: "8. Rde", dateStr: "Sa, 24.10.2026 | 12:00", iso: "2026-10-24T12:00:00", match: "SK Ebbs vs. St.Johann B", home: "SK Ebbs", away: "St.Johann B" },
-            { round: "9. Rde", dateStr: "Fr, 30.10.2026 | 17:00", iso: "2026-10-30T17:00:00", match: "Bad Häring sv. vs. SK Ebbs", home: "Bad Häring sv.", away: "SK Ebbs" }
+            { round: "1. Rde", dateStr: "Fr, 04.09.2026 | 18:30", iso: "2026-09-04T18:30:00", match: "SK Ebbs A vs. Walchsee", home: "SK Ebbs A", away: "Walchsee" },
+            { round: "2. Rde", dateStr: "Sa, 12.09.2026 | 14:00", iso: "2026-09-12T14:00:00", match: "Erl vs. SK Ebbs A", home: "Erl", away: "SK Ebbs A" },
+            { round: "3. Rde", dateStr: "Sa, 19.09.2026 | 12:00", iso: "2026-09-19T12:00:00", match: "SK Ebbs A vs. Kössen", home: "SK Ebbs A", away: "Kössen" },
+            { round: "4. Rde", dateStr: "Fr, 25.09.2026 | 17:00", iso: "2026-09-25T17:00:00", match: "Niederndorf vs. SK Ebbs A", home: "Niederndorf", away: "SK Ebbs A" },
+            { round: "5. Rde", dateStr: "Mo, 05.10.2026 | 18:00", iso: "2026-10-05T18:00:00", match: "SK Ebbs A vs. SPG Bichlach A", home: "SK Ebbs A", away: "SPG Bichlach A" },
+            { round: "6. Rde", dateStr: "So, 11.10.2026 | 14:30", iso: "2026-10-11T14:30:00", match: "SPG Unterland B vs. SK Ebbs A", home: "SPG Unterland B", away: "SK Ebbs A" },
+            { round: "7. Rde", dateStr: "Sa, 17.10.2026 | 12:30", iso: "2026-10-17T12:30:00", match: "Schwoich vs. SK Ebbs A", home: "Schwoich", away: "SK Ebbs A" },
+            { round: "8. Rde", dateStr: "Sa, 24.10.2026 | 12:00", iso: "2026-10-24T12:00:00", match: "SK Ebbs A vs. St. Johann A", home: "SK Ebbs A", away: "St. Johann A" },
+            { round: "9. Rde", dateStr: "Fr, 30.10.2026 | 17:00", iso: "2026-10-30T17:00:00", match: "Waidring vs. SK Ebbs A", home: "Waidring", away: "SK Ebbs A" }
         ];
 
+        // Herbst Termine Gruppe B (Grün) - exakt angepasst mit Kufstein etc.
         const scheduleGruenHerbst = [
-            { round: "1. Rde", dateStr: "Fr, 04.09.2026 | 18:30", iso: "2026-09-04T18:30:00", match: "SK Ebbs vs. St.Johann A", home: "SK Ebbs", away: "St.Johann A" },
-            { round: "2. Rde", dateStr: "Fr, 11.09.2026 | 17:00", iso: "2026-09-11T17:00:00", match: "Kundl/Breiten... vs. SK Ebbs", home: "Kundl/Breiten...", away: "SK Ebbs" },
-            { round: "3. Rde", dateStr: "Sa, 19.09.2026 | 12:00", iso: "2026-09-19T12:00:00", match: "SK Ebbs vs. Bichlach A", home: "SK Ebbs", away: "Bichlach A" },
-            { round: "4. Rde", dateStr: "Sa, 26.09.2026 | 13:00", iso: "2026-09-26T13:00:00", match: "Söll vs. SK Ebbs", home: "Söll", away: "SK Ebbs" },
-            { round: "5. Rde", dateStr: "Sa, 03.10.2026 | 11:30", iso: "2026-10-03T11:30:00", match: "SK Ebbs vs. Waidring", home: "SK Ebbs", away: "Waidring" },
-            { round: "6. Rde", dateStr: "Sa, 10.10.2026 | 12:00", iso: "2026-10-10T12:00:00", match: "SK Ebbs vs. Pillerseetal", home: "SK Ebbs", away: "Pillerseetal" },
-            { round: "7. Rde", dateStr: "Sa, 17.10.2026 | 11:30", iso: "2026-10-17T11:30:00", match: "Kirchberg (U11) vs. SK Ebbs", home: "Kirchberg (U11)", away: "SK Ebbs" },
-            { round: "8. Rde", dateStr: "Sa, 24.10.2026 | 12:00", iso: "2026-10-24T12:00:00", match: "Kössen vs. SK Ebbs", home: "Kössen", away: "SK Ebbs" },
-            { round: "9. Rde", dateStr: "Do, 29.10.2026 | 17:00", iso: "2026-10-29T17:00:00", match: "SK Ebbs vs. Bruckhäusl", home: "SK Ebbs", away: "Bruckhäusl" }
+            { round: "1. Rde", dateStr: "Fr, 04.09.2026 | 18:30", iso: "2026-09-04T18:30:00", match: "SK Ebbs B vs. Kufstein", home: "SK Ebbs B", away: "Kufstein" },
+            { round: "2. Rde", dateStr: "Fr, 11.09.2026 | 17:00", iso: "2026-09-11T17:00:00", match: "Pillerseetal vs. SK Ebbs B", home: "Pillerseetal", away: "SK Ebbs B" },
+            { round: "3. Rde", dateStr: "Sa, 19.09.2026 | 12:00", iso: "2026-09-19T12:00:00", match: "SK Ebbs B vs. SPG Bichlach B", home: "SK Ebbs B", away: "SPG Bichlach B" },
+            { round: "4. Rde", dateStr: "Sa, 26.09.2026 | 13:00", iso: "2026-09-26T13:00:00", match: "SPG Breitenbach / Kundl vs. SK Ebbs B", home: "SPG Breitenbach / Kundl", away: "SK Ebbs B" },
+            { round: "5. Rde", dateStr: "Sa, 03.10.2026 | 11:30", iso: "2026-10-03T11:30:00", match: "SK Ebbs B vs. SPG Unterland A", home: "SK Ebbs B", away: "SPG Unterland A" },
+            { round: "6. Rde", dateStr: "Sa, 10.10.2026 | 12:00", iso: "2026-10-10T12:00:00", match: "SK Ebbs B vs. St. Johann B", home: "SK Ebbs B", away: "St. Johann B" },
+            { round: "7. Rde", dateStr: "Sa, 17.10.2026 | 11:30", iso: "2026-10-17T11:30:00", match: "Söll A vs. SK Ebbs B", home: "Söll A", away: "SK Ebbs B" },
+            { round: "8. Rde", dateStr: "Sa, 24.10.2026 | 12:00", iso: "2026-10-24T12:00:00", match: "Wörgl vs. SK Ebbs B", home: "Wörgl", away: "SK Ebbs B" },
+            { round: "9. Rde", dateStr: "Do, 29.10.2026 | 17:00", iso: "2026-10-29T17:00:00", match: "SK Ebbs B vs. SK Ebbs B", home: "SK Ebbs B", away: "SK Ebbs B" }
         ];
 
-        // Frühjahr generieren (Heim/Auswärts getauscht)
         function generateSpringSchedule(herbstList) {
             return herbstList.map(item => ({
                 round: item.round.replace("Rde", "Rde (Rück)"),
@@ -356,26 +355,25 @@
         const scheduleWeissFruehjahr = generateSpringSchedule(scheduleWeissHerbst);
         const scheduleGruenFruehjahr = generateSpringSchedule(scheduleGruenHerbst);
 
-        const teamsWeiss = ["SK Ebbs A", "Erl", "Kössen", "Niederndorf", "SPG Bichlach A", "Bad Häring B", "Schwoich", "St.Johann A", "Waidring", "Walchsee"];
-        const teamsGruen = ["SK Ebbs B", "Kufstein", "Pillerseetal", "SPG Bichlach B", "SPG Breitenbach / Kundl", "Bad Häring A", "St.Johann B", "Söll A", "Wörgl"];
+        const teamsWeiss = ["SK Ebbs A", "Erl", "Kössen", "Niederndorf", "SPG Bichlach A", "SPG Unterland B", "Schwoich", "St. Johann A", "Waidring", "Walchsee"];
+        const teamsGruen = ["SK Ebbs B", "Kufstein", "Pillerseetal", "SPG Bichlach B", "SPG Breitenbach / Kundl", "SPG Unterland A", "St. Johann B", "Söll A", "Wörgl"];
 
         // Datenstrukturen
         let dataWeissHerbst = scheduleWeissHerbst.map(s => ({
-            round: s.round, home: s.home.replace("SK Ebbs", "SK Ebbs A"), away: s.away,
-            homeGoals: (s.round === "1. Rde" ? "7" : ""), awayGoals: (s.round === "1. Rde" ? "3" : "")
+            round: s.round, home: s.home, away: s.away,
+            homeGoals: "", awayGoals: ""
         }));
         let dataWeissFruehjahr = scheduleWeissFruehjahr.map(s => ({
-            round: s.round, home: s.home, away: s.away.replace("SK Ebbs", "SK Ebbs A"),
+            round: s.round, home: s.home, away: s.away,
             homeGoals: "", awayGoals: ""
         }));
 
         let dataGruenHerbst = scheduleGruenHerbst.map(s => ({
-            round: s.round, home: s.home.replace("SK Ebbs", "SK Ebbs B"), away: s.away.replace("SK Ebbs", "SK Ebbs B"),
-            homeGoals: (s.round === "1. Rde" ? "8" : (s.round === "2. Rde" ? "1" : "")),
-            awayGoals: (s.round === "1. Rde" ? "2" : (s.round === "2. Rde" ? "4" : ""))
+            round: s.round, home: s.home, away: s.away,
+            homeGoals: "", awayGoals: ""
         }));
         let dataGruenFruehjahr = scheduleGruenFruehjahr.map(s => ({
-            round: s.round, home: s.home.replace("SK Ebbs", "SK Ebbs B"), away: s.away.replace("SK Ebbs", "SK Ebbs B"),
+            round: s.round, home: s.home, away: s.away,
             homeGoals: "", awayGoals: ""
         }));
 
@@ -584,11 +582,12 @@
             if (!playedContainer || !openContainer) return;
             playedContainer.innerHTML = ""; openContainer.innerHTML = ""; if(quickList) quickList.innerHTML = "";
 
-            let openCount = 0;
             let hasFilter = filterTeam && filterTeam !== "";
 
             groupData.forEach((m, index) => {
+                // Hier greift nun die saubere Überprüfung auf eingetragene Tore
                 const isPlayed = m.homeGoals !== "" && m.homeGoals !== undefined && m.awayGoals !== "" && m.awayGoals !== undefined;
+                
                 const matchHtml = `
                     <span class="round">${m.round}</span>
                     <div class="team-home">${getTeamLogoHtml(m.home)} <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.home}</span></div>
@@ -604,10 +603,12 @@
                 div.className = "match"; div.innerHTML = matchHtml;
 
                 if (isPlayed) {
+                    // Spiel ist gespielt -> landet im Tab "Gespielt" und wird automatisch aus "Offen" herausgefiltert
                     if (!hasFilter || m.home === filterTeam || m.away === filterTeam) {
                         playedContainer.appendChild(div);
                     }
                 } else {
+                    // Spiel ist offen
                     if (hasFilter && (m.home === filterTeam || m.away === filterTeam)) {
                         const qDiv = document.createElement("div");
                         qDiv.className = "match"; qDiv.innerHTML = matchHtml;
@@ -615,7 +616,6 @@
                     }
                     if (hasFilter && m.home !== filterTeam && m.away !== filterTeam) return;
 
-                    openCount++;
                     openContainer.appendChild(div);
                 }
             });
