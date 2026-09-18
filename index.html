@@ -584,6 +584,7 @@
         }
 
         function renderAll() {
+            // Dropdown-Filter ignorieren, wenn kein Wert gewählt ist, oder übergeben
             const filterWeiss = document.getElementById('select-team-offen-weiss')?.value || "";
             const filterGruen = document.getElementById('select-team-offen-gruen')?.value || "";
 
@@ -652,6 +653,7 @@
             let hasFilter = filterTeam && filterTeam !== "";
 
             groupData.forEach((m, index) => {
+                // HIER IST DIE KORREKTUR: Wenn kein Dropdown-Filter aktiv ist, werden IMMER ALLE Partien gerendert!
                 const matchesFilter = !hasFilter || m.home === filterTeam || m.away === filterTeam;
                 if (!matchesFilter) return;
 
@@ -808,9 +810,9 @@
             try {
                 await setDoc(doc(db, "matchdata", "seasons"), {
                     weissHerbst: dataWeissHerbst.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
-                    weissFruehjahr: dataWeissFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
-                    gruenHerbst: dataGruenHerbst.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
-                    gruenFruehjahr: dataGruenFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals }))
+                    weissFruehjahr: dataWeissFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.homeGoals })),
+                    gruenHerbst: dataGruenHerbst.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.homeGoals })),
+                    gruenFruehjahr: dataGruenFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.homeGoals }))
                 });
                 alert("Erfolgreich in Firebase gespeichert!");
             } catch (e) { 
