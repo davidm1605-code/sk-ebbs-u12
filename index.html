@@ -492,6 +492,9 @@
             let icsContent = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//SK Ebbs U12//Spielplan//DE\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\n";
             
             list.forEach(item => {
+                // Auch beim Kalender-Download nur SK Ebbs berücksichtigen
+                if (item.home !== "SK Ebbs" && item.away !== "SK Ebbs") return;
+
                 const startDate = new Date(item.iso);
                 const endDate = new Date(startDate.getTime() + 90 * 60000);
                 function formatICSDate(date) { return date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z"; }
@@ -520,10 +523,10 @@
             const filterWeiss = document.getElementById('select-team-offen-weiss')?.value || "";
             const filterGruen = document.getElementById('select-team-offen-gruen')?.value || "";
 
-            renderSchedule("schedule-weiss-herbst-list", scheduleWeissHerbst, dataWeissHerbst);
-            renderSchedule("schedule-weiss-fruehjahr-list", scheduleWeissFruehjahr, dataWeissFruehjahr);
-            renderSchedule("schedule-gruen-herbst-list", scheduleGruenHerbst, dataGruenHerbst);
-            renderSchedule("schedule-gruen-fruehjahr-list", scheduleGruenFruehjahr, dataGruenFruehjahr);
+            renderSchedule("schedule-weiss-herbst-list", scheduleWeissHerbst, dataWeissHerbst, "weiss");
+            renderSchedule("schedule-weiss-fruehjahr-list", scheduleWeissFruehjahr, dataWeissFruehjahr, "weiss");
+            renderSchedule("schedule-gruen-herbst-list", scheduleGruenHerbst, dataGruenHerbst, "gruen");
+            renderSchedule("schedule-gruen-fruehjahr-list", scheduleGruenFruehjahr, dataGruenFruehjahr, "gruen");
 
             renderGroupContainer("weiss", "herbst", dataWeissHerbst, filterWeiss);
             renderGroupContainer("weiss", "fruehjahr", dataWeissFruehjahr, filterWeiss);
@@ -534,15 +537,19 @@
             calculateTable("gruen", dataGruenHerbst, dataGruenFruehjahr);
         }
 
-        function renderSchedule(containerId, list, groupData) {
+        // NUR in der Terminübersicht wird nach SK Ebbs gefiltert
+        function renderSchedule(containerId, list, groupData, groupKey) {
             const container = document.getElementById(containerId);
             if (!container) return;
             container.innerHTML = "";
             const now = new Date();
 
+            const ownTeams = groupKey === "weiss"
+                ? ["SK Ebbs", "SK Ebbs A"]
+                : ["SK Ebbs", "SK Ebbs B"];
+
             list.forEach(item => {
-                // Nur SK Ebbs Spiele anzeigen für die Termine-Tabs
-                if (item.home !== "SK Ebbs" && item.away !== "SK Ebbs") return;
+                if (!ownTeams.includes(item.home) && !ownTeams.includes(item.away)) return;
 
                 const kickoff = new Date(item.iso);
                 const matchEnd = new Date(kickoff.getTime() + 60 * 60000);
@@ -573,6 +580,7 @@
             });
         }
 
+        // Hier bleiben alle Ligaspiele für Gespielt / Offen erhalten
         function renderGroupContainer(groupKey, seasonKey, groupData, filterTeam) {
             const playedContainer = document.getElementById(`matches-${groupKey}-${seasonKey}-played`);
             const openContainer = document.getElementById(`matches-${groupKey}-${seasonKey}-open`);
@@ -770,7 +778,7 @@
             try {
                 await setDoc(doc(db, "matchdata", "seasons"), {
                     weissHerbst: dataWeissHerbst.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
-                    weissFruehjahr: dataWeissFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.home, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
+                    weissFruehjahr: dataWeissFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
                     gruenHerbst: dataGruenHerbst.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
                     gruenFruehjahr: dataGruenFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals }))
                 });
