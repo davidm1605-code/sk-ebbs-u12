@@ -662,8 +662,7 @@
 
             groupData.forEach((m, index) => {
                 const matchesFilter = !hasFilter || m.home === filterTeam || m.away === filterTeam;
-                if (!matchesFilter) return;
-
+                
                 const isPlayed = m.homeGoals !== "" && m.homeGoals !== undefined && m.awayGoals !== "" && m.awayGoals !== undefined;
                 
                 const matchHtml = `
@@ -684,8 +683,10 @@
                 if (isPlayed) {
                     playedContainer.appendChild(div);
                 } else {
-                    openContainer.appendChild(div);
-                    if (hasFilter) {
+                    if (matchesFilter) {
+                        openContainer.appendChild(div);
+                    }
+                    if (hasFilter && matchesFilter) {
                         const qDiv = document.createElement("div");
                         qDiv.className = "match"; 
                         qDiv.innerHTML = matchHtml;
@@ -737,7 +738,6 @@
 
         window.syncAndUpdate = function() {
             collectValues();
-            // Nur Tabellen- und Live-Daten im Hintergrund aktualisieren, ohne die Eingabefelder komplett neu zu zeichnen, um den Fokus nicht zu verlieren
             calculateTable("weiss", dataWeissHerbst, dataWeissFruehjahr);
             calculateTable("gruen", dataGruenHerbst, dataGruenFruehjahr);
         }
