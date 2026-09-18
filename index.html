@@ -105,8 +105,8 @@
         <div class="tabs">
             <button class="tab-btn" onclick="switchTab('termene-weiss', event)">Termine SK Ebbs A (Weiß)</button>
             <button class="tab-btn" onclick="switchTab('termene-gruen', event)">Termine SK Ebbs B (Grün)</button>
-            <button class="tab-btn active" onclick="switchTab('gespielt', event)">Gespielt</button>
-            <button class="tab-btn" onclick="switchTab('offen', event)">Offen</button>
+            <button class="tab-btn" onclick="switchTab('gespielt', event)">Gespielt</button>
+            <button class="tab-btn active" onclick="switchTab('offen', event)">Offen</button>
             <button class="tab-btn" onclick="switchTab('tabelle', event)">Tabelle</button>
         </div>
 
@@ -155,7 +155,7 @@
         </div>
 
         <!-- TAB: GESPIELT -->
-        <div id="tab-gespielt" class="tab-content active">
+        <div id="tab-gespielt" class="tab-content">
             <div class="btn-container" style="margin-top: 0; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 2px solid #334155;">
                 <button class="action-btn" id="toggle-btn-top-gespielt" onclick="toggleEditMode()">🔒 Schreibmodus Aus</button>
                 <button class="action-btn" onclick="triggerUpdate()" style="border-color: #22c55e; color: #22c55e;">💾 Speichern</button>
@@ -198,7 +198,7 @@
         </div>
 
         <!-- TAB: OFFEN -->
-        <div id="tab-offen" class="tab-content">
+        <div id="tab-offen" class="tab-content active">
             <div class="btn-container" style="margin-top: 0; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 2px solid #334155;">
                 <button class="action-btn" id="toggle-btn-top-offen" onclick="toggleEditMode()">🔒 Schreibmodus Aus</button>
                 <button class="action-btn" onclick="triggerUpdate()" style="border-color: #22c55e; color: #22c55e;">💾 Speichern</button>
@@ -590,10 +590,12 @@
                         playedContainer.appendChild(div);
                     }
                 } else {
-                    // Alle offenen Spiele werden in der Hauptliste angezeigt
-                    openContainer.appendChild(div);
+                    // Korrektur: Offene Spiele entweder anzeigen, wenn kein Filter aktiv ist, ODER wenn das gefilterte Team beteiligt ist
+                    if (!hasFilter || m.home === filterTeam || m.away === filterTeam) {
+                        openContainer.appendChild(div);
+                    }
 
-                    // Wenn ein Filter aktiv ist und das Team in dieser Partie spielt, zusätzlich in die Schnellansicht kopieren
+                    // Wenn ein Filter aktiv ist, zusätzlich in die Schnellansicht kopieren
                     if (hasFilter && (m.home === filterTeam || m.away === filterTeam)) {
                         const qDiv = document.createElement("div");
                         qDiv.className = "match"; qDiv.innerHTML = matchHtml;
