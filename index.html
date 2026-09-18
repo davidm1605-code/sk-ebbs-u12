@@ -439,7 +439,6 @@
 
         let dataWeissHerbst = scheduleWeissHerbst.map(s => ({ round: s.round, home: s.home, away: s.away, homeGoals: "", awayGoals: "" }));
         let dataWeissFruehjahr = scheduleWeissFruehjahr.map(s => ({ round: s.round, home: s.home, away: s.away, homeGoals: "", awayGoals: "" }));
-        // HIER KORRIGIERT: s.away statt s.home für das Auswärtsteam bei Gruppe Grün!
         let dataGruenHerbst = scheduleGruenHerbst.map(s => ({ round: s.round, home: s.home, away: s.away, homeGoals: "", awayGoals: "" }));
         let dataGruenFruehjahr = scheduleGruenFruehjahr.map(s => ({ round: s.round, home: s.home, away: s.away, homeGoals: "", awayGoals: "" }));
 
@@ -662,9 +661,9 @@
                     <span class="round">${m.round}</span>
                     <div class="team-home">${getTeamLogoHtml(m.home)} <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.home}</span></div>
                     <div class="score-inputs">
-                        <input type="text" data-group="${groupKey}" data-season="${seasonKey}" data-index="${index}" data-type="h" value="${m.homeGoals !== undefined ? m.homeGoals : ''}" oninput="syncAndUpdate()"> 
+                        <input type="text" data-group="${groupKey}" data-season="${seasonKey}" data-index="${index}" data-type="h" value="${m.homeGoals !== undefined ? m.homeGoals : ''}" onchange="syncAndUpdate()"> 
                         <span>:</span> 
-                        <input type="text" data-group="${groupKey}" data-season="${seasonKey}" data-index="${index}" data-type="a" value="${m.awayGoals !== undefined ? m.awayGoals : ''}" oninput="syncAndUpdate()">
+                        <input type="text" data-group="${groupKey}" data-season="${seasonKey}" data-index="${index}" data-type="a" value="${m.awayGoals !== undefined ? m.awayGoals : ''}" onchange="syncAndUpdate()">
                     </div>
                     <div class="team-away"><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.away}</span> ${getTeamLogoHtml(m.away)}</div>
                 `;
