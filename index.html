@@ -592,6 +592,7 @@
         }
 
         function renderAll() {
+            collectValues(); // Werte vor dem Rendern sichern
             const filterWeiss = document.getElementById('select-team-offen-weiss')?.value || "";
             const filterGruen = document.getElementById('select-team-offen-gruen')?.value || "";
 
@@ -736,7 +737,9 @@
 
         window.syncAndUpdate = function() {
             collectValues();
-            renderAll(); 
+            // Nur Tabellen- und Live-Daten im Hintergrund aktualisieren, ohne die Eingabefelder komplett neu zu zeichnen, um den Fokus nicht zu verlieren
+            calculateTable("weiss", dataWeissHerbst, dataWeissFruehjahr);
+            calculateTable("gruen", dataGruenHerbst, dataGruenFruehjahr);
         }
 
         function calculateTable(groupKey, herbstData, fruehjahrData) {
