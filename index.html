@@ -662,7 +662,6 @@
 
             groupData.forEach((m, index) => {
                 const matchesFilter = !hasFilter || m.home === filterTeam || m.away === filterTeam;
-                
                 const isPlayed = m.homeGoals !== "" && m.homeGoals !== undefined && m.awayGoals !== "" && m.awayGoals !== undefined;
                 
                 const matchHtml = `
@@ -688,8 +687,11 @@
                     }
                     if (hasFilter && matchesFilter) {
                         const qDiv = document.createElement("div");
-                        qDiv.className = "match"; 
+                        qDiv.className = "match quick-match"; 
                         qDiv.innerHTML = matchHtml;
+                        qDiv.querySelectorAll("input").forEach(input => {
+                            input.dataset.quick = "true";
+                        });
                         if (quickList) quickList.appendChild(qDiv);
                     }
                 }
@@ -714,25 +716,45 @@
         }
 
         function collectValues() {
-            document.querySelectorAll('input[data-group]').forEach(input => {
+            function processInput(input) {
                 const group = input.dataset.group;
                 const season = input.dataset.season;
                 const index = parseInt(input.dataset.index);
                 const type = input.dataset.type;
 
                 let targetArray = null;
-                if (group === 'weiss' && season === 'herbst') targetArray = dataWeissHerbst;
-                else if (group === 'weiss' && season === 'fruehjahr') targetArray = dataWeissFruehjahr;
-                else if (group === 'gruen' && season === 'herbst') targetArray = dataGruenHerbst;
-                else if (group === 'gruen' && season === 'fruehjahr') targetArray = dataGruenFruehjahr;
+
+                if (group === "weiss" && season === "herbst") {
+                    targetArray = dataWeissHerbst;
+                } else if (group === "weiss" && season === "fruehjahr") {
+                    targetArray = dataWeissFruehjahr;
+                } else if (group === "gruen" && season === "herbst") {
+                    targetArray = dataGruenHerbst;
+                } else if (group === "gruen" && season === "fruehjahr") {
+                    targetArray = dataGruenFruehjahr;
+                }
 
                 if (targetArray && targetArray[index]) {
-                    if (type === 'h') {
+                    if (type === "h") {
                         targetArray[index].homeGoals = input.value.trim();
-                    } else if (type === 'a') {
+                    } else if (type === "a") {
                         targetArray[index].awayGoals = input.value.trim();
                     }
                 }
+            }
+
+            // 1. Normale Eingabefelder verarbeiten
+            document.querySelectorAll(
+                'input[data-group]:not([data-quick="true"])'
+            ).forEach(input => {
+                processInput(input);
+            });
+
+            // 2. Schnellansicht zuletzt verarbeiten (hat Priorität)
+            document.querySelectorAll(
+                'input[data-group][data-quick="true"]'
+            ).forEach(input => {
+                processInput(input);
             });
         }
 
