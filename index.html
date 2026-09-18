@@ -504,7 +504,6 @@
             container.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
 
-            // HIER KORRIGIERT: Dropdowns zurücksetzen, wenn "Alle anzeigen" gewählt wird
             if (groupType === 'alle') {
                 const selWeiss = document.getElementById('select-team-offen-weiss');
                 const selGruen = document.getElementById('select-team-offen-gruen');
@@ -666,7 +665,6 @@
 
                 const isPlayed = m.homeGoals !== "" && m.homeGoals !== undefined && m.awayGoals !== "" && m.awayGoals !== undefined;
                 
-                // HIER GEÄNDERT: oninput statt onchange, damit das Tippen mit Filter stabil bleibt und Werte nicht verloren gehen
                 const matchHtml = `
                     <span class="round">${m.round}</span>
                     <div class="team-home">${getTeamLogoHtml(m.home)} <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.home}</span></div>
@@ -827,11 +825,12 @@
             try {
                 await setDoc(doc(db, "matchdata", "seasons"), {
                     weissHerbst: dataWeissHerbst.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
-                    weissFruehjahr: dataWeissFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.homeGoals })),
-                    gruenHerbst: dataGruenHerbst.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.homeGoals })),
-                    gruenFruehjahr: dataGruenFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.homeGoals }))
+                    weissFruehjahr: dataWeissFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
+                    gruenHerbst: dataGruenHerbst.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
+                    gruenFruehjahr: dataGruenFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals }))
                 });
                 alert("Erfolgreich in Firebase gespeichert!");
+                renderAll(); // Aktualisiert die Ansicht nach dem Speichern sofort
             } catch (e) { 
                 console.error("Fehler beim Speichern:", e);
                 alert("Fehler beim Speichern."); 
