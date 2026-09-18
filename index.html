@@ -584,7 +584,6 @@
         }
 
         function renderAll() {
-            // Dropdown-Filter ignorieren, wenn kein Wert gewählt ist, oder übergeben
             const filterWeiss = document.getElementById('select-team-offen-weiss')?.value || "";
             const filterGruen = document.getElementById('select-team-offen-gruen')?.value || "";
 
@@ -643,7 +642,7 @@
             const openContainer = document.getElementById(`matches-${groupKey}-${seasonKey}-open`);
             const quickView = document.getElementById(`filtered-quick-view-${groupKey}-${seasonKey}`);
             const quickList = document.getElementById(`filtered-quick-list-${groupKey}-${seasonKey}`);
-            const quickTitle = document.getElementById(`quick-view-title-${groupKey}-${seasonKey}`);
+            const quickTitle = document.getElementById(`filtered-quick-title-${groupKey}-${seasonKey}`);
 
             if (!playedContainer || !openContainer) return;
             playedContainer.innerHTML = ""; 
@@ -653,19 +652,22 @@
             let hasFilter = filterTeam && filterTeam !== "";
 
             groupData.forEach((m, index) => {
-                // HIER IST DIE KORREKTUR: Wenn kein Dropdown-Filter aktiv ist, werden IMMER ALLE Partien gerendert!
                 const matchesFilter = !hasFilter || m.home === filterTeam || m.away === filterTeam;
                 if (!matchesFilter) return;
 
                 const isPlayed = m.homeGoals !== "" && m.homeGoals !== undefined && m.awayGoals !== "" && m.awayGoals !== undefined;
                 
+                // Eindeutige ID basierend auf Gruppen-, Saison- und Match-Index, damit es niemals zu Überlappungen kommt
+                const inputIdH = `input-${groupKey}-${seasonKey}-${index}-h`;
+                const inputIdA = `input-${groupKey}-${seasonKey}-${index}-a`;
+
                 const matchHtml = `
                     <span class="round">${m.round}</span>
                     <div class="team-home">${getTeamLogoHtml(m.home)} <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.home}</span></div>
                     <div class="score-inputs">
-                        <input type="text" id="${groupKey}-${seasonKey}-h-${index}" value="${m.homeGoals !== undefined ? m.homeGoals : ''}" onchange="syncAndUpdate()"> 
+                        <input type="text" id="${inputIdH}" data-group="${groupKey}" data-season="${seasonKey}" data-index="${index}" value="${m.homeGoals !== undefined ? m.homeGoals : ''}" onchange="syncAndUpdate()"> 
                         <span>:</span> 
-                        <input type="text" id="${groupKey}-${seasonKey}-a-${index}" value="${m.awayGoals !== undefined ? m.awayGoals : ''}" onchange="syncAndUpdate()">
+                        <input type="text" id="${inputIdA}" data-group="${groupKey}" data-season="${seasonKey}" data-index="${index}" value="${m.awayGoals !== undefined ? m.awayGoals : ''}" onchange="syncAndUpdate()">
                     </div>
                     <div class="team-away"><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.away}</span> ${getTeamLogoHtml(m.away)}</div>
                 `;
@@ -705,23 +707,32 @@
             }
         }
 
-        function collectValues(groupKey, seasonKey, groupData) {
-            groupData.forEach((m, index) => {
-                const hInput = document.getElementById(`${groupKey}-${seasonKey}-h-${index}`);
-                const aInput = document.getElementById(`${groupKey}-${seasonKey}-a-${index}`);
-                if (hInput && aInput) {
-                    m.homeGoals = hInput.value.trim();
-                    m.awayGoals = aInput.value.trim();
+        function collectValues() {
+            // Alle Input-Felder im Dokument sicher einsammeln und den jeweiligen Arrays zuordnen
+            document.querySelectorAll('.match input[data-group]').forEach(input => {
+                const group = input.dataset.group;
+                const season = input.dataset.season;
+                const index = parseInt(input.dataset.index);
+                const isHome = input.id.endsWith('-h');
+
+                let targetArray = null;
+                if (group === 'weiss' && season === 'herbst') targetArray = dataWeissHerbst;
+                else if (group === 'weiss' && season === 'fruehjahr') targetArray = dataWeissFruehjahr;
+                else if (group === 'gruen' && season === 'herbst') targetArray = dataGruenHerbst;
+                else if (group === 'gruen' && season === 'fruehjahr') targetArray = dataGruenFruehjahr;
+
+                if (targetArray && targetArray[index]) {
+                    if (isHome) {
+                        targetArray[index].homeGoals = input.value.trim();
+                    } else {
+                        targetArray[index].awayGoals = input.value.trim();
+                    }
                 }
             });
         }
 
         window.syncAndUpdate = function() {
-            collectValues("weiss", "herbst", dataWeissHerbst);
-            collectValues("weiss", "fruehjahr", dataWeissFruehjahr);
-            collectValues("gruen", "herbst", dataGruenHerbst);
-            collectValues("gruen", "fruehjahr", dataGruenFruehjahr);
-            
+            collectValues();
             renderAll();
         }
 
@@ -806,13 +817,13 @@
         }
 
         window.triggerUpdate = async function() {
-            syncAndUpdate();
+            collectValues();
             try {
                 await setDoc(doc(db, "matchdata", "seasons"), {
                     weissHerbst: dataWeissHerbst.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
-                    weissFruehjahr: dataWeissFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.homeGoals })),
-                    gruenHerbst: dataGruenHerbst.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.homeGoals })),
-                    gruenFruehjahr: dataGruenFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.homeGoals }))
+                    weissFruehjahr: dataWeissFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
+                    gruenHerbst: dataGruenHerbst.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
+                    gruenFruehjahr: dataGruenFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals }))
                 });
                 alert("Erfolgreich in Firebase gespeichert!");
             } catch (e) { 
