@@ -218,14 +218,14 @@
             <div class="filter-row" id="filter-row-weiss" style="display: none;">
                 <div class="filter-group">
                     <label style="font-size: 0.7rem; color: #94a3b8; display: block; margin-bottom: 3px;">Filter SK Ebbs A:</label>
-                    <select id="select-team-offen-weiss" class="team-filter-select"><option value="">-- Alle SK Ebbs A --</option></select>
+                    <select id="select-team-offen-weiss" class="team-filter-select"><option value="">-- Alle Vereine (Weiß) --</option></select>
                 </div>
             </div>
 
             <div class="filter-row" id="filter-row-gruen" style="display: none;">
                 <div class="filter-group">
                     <label style="font-size: 0.7rem; color: #94a3b8; display: block; margin-bottom: 3px;">Filter SK Ebbs B:</label>
-                    <select id="select-team-offen-gruen" class="team-filter-select"><option value="">-- Alle SK Ebbs B --</option></select>
+                    <select id="select-team-offen-gruen" class="team-filter-select"><option value="">-- Alle Vereine (Grün) --</option></select>
                 </div>
             </div>
 
@@ -305,9 +305,7 @@
             "SPG Unterland A": { label: "UPA", color: "#475569" },
             "SPG Unterland B": { label: "UPB", color: "#475569" },
             "Söll A": { label: "SÖL", color: "#ca8a04" },
-            "Wörgl": { label: "WÖG", color: "#475569" },
-            "SPG Bichlach A": { label: "BIC", color: "#047857" },
-            "SPG Bichlach B": { label: "BIC", color: "#047857" }
+            "Wörgl": { label: "WÖG", color: "#475569" }
         };
 
         function getTeamLogoHtml(teamName) {
@@ -328,7 +326,7 @@
             { round: "9. Rde", dateStr: "Fr, 30.10.2026 | 17:00", iso: "2026-10-30T17:00:00", match: "Waidring vs. SK Ebbs A", home: "Waidring", away: "SK Ebbs A" }
         ];
 
-        // Herbst Termine Gruppe B (Grün) - exakt angepasst mit Kufstein etc.
+        // Herbst Termine Gruppe B (Grün)
         const scheduleGruenHerbst = [
             { round: "1. Rde", dateStr: "Fr, 04.09.2026 | 18:30", iso: "2026-09-04T18:30:00", match: "SK Ebbs B vs. Kufstein", home: "SK Ebbs B", away: "Kufstein" },
             { round: "2. Rde", dateStr: "Fr, 11.09.2026 | 17:00", iso: "2026-09-11T17:00:00", match: "Pillerseetal vs. SK Ebbs B", home: "Pillerseetal", away: "SK Ebbs B" },
@@ -380,8 +378,8 @@
         let currentTableMode = 'herbst';
 
         function initSelectOptions() {
-            populateSelectOptions('select-team-offen-weiss', teamsWeiss, '-- Alle SK Ebbs A --');
-            populateSelectOptions('select-team-offen-gruen', teamsGruen, '-- Alle SK Ebbs B --');
+            populateSelectOptions('select-team-offen-weiss', teamsWeiss, '-- Alle Vereine (Weiß) --');
+            populateSelectOptions('select-team-offen-gruen', teamsGruen, '-- Alle Vereine (Grün) --');
             
             const selWeiss = document.getElementById('select-team-offen-weiss');
             const selGruen = document.getElementById('select-team-offen-gruen');
@@ -585,7 +583,6 @@
             let hasFilter = filterTeam && filterTeam !== "";
 
             groupData.forEach((m, index) => {
-                // Hier greift nun die saubere Überprüfung auf eingetragene Tore
                 const isPlayed = m.homeGoals !== "" && m.homeGoals !== undefined && m.awayGoals !== "" && m.awayGoals !== undefined;
                 
                 const matchHtml = `
@@ -603,12 +600,10 @@
                 div.className = "match"; div.innerHTML = matchHtml;
 
                 if (isPlayed) {
-                    // Spiel ist gespielt -> landet im Tab "Gespielt" und wird automatisch aus "Offen" herausgefiltert
                     if (!hasFilter || m.home === filterTeam || m.away === filterTeam) {
                         playedContainer.appendChild(div);
                     }
                 } else {
-                    // Spiel ist offen
                     if (hasFilter && (m.home === filterTeam || m.away === filterTeam)) {
                         const qDiv = document.createElement("div");
                         qDiv.className = "match"; qDiv.innerHTML = matchHtml;
