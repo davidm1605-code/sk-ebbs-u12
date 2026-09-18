@@ -504,6 +504,14 @@
             container.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
 
+            // HIER KORRIGIERT: Dropdowns zurücksetzen, wenn "Alle anzeigen" gewählt wird
+            if (groupType === 'alle') {
+                const selWeiss = document.getElementById('select-team-offen-weiss');
+                const selGruen = document.getElementById('select-team-offen-gruen');
+                if (selWeiss) selWeiss.value = "";
+                if (selGruen) selGruen.value = "";
+            }
+
             ['herbst', 'fruehjahr'].forEach(season => {
                 const secWeiss = document.getElementById(`section-${tabName}-weiss-${season}`);
                 const secGruen = document.getElementById(`section-${tabName}-gruen-${season}`);
@@ -535,6 +543,7 @@
                     if(quickGruen) quickGruen.style.display = 'none';
                 }
             });
+            renderAll();
         }
 
         window.toggleEditMode = function() {
@@ -657,13 +666,14 @@
 
                 const isPlayed = m.homeGoals !== "" && m.homeGoals !== undefined && m.awayGoals !== "" && m.awayGoals !== undefined;
                 
+                // HIER GEÄNDERT: oninput statt onchange, damit das Tippen mit Filter stabil bleibt und Werte nicht verloren gehen
                 const matchHtml = `
                     <span class="round">${m.round}</span>
                     <div class="team-home">${getTeamLogoHtml(m.home)} <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.home}</span></div>
                     <div class="score-inputs">
-                        <input type="text" data-group="${groupKey}" data-season="${seasonKey}" data-index="${index}" data-type="h" value="${m.homeGoals !== undefined ? m.homeGoals : ''}" onchange="syncAndUpdate()"> 
+                        <input type="text" data-group="${groupKey}" data-season="${seasonKey}" data-index="${index}" data-type="h" value="${m.homeGoals !== undefined ? m.homeGoals : ''}" oninput="syncAndUpdate()"> 
                         <span>:</span> 
-                        <input type="text" data-group="${groupKey}" data-season="${seasonKey}" data-index="${index}" data-type="a" value="${m.awayGoals !== undefined ? m.awayGoals : ''}" onchange="syncAndUpdate()">
+                        <input type="text" data-group="${groupKey}" data-season="${seasonKey}" data-index="${index}" data-type="a" value="${m.awayGoals !== undefined ? m.awayGoals : ''}" oninput="syncAndUpdate()">
                     </div>
                     <div class="team-away"><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.away}</span> ${getTeamLogoHtml(m.away)}</div>
                 `;
@@ -728,7 +738,8 @@
 
         window.syncAndUpdate = function() {
             collectValues();
-            renderAll();
+            calculateTable("weiss", dataWeissHerbst, dataWeissFruehjahr);
+            calculateTable("gruen", dataGruenHerbst, dataGruenFruehjahr);
         }
 
         function calculateTable(groupKey, herbstData, fruehjahrData) {
@@ -816,9 +827,9 @@
             try {
                 await setDoc(doc(db, "matchdata", "seasons"), {
                     weissHerbst: dataWeissHerbst.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
-                    weissFruehjahr: dataWeissFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
-                    gruenHerbst: dataGruenHerbst.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
-                    gruenFruehjahr: dataGruenFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals }))
+                    weissFruehjahr: dataWeissFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.homeGoals })),
+                    gruenHerbst: dataGruenHerbst.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.homeGoals })),
+                    gruenFruehjahr: dataGruenFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.homeGoals }))
                 });
                 alert("Erfolgreich in Firebase gespeichert!");
             } catch (e) { 
