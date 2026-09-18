@@ -439,7 +439,8 @@
 
         let dataWeissHerbst = scheduleWeissHerbst.map(s => ({ round: s.round, home: s.home, away: s.away, homeGoals: "", awayGoals: "" }));
         let dataWeissFruehjahr = scheduleWeissFruehjahr.map(s => ({ round: s.round, home: s.home, away: s.away, homeGoals: "", awayGoals: "" }));
-        let dataGruenHerbst = scheduleGruenHerbst.map(s => ({ round: s.round, home: s.home, away: s.home, homeGoals: "", awayGoals: "" }));
+        // HIER KORRIGIERT: s.away statt s.home für das Auswärtsteam bei Gruppe Grün!
+        let dataGruenHerbst = scheduleGruenHerbst.map(s => ({ round: s.round, home: s.home, away: s.away, homeGoals: "", awayGoals: "" }));
         let dataGruenFruehjahr = scheduleGruenFruehjahr.map(s => ({ round: s.round, home: s.home, away: s.away, homeGoals: "", awayGoals: "" }));
 
         let currentTableMode = 'herbst';
@@ -657,7 +658,6 @@
 
                 const isPlayed = m.homeGoals !== "" && m.homeGoals !== undefined && m.awayGoals !== "" && m.awayGoals !== undefined;
                 
-                // HIER GEÄNDERT: oninput statt onchange, damit beim Tippen (auch im Filter) die Ansicht stabil bleibt
                 const matchHtml = `
                     <span class="round">${m.round}</span>
                     <div class="team-home">${getTeamLogoHtml(m.home)} <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.home}</span></div>
@@ -817,9 +817,9 @@
             try {
                 await setDoc(doc(db, "matchdata", "seasons"), {
                     weissHerbst: dataWeissHerbst.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
-                    weissFruehjahr: dataWeissFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.homeGoals })),
-                    gruenHerbst: dataGruenHerbst.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.homeGoals })),
-                    gruenFruehjahr: dataGruenFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.homeGoals }))
+                    weissFruehjahr: dataWeissFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
+                    gruenHerbst: dataGruenHerbst.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
+                    gruenFruehjahr: dataGruenFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals }))
                 });
                 alert("Erfolgreich in Firebase gespeichert!");
             } catch (e) { 
