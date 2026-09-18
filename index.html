@@ -712,7 +712,8 @@
         }
 
         function collectValues() {
-            document.querySelectorAll('.match input[data-group]').forEach(input => {
+            // Durchsucht sowohl normale Spiel-Zeilen als auch Schnellansicht-Zeilen anhand ihrer Data-Attribute
+            document.querySelectorAll('input[data-group]').forEach(input => {
                 const group = input.dataset.group;
                 const season = input.dataset.season;
                 const index = parseInt(input.dataset.index);
@@ -736,8 +737,7 @@
 
         window.syncAndUpdate = function() {
             collectValues();
-            calculateTable("weiss", dataWeissHerbst, dataWeissFruehjahr);
-            calculateTable("gruen", dataGruenHerbst, dataGruenFruehjahr);
+            renderAll(); // Aktualisiert die Ansicht sofort, sodass Spiele direkt in die "Gespielt"-Liste springen
         }
 
         function calculateTable(groupKey, herbstData, fruehjahrData) {
@@ -826,6 +826,7 @@
                 await setDoc(doc(db, "matchdata", "seasons"), {
                     weissHerbst: dataWeissHerbst.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
                     weissFruehjahr: dataWeissFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
+                    gruenHerbst: dataGruenHerbst.map(m =>Goals(m)), // Fallback für saubere Map-Struktur
                     gruenHerbst: dataGruenHerbst.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
                     gruenFruehjahr: dataGruenFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals }))
                 });
