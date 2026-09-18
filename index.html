@@ -662,32 +662,35 @@
 
             groupData.forEach((m, index) => {
                 const matchesFilter = !hasFilter || m.home === filterTeam || m.away === filterTeam;
+                
                 const isPlayed = m.homeGoals !== "" && m.homeGoals !== undefined && m.awayGoals !== "" && m.awayGoals !== undefined;
                 
-                const createMatchElement = (isQuickView = false) => {
-                    const div = document.createElement("div");
-                    div.className = "match"; 
-                    div.innerHTML = `
-                        <span class="round">${m.round}</span>
-                        <div class="team-home">${getTeamLogoHtml(m.home)} <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.home}</span></div>
-                        <div class="score-inputs">
-                            <input type="text" data-group="${groupKey}" data-season="${seasonKey}" data-index="${index}" data-type="h" value="${m.homeGoals !== undefined ? m.homeGoals : ''}" oninput="syncAndUpdate()"> 
-                            <span>:</span> 
-                            <input type="text" data-group="${groupKey}" data-season="${seasonKey}" data-index="${index}" data-type="a" value="${m.awayGoals !== undefined ? m.awayGoals : ''}" oninput="syncAndUpdate()">
-                        </div>
-                        <div class="team-away"><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.away}</span> ${getTeamLogoHtml(m.away)}</div>
-                    `;
-                    return div;
-                };
+                const matchHtml = `
+                    <span class="round">${m.round}</span>
+                    <div class="team-home">${getTeamLogoHtml(m.home)} <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.home}</span></div>
+                    <div class="score-inputs">
+                        <input type="text" data-group="${groupKey}" data-season="${seasonKey}" data-index="${index}" data-type="h" value="${m.homeGoals !== undefined ? m.homeGoals : ''}" oninput="syncAndUpdate()"> 
+                        <span>:</span> 
+                        <input type="text" data-group="${groupKey}" data-season="${seasonKey}" data-index="${index}" data-type="a" value="${m.awayGoals !== undefined ? m.awayGoals : ''}" oninput="syncAndUpdate()">
+                    </div>
+                    <div class="team-away"><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.away}</span> ${getTeamLogoHtml(m.away)}</div>
+                `;
+
+                const div = document.createElement("div");
+                div.className = "match"; 
+                div.innerHTML = matchHtml;
 
                 if (isPlayed) {
-                    playedContainer.appendChild(createMatchElement());
+                    playedContainer.appendChild(div);
                 } else {
                     if (matchesFilter) {
-                        openContainer.appendChild(createMatchElement());
+                        openContainer.appendChild(div);
                     }
                     if (hasFilter && matchesFilter) {
-                        if (quickList) quickList.appendChild(createMatchElement(true));
+                        const qDiv = document.createElement("div");
+                        qDiv.className = "match"; 
+                        qDiv.innerHTML = matchHtml;
+                        if (quickList) quickList.appendChild(qDiv);
                     }
                 }
             });
@@ -824,7 +827,7 @@
             try {
                 await setDoc(doc(db, "matchdata", "seasons"), {
                     weissHerbst: dataWeissHerbst.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
-                    weissFruehjahr: dataWeissFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
+                    weissFruehjahr: dataWeissFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.home, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
                     gruenHerbst: dataGruenHerbst.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
                     gruenFruehjahr: dataGruenFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals }))
                 });
