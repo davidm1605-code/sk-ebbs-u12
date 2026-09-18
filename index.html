@@ -802,8 +802,8 @@
                         savedList.forEach(savedItem => {
                             const match = targetList.find(m => m.round === savedItem.round && m.home === savedItem.home && m.away === savedItem.away);
                             if (match) {
-                                match.homeGoals = savedItem.homeGoals;
-                                match.awayGoals = savedItem.awayGoals;
+                                match.homeGoals = savedItem.homeGoals !== undefined ? savedItem.homeGoals : "";
+                                match.awayGoals = savedItem.awayGoals !== undefined ? savedItem.awayGoals : "";
                             }
                         });
                     };
