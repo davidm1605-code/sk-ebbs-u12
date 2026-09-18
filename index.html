@@ -283,28 +283,32 @@
 
         const teamConfigs = {
             "SK Ebbs": { label: "SKE", color: "#15803d" },
-            "SK Ebbs A": { label: "SKE A", color: "#15803d" },
-            "SK Ebbs B": { label: "SKE B", color: "#15803d" },
+            "SK Ebbs A": { label: "SKE", color: "#15803d" },
+            "SK Ebbs B": { label: "SKE", color: "#15803d" },
             "Erl": { label: "ERL", color: "#b91c1c" },
             "Kössen": { label: "KÖS", color: "#1e293b" },
             "Niederndorf": { label: "NIE", color: "#b91c1c" },
             "SPG Bichlach A": { label: "BIC", color: "#047857" },
-            "SPG Bichlach B": { label: "BIC", color: "#047857" },
+            "SPG Bichlach B": { label: "BIB", color: "#047857" },
             "Bichlach A": { label: "BIC", color: "#047857" },
-            "Bichlach B": { label: "BIC", color: "#047857" },
+            "Bichlach B": { label: "BIB", color: "#047857" },
             "Schwoich": { label: "SCH", color: "#dc2626" },
-            "St. Johann A": { label: "STJ", color: "#1d4ed8" },
-            "St. Johann B": { label: "STJ", color: "#1d4ed8" },
-            "St.Johann A": { label: "STJ", color: "#1d4ed8" },
-            "St.Johann B": { label: "STJ", color: "#1d4ed8" },
+            "St. Johann A": { label: "STA", color: "#1d4ed8" },
+            "St. Johann B": { label: "STB", color: "#1d4ed8" },
+            "St.Johann A": { label: "STA", color: "#1d4ed8" },
+            "St.Johann B": { label: "STB", color: "#1d4ed8" },
             "Waidring": { label: "WAI", color: "#b91c1c" },
             "Walchsee": { label: "WAL", color: "#eab308" },
             "Kufstein": { label: "KUF", color: "#0284c7" },
             "Pillerseetal": { label: "PIL", color: "#2563eb" },
-            "SPG Breitenbach / Kundl": { label: "KUN", color: "#2563eb" },
+            "SPG Breitenbach / Kundl": { label: "KUB", color: "#2563eb" },
+            "Bruckhäusl": { label: "BRU", color: "#2563eb" },
             "SPG Unterland A": { label: "UPA", color: "#475569" },
             "SPG Unterland B": { label: "UPB", color: "#475569" },
             "Söll A": { label: "SÖL", color: "#ca8a04" },
+            "Söll": { label: "SÖL", color: "#ca8a04" },
+            "Kirchberg (U11)": { label: "KIR", color: "#ca8a04" },
+            "Bad Häring sv.": { label: "HÄR", color: "#ca8a04" },
             "Wörgl": { label: "WÖG", color: "#475569" }
         };
 
@@ -313,111 +317,30 @@
             return `<div class="team-shield" style="background-color: ${conf.color};">${conf.label}</div>`;
         }
 
-        // Alle Herbst-Spiele Gruppe A (Weiß) - Vollständiger Spielplan
+        // Exakte Termine für SK Ebbs A (Weiß) laut Screenshot 35855.png
         const scheduleWeissHerbst = [
-            // Runde 1
-            { round: "1. Rde", dateStr: "Fr, 04.09.2026 | 18:30", iso: "2026-09-04T18:30:00", match: "SK Ebbs A vs. Walchsee", home: "SK Ebbs A", away: "Walchsee" },
-            { round: "1. Rde", dateStr: "Fr, 04.09.2026 | 18:00", iso: "2026-09-04T18:00:00", match: "Erl vs. Kössen", home: "Erl", away: "Kössen" },
-            { round: "1. Rde", dateStr: "Sa, 05.09.2026 | 14:00", iso: "2026-09-05T14:00:00", match: "Niederndorf vs. SPG Bichlach A", home: "Niederndorf", away: "SPG Bichlach A" },
-            { round: "1. Rde", dateStr: "So, 06.09.2026 | 14:00", iso: "2026-09-06T14:00:00", match: "SPG Unterland B vs. Schwoich", home: "SPG Unterland B", away: "Schwoich" },
-            { round: "1. Rde", dateStr: "So, 06.09.2026 | 15:00", iso: "2026-09-06T15:00:00", match: "St. Johann A vs. Waidring", home: "St. Johann A", away: "Waidring" },
-            // Runde 2
-            { round: "2. Rde", dateStr: "Sa, 12.09.2026 | 14:00", iso: "2026-09-12T14:00:00", match: "Erl vs. SK Ebbs A", home: "Erl", away: "SK Ebbs A" },
-            { round: "2. Rde", dateStr: "Sa, 12.09.2026 | 12:00", iso: "2026-09-12T12:00:00", match: "Walchsee vs. St. Johann A", home: "Walchsee", away: "St. Johann A" },
-            { round: "2. Rde", dateStr: "Sa, 12.09.2026 | 13:00", iso: "2026-09-12T13:00:00", match: "Kössen vs. Niederndorf", home: "Kössen", away: "Niederndorf" },
-            { round: "2. Rde", dateStr: "So, 13.09.2026 | 11:00", iso: "2026-09-13T11:00:00", match: "SPG Bichlach A vs. SPG Unterland B", home: "SPG Bichlach A", away: "SPG Unterland B" },
-            { round: "2. Rde", dateStr: "So, 13.09.2026 | 14:00", iso: "2026-09-13T14:00:00", match: "Schwoich vs. Waidring", home: "Schwoich", away: "Waidring" },
-            // Runde 3
-            { round: "3. Rde", dateStr: "Sa, 19.09.2026 | 12:00", iso: "2026-09-19T12:00:00", match: "SK Ebbs A vs. Kössen", home: "SK Ebbs A", away: "Kössen" },
-            { round: "3. Rde", dateStr: "Fr, 18.09.2026 | 17:30", iso: "2026-09-18T17:30:00", match: "Niederndorf vs. Erl", home: "Niederndorf", away: "Erl" },
-            { round: "3. Rde", dateStr: "So, 20.09.2026 | 11:00", iso: "2026-09-20T11:00:00", match: "SPG Unterland B vs. Walchsee", home: "SPG Unterland B", away: "Walchsee" },
-            { round: "3. Rde", dateStr: "So, 20.09.2026 | 13:00", iso: "2026-09-20T13:00:00", match: "Waidring vs. SPG Bichlach A", home: "Waidring", away: "SPG Bichlach A" },
-            { round: "3. Rde", dateStr: "So, 20.09.2026 | 14:00", iso: "2026-09-20T14:00:00", match: "St. Johann A vs. Schwoich", home: "St. Johann A", away: "Schwoich" },
-            // Runde 4
-            { round: "4. Rde", dateStr: "Fr, 25.09.2026 | 17:00", iso: "2026-09-25T17:00:00", match: "Niederndorf vs. SK Ebbs A", home: "Niederndorf", away: "SK Ebbs A" },
-            { round: "4. Rde", dateStr: "Sa, 26.09.2026 | 14:00", iso: "2026-09-26T14:00:00", match: "Erl vs. Waidring", home: "Erl", away: "Waidring" },
-            { round: "4. Rde", dateStr: "Sa, 26.09.2026 | 15:00", iso: "2026-09-26T15:00:00", match: "Kössen vs. SPG Unterland B", home: "Kössen", away: "SPG Unterland B" },
-            { round: "4. Rde", dateStr: "So, 27.09.2026 | 11:00", iso: "2026-09-27T11:00:00", match: "Walchsee vs. Schwoich", home: "Walchsee", away: "Schwoich" },
-            { round: "4. Rde", dateStr: "So, 27.09.2026 | 13:00", iso: "2026-09-27T13:00:00", match: "SPG Bichlach A vs. St. Johann A", home: "SPG Bichlach A", away: "St. Johann A" },
-            // Runde 5
-            { round: "5. Rde", dateStr: "Mo, 05.10.2026 | 18:00", iso: "2026-10-05T18:00:00", match: "SK Ebbs A vs. SPG Bichlach A", home: "SK Ebbs A", away: "SPG Bichlach A" },
-            { round: "5. Rde", dateStr: "Fr, 02.10.2026 | 17:30", iso: "2026-10-02T17:30:00", match: "SPG Unterland B vs. Niederndorf", home: "SPG Unterland B", away: "Niederndorf" },
-            { round: "5. Rde", dateStr: "Sa, 03.10.2026 | 13:00", iso: "2026-10-03T13:00:00", match: "Schwoich vs. Erl", home: "Schwoich", away: "Erl" },
-            { round: "5. Rde", dateStr: "So, 04.10.2026 | 11:00", iso: "2026-10-04T11:00:00", match: "Waidring vs. Walchsee", home: "Waidring", away: "Walchsee" },
-            { round: "5. Rde", dateStr: "So, 04.10.2026 | 13:00", iso: "2026-10-04T13:00:00", match: "St. Johann A vs. Kössen", home: "St. Johann A", away: "Kössen" },
-            // Runde 6
-            { round: "6. Rde", dateStr: "So, 11.10.2026 | 14:30", iso: "2026-10-11T14:30:00", match: "SPG Unterland B vs. SK Ebbs A", home: "SPG Unterland B", away: "SK Ebbs A" },
-            { round: "6. Rde", dateStr: "Sa, 10.10.2026 | 13:00", iso: "2026-10-10T13:00:00", match: "Niederndorf vs. Waidring", home: "Niederndorf", away: "Waidring" },
-            { round: "6. Rde", dateStr: "Sa, 10.10.2026 | 14:00", iso: "2026-10-10T14:00:00", match: "Erl vs. St. Johann A", home: "Erl", away: "St. Johann A" },
-            { round: "6. Rde", dateStr: "Sa, 10.10.2026 | 15:00", iso: "2026-10-10T15:00:00", match: "Kössen vs. Schwoich", home: "Kössen", away: "Schwoich" },
-            { round: "6. Rde", dateStr: "So, 11.10.2026 | 11:00", iso: "2026-10-11T11:00:00", match: "Walchsee vs. SPG Bichlach A", home: "Walchsee", away: "SPG Bichlach A" },
-            // Runde 7
-            { round: "7. Rde", dateStr: "Sa, 17.10.2026 | 12:30", iso: "2026-10-17T12:30:00", match: "Schwoich vs. SK Ebbs A", home: "Schwoich", away: "SK Ebbs A" },
-            { round: "7. Rde", dateStr: "So, 18.10.2026 | 11:00", iso: "2026-10-18T11:00:00", match: "Waidring vs. SPG Unterland B", home: "Waidring", away: "SPG Unterland B" },
-            { round: "7. Rde", dateStr: "So, 18.10.2026 | 13:00", iso: "2026-10-18T13:00:00", match: "St. Johann A vs. Niederndorf", home: "St. Johann A", away: "Niederndorf" },
-            { round: "7. Rde", dateStr: "So, 18.10.2026 | 14:00", iso: "2026-10-18T14:00:00", match: "SPG Bichlach A vs. Erl", home: "SPG Bichlach A", away: "Erl" },
-            { round: "7. Rde", dateStr: "So, 18.10.2026 | 15:00", iso: "2026-10-18T15:00:00", match: "Walchsee vs. Kössen", home: "Walchsee", away: "Kössen" },
-            // Runde 8
-            { round: "8. Rde", dateStr: "Sa, 24.10.2026 | 12:00", iso: "2026-10-24T12:00:00", match: "SK Ebbs A vs. St. Johann A", home: "SK Ebbs A", away: "St. Johann A" },
-            { round: "8. Rde", dateStr: "So, 25.10.2026 | 11:00", iso: "2026-10-25T11:00:00", match: "SPG Unterland B vs. Erl", home: "SPG Unterland B", away: "Erl" },
-            { round: "8. Rde", dateStr: "Sa, 24.10.2026 | 13:00", iso: "2026-10-24T13:00:00", match: "Niederndorf vs. Walchsee", home: "Niederndorf", away: "Walchsee" },
-            { round: "8. Rde", dateStr: "Sa, 24.10.2026 | 14:00", iso: "2026-10-24T14:00:00", match: "Kössen vs. Waidring", home: "Kössen", away: "Waidring" },
-            { round: "8. Rde", dateStr: "So, 25.10.2026 | 13:00", iso: "2026-10-25T13:00:00", match: "Schwoich vs. SPG Bichlach A", home: "Schwoich", away: "SPG Bichlach A" },
-            // Runde 9
-            { round: "9. Rde", dateStr: "Fr, 30.10.2026 | 17:00", iso: "2026-10-30T17:00:00", match: "Waidring vs. SK Ebbs A", home: "Waidring", away: "SK Ebbs A" },
-            { round: "9. Rde", dateStr: "So, 01.11.2026 | 11:00", iso: "2026-11-01T11:00:00", match: "St. Johann A vs. SPG Unterland B", home: "St. Johann A", away: "SPG Unterland B" },
-            { round: "9. Rde", dateStr: "So, 01.11.2026 | 12:00", iso: "2026-11-01T12:00:00", match: "Walchsee vs. Erl", home: "Walchsee", away: "Erl" },
-            { round: "9. Rde", dateStr: "So, 01.11.2026 | 13:00", iso: "2026-11-01T13:00:00", match: "SPG Bichlach A vs. Kössen", home: "SPG Bichlach A", away: "Kössen" },
-            { round: "9. Rde", dateStr: "So, 01.11.2026 | 14:00", iso: "2026-11-01T14:00:00", match: "Schwoich vs. Niederndorf", home: "Schwoich", away: "Niederndorf" }
+            { round: "1. Rde", dateStr: "Fr, 04.09.2026 | 18:30", iso: "2026-09-04T18:30:00", match: "SK Ebbs A vs. Kufstein", home: "SK Ebbs A", away: "Kufstein" },
+            { round: "2. Rde", dateStr: "Sa, 12.09.2026 | 14:00", iso: "2026-09-12T14:00:00", match: "Walchsee vs. SK Ebbs A", home: "Walchsee", away: "SK Ebbs A" },
+            { round: "3. Rde", dateStr: "Sa, 19.09.2026 | 12:00", iso: "2026-09-19T12:00:00", match: "SK Ebbs A vs. Wörgl", home: "SK Ebbs A", away: "Wörgl" },
+            { round: "4. Rde", dateStr: "Fr, 25.09.2026 | 17:00", iso: "2026-09-25T17:00:00", match: "Erl vs. SK Ebbs A", home: "Erl", away: "SK Ebbs A" },
+            { round: "5. Rde", dateStr: "Mo, 05.10.2026 | 18:00", iso: "2026-10-05T18:00:00", match: "SK Ebbs A vs. Bichlach B", home: "SK Ebbs A", away: "Bichlach B" },
+            { round: "6. Rde", dateStr: "So, 11.10.2026 | 14:30", iso: "2026-10-11T14:30:00", match: "Schwoich vs. SK Ebbs A", home: "Schwoich", away: "SK Ebbs A" },
+            { round: "7. Rde", dateStr: "Sa, 17.10.2026 | 12:30", iso: "2026-10-17T12:30:00", match: "Niederndorf vs. SK Ebbs A", home: "Niederndorf", away: "SK Ebbs A" },
+            { round: "8. Rde", dateStr: "Sa, 24.10.2026 | 12:00", iso: "2026-10-24T12:00:00", match: "SK Ebbs A vs. St.Johann B", home: "SK Ebbs A", away: "St.Johann B" },
+            { round: "9. Rde", dateStr: "Fr, 30.10.2026 | 17:00", iso: "2026-10-30T17:00:00", match: "Bad Häring sv. vs. SK Ebbs A", home: "Bad Häring sv.", away: "SK Ebbs A" }
         ];
 
-        // Alle Herbst-Spiele Gruppe B (Grün) - Vollständiger Spielplan
+        // Exakte Termine für SK Ebbs B (Grün) laut Screenshot 35856.png
         const scheduleGruenHerbst = [
-            // Runde 1
-            { round: "1. Rde", dateStr: "Fr, 04.09.2026 | 18:30", iso: "2026-09-04T18:30:00", match: "SK Ebbs B vs. Kufstein", home: "SK Ebbs B", away: "Kufstein" },
-            { round: "1. Rde", dateStr: "Fr, 04.09.2026 | 17:00", iso: "2026-09-04T17:00:00", match: "Pillerseetal vs. SPG Bichlach B", home: "Pillerseetal", away: "SPG Bichlach B" },
-            { round: "1. Rde", dateStr: "Sa, 05.09.2026 | 13:00", iso: "2026-09-05T13:00:00", match: "SPG Breitenbach / Kundl vs. SPG Unterland A", home: "SPG Breitenbach / Kundl", away: "SPG Unterland A" },
-            { round: "1. Rde", dateStr: "So, 06.09.2026 | 13:00", iso: "2026-09-06T13:00:00", match: "St. Johann B vs. Söll A", home: "St. Johann B", away: "Söll A" },
-            // Runde 2
-            { round: "2. Rde", dateStr: "Fr, 11.09.2026 | 17:00", iso: "2026-09-11T17:00:00", match: "Pillerseetal vs. SK Ebbs B", home: "Pillerseetal", away: "SK Ebbs B" },
-            { round: "2. Rde", dateStr: "Sa, 12.09.2026 | 11:00", iso: "2026-09-12T11:00:00", match: "Kufstein vs. St. Johann B", home: "Kufstein", away: "St. Johann B" },
-            { round: "2. Rde", dateStr: "Sa, 12.09.2026 | 15:00", iso: "2026-09-12T15:00:00", match: "SPG Bichlach B vs. SPG Breitenbach / Kundl", home: "SPG Bichlach B", away: "SPG Breitenbach / Kundl" },
-            { round: "2. Rde", dateStr: "So, 13.09.2026 | 13:00", iso: "2026-09-13T13:00:00", match: "SPG Unterland A vs. Wörgl", home: "SPG Unterland A", away: "Wörgl" },
-            // Runde 3
-            { round: "3. Rde", dateStr: "Sa, 19.09.2026 | 12:00", iso: "2026-09-19T12:00:00", match: "SK Ebbs B vs. SPG Bichlach B", home: "SK Ebbs B", away: "SPG Bichlach B" },
-            { round: "3. Rde", dateStr: "Sa, 19.09.2026 | 14:00", iso: "2026-09-19T14:00:00", match: "SPG Breitenbach / Kundl vs. Pillerseetal", home: "SPG Breitenbach / Kundl", away: "Pillerseetal" },
-            { round: "3. Rde", dateStr: "Sa, 19.09.2026 | 15:00", iso: "2026-09-19T15:00:00", match: "Wörgl vs. Kufstein", home: "Wörgl", away: "Kufstein" },
-            { round: "3. Rde", dateStr: "So, 20.09.2026 | 12:00", iso: "2026-09-20T12:00:00", match: "Söll A vs. SPG Unterland A", home: "Söll A", away: "SPG Unterland A" },
-            // Runde 4
-            { round: "4. Rde", dateStr: "Sa, 26.09.2026 | 13:00", iso: "2026-09-26T13:00:00", match: "SPG Breitenbach / Kundl vs. SK Ebbs B", home: "SPG Breitenbach / Kundl", away: "SK Ebbs B" },
-            { round: "4. Rde", dateStr: "Sa, 26.09.2026 | 11:00", iso: "2026-09-26T11:00:00", match: "Pillerseetal vs. Wörgl", home: "Pillerseetal", away: "Wörgl" },
-            { round: "4. Rde", dateStr: "So, 27.09.2026 | 12:00", iso: "2026-09-27T12:00:00", match: "Kufstein vs. Söll A", home: "Kufstein", away: "Söll A" },
-            { round: "4. Rde", dateStr: "So, 27.09.2026 | 14:00", iso: "2026-09-27T14:00:00", match: "SPG Bichlach B vs. St. Johann B", home: "SPG Bichlach B", away: "St. Johann B" },
-            // Runde 5
-            { round: "5. Rde", dateStr: "Sa, 03.10.2026 | 11:30", iso: "2026-10-03T11:30:00", match: "SK Ebbs B vs. SPG Unterland A", home: "SK Ebbs B", away: "SPG Unterland A" },
-            { round: "5. Rde", dateStr: "Sa, 03.10.2026 | 14:00", iso: "2026-10-03T14:00:00", match: "Wörgl vs. SPG Breitenbach / Kundl", home: "Wörgl", away: "SPG Breitenbach / Kundl" },
-            { round: "5. Rde", dateStr: "So, 04.10.2026 | 12:00", iso: "2026-10-04T12:00:00", match: "Söll A vs. Pillerseetal", home: "Söll A", away: "Pillerseetal" },
-            { round: "5. Rde", dateStr: "So, 04.10.2026 | 14:00", iso: "2026-10-04T14:00:00", match: "St. Johann B vs. Kufstein", home: "St. Johann B", away: "Kufstein" },
-            // Runde 6
-            { round: "6. Rde", dateStr: "Sa, 10.10.2026 | 12:00", iso: "2026-10-10T12:00:00", match: "SK Ebbs B vs. St. Johann B", home: "SK Ebbs B", away: "St. Johann B" },
-            { round: "6. Rde", dateStr: "Sa, 10.10.2026 | 14:00", iso: "2026-10-10T14:00:00", match: "SPG Breitenbach / Kundl vs. Söll A", home: "SPG Breitenbach / Kundl", away: "Söll A" },
-            { round: "6. Rde", dateStr: "So, 11.10.2026 | 12:00", iso: "2026-10-11T12:00:00", match: "Pillerseetal vs. Kufstein", home: "Pillerseetal", away: "Kufstein" },
-            { round: "6. Rde", dateStr: "So, 11.10.2026 | 13:00", iso: "2026-10-11T13:00:00", match: "SPG Unterland A vs. SPG Bichlach B", home: "SPG Unterland A", away: "SPG Bichlach B" },
-            // Runde 7
-            { round: "7. Rde", dateStr: "Sa, 17.10.2026 | 11:30", iso: "2026-10-17T11:30:00", match: "Söll A vs. SK Ebbs B", home: "Söll A", away: "SK Ebbs B" },
-            { round: "7. Rde", dateStr: "Sa, 17.10.2026 | 13:00", iso: "2026-10-17T13:00:00", match: "Kufstein vs. SPG Unterland A", home: "Kufstein", away: "SPG Unterland A" },
-            { round: "7. Rde", dateStr: "So, 18.10.2026 | 12:00", iso: "2026-10-18T12:00:00", match: "St. Johann B vs. Pillerseetal", home: "St. Johann B", away: "Pillerseetal" },
-            { round: "7. Rde", dateStr: "So, 18.10.2026 | 14:00", iso: "2026-10-18T14:00:00", match: "SPG Bichlach B vs. Wörgl", home: "SPG Bichlach B", away: "Wörgl" },
-            // Runde 8
-            { round: "8. Rde", dateStr: "Sa, 24.10.2026 | 12:00", iso: "2026-10-24T12:00:00", match: "Wörgl vs. SK Ebbs B", home: "Wörgl", away: "SK Ebbs B" },
-            { round: "8. Rde", dateStr: "Sa, 24.10.2026 | 14:00", iso: "2026-10-24T14:00:00", match: "Pillerseetal vs. SPG Unterland A", home: "Pillerseetal", away: "SPG Unterland A" },
-            { round: "8. Rde", dateStr: "So, 25.10.2026 | 12:00", iso: "2026-10-25T12:00:00", match: "SPG Breitenbach / Kundl vs. St. Johann B", home: "SPG Breitenbach / Kundl", away: "St. Johann B" },
-            { round: "8. Rde", dateStr: "So, 25.10.2026 | 14:00", iso: "2026-10-25T14:00:00", match: "Söll A vs. SPG Bichlach B", home: "Söll A", away: "SPG Bichlach B" },
-            // Runde 9
-            { round: "9. Rde", dateStr: "Do, 29.10.2026 | 17:00", iso: "2026-10-29T17:00:00", match: "SK Ebbs B vs. Pillerseetal", home: "SK Ebbs B", away: "Pillerseetal" },
-            { round: "9. Rde", dateStr: "Sa, 31.10.2026 | 13:00", iso: "2026-10-31T13:00:00", match: "Wörgl vs. Söll A", home: "Wörgl", away: "Söll A" },
-            { round: "9. Rde", dateStr: "So, 01.11.2026 | 12:00", iso: "2026-11-01T12:00:00", match: "SPG Unterland A vs. St. Johann B", home: "SPG Unterland A", away: "St. Johann B" },
-            { round: "9. Rde", dateStr: "So, 01.11.2026 | 14:00", iso: "2026-11-01T14:00:00", match: "SPG Bichlach B vs. Kufstein", home: "SPG Bichlach B", away: "Kufstein" }
+            { round: "1. Rde", dateStr: "Fr, 04.09.2026 | 18:30", iso: "2026-09-04T18:30:00", match: "SK Ebbs B vs. St.Johann A", home: "SK Ebbs B", away: "St.Johann A" },
+            { round: "2. Rde", dateStr: "Fr, 11.09.2026 | 17:00", iso: "2026-09-11T17:00:00", match: "Kundl/Breiten... vs. SK Ebbs B", home: "SPG Breitenbach / Kundl", away: "SK Ebbs B" },
+            { round: "3. Rde", dateStr: "Sa, 19.09.2026 | 12:00", iso: "2026-09-19T12:00:00", match: "SK Ebbs B vs. Bichlach A", home: "SK Ebbs B", away: "Bichlach A" },
+            { round: "4. Rde", dateStr: "Sa, 26.09.2026 | 13:00", iso: "2026-09-26T13:00:00", match: "Söll vs. SK Ebbs B", home: "Söll", away: "SK Ebbs B" },
+            { round: "5. Rde", dateStr: "Sa, 03.10.2026 | 11:30", iso: "2026-10-03T11:30:00", match: "SK Ebbs B vs. Waidring", home: "SK Ebbs B", away: "Waidring" },
+            { round: "6. Rde", dateStr: "Sa, 10.10.2026 | 12:00", iso: "2026-10-10T12:00:00", match: "SK Ebbs B vs. Pillerseetal", home: "SK Ebbs B", away: "Pillerseetal" },
+            { round: "7. Rde", dateStr: "Sa, 17.10.2026 | 11:30", iso: "2026-10-17T11:30:00", match: "Kirchberg (U11) vs. SK Ebbs B", home: "Kirchberg (U11)", away: "SK Ebbs B" },
+            { round: "8. Rde", dateStr: "Sa, 24.10.2026 | 12:00", iso: "2026-10-24T12:00:00", match: "Kössen vs. SK Ebbs B", home: "Kössen", away: "SK Ebbs B" },
+            { round: "9. Rde", dateStr: "Do, 29.10.2026 | 17:00", iso: "2026-10-29T17:00:00", match: "SK Ebbs B vs. Bruckhäusl", home: "SK Ebbs B", away: "Bruckhäusl" }
         ];
 
         function generateSpringSchedule(herbstList) {
@@ -434,13 +357,20 @@
         const scheduleWeissFruehjahr = generateSpringSchedule(scheduleWeissHerbst);
         const scheduleGruenFruehjahr = generateSpringSchedule(scheduleGruenHerbst);
 
-        const teamsWeiss = ["SK Ebbs A", "Erl", "Kössen", "Niederndorf", "SPG Bichlach A", "SPG Unterland B", "Schwoich", "St. Johann A", "Waidring", "Walchsee"];
-        const teamsGruen = ["SK Ebbs B", "Kufstein", "Pillerseetal", "SPG Bichlach B", "SPG Breitenbach / Kundl", "SPG Unterland A", "St. Johann B", "Söll A", "Wörgl"];
+        const teamsWeiss = ["SK Ebbs A", "Kufstein", "Walchsee", "Wörgl", "Erl", "Bichlach B", "Schwoich", "Niederndorf", "St.Johann B", "Bad Häring sv."];
+        const teamsGruen = ["SK Ebbs B", "St.Johann A", "SPG Breitenbach / Kundl", "Bichlach A", "Söll", "Waidring", "Pillerseetal", "Kirchberg (U11)", "Kössen", "Bruckhäusl"];
 
         let dataWeissHerbst = scheduleWeissHerbst.map(s => ({ round: s.round, home: s.home, away: s.away, homeGoals: "", awayGoals: "" }));
         let dataWeissFruehjahr = scheduleWeissFruehjahr.map(s => ({ round: s.round, home: s.home, away: s.away, homeGoals: "", awayGoals: "" }));
         let dataGruenHerbst = scheduleGruenHerbst.map(s => ({ round: s.round, home: s.home, away: s.away, homeGoals: "", awayGoals: "" }));
         let dataGruenFruehjahr = scheduleGruenFruehjahr.map(s => ({ round: s.round, home: s.home, away: s.away, homeGoals: "", awayGoals: "" }));
+
+        // Voreinstellung der bereits gespielten Ergebnisse aus den Screenshots
+        dataWeissHerbst[0].homeGoals = "7"; dataWeissHerbst[0].awayGoals = "3"; // SK Ebbs A vs Kufstein
+        dataWeissHerbst[1].homeGoals = "1"; dataWeissHerbst[1].awayGoals = "4"; // Walchsee vs SK Ebbs A
+
+        dataGruenHerbst[0].homeGoals = "8"; dataGruenHerbst[0].awayGoals = "2"; // SK Ebbs B vs St.Johann A
+        dataGruenHerbst[1].homeGoals = "1"; dataGruenHerbst[1].awayGoals = "4"; // Kundl/Breiten... vs SK Ebbs B
 
         let currentTableMode = 'herbst';
 
@@ -592,7 +522,7 @@
         }
 
         function renderAll() {
-            collectValues(); // Werte vor dem Rendern sichern
+            collectValues();
             const filterWeiss = document.getElementById('select-team-offen-weiss')?.value || "";
             const filterGruen = document.getElementById('select-team-offen-gruen')?.value || "";
 
@@ -743,17 +673,11 @@
                 }
             }
 
-            // 1. Normale Eingabefelder verarbeiten
-            document.querySelectorAll(
-                'input[data-group]:not([data-quick="true"])'
-            ).forEach(input => {
+            document.querySelectorAll('input[data-group]:not([data-quick="true"])').forEach(input => {
                 processInput(input);
             });
 
-            // 2. Schnellansicht zuletzt verarbeiten (hat Priorität)
-            document.querySelectorAll(
-                'input[data-group][data-quick="true"]'
-            ).forEach(input => {
+            document.querySelectorAll('input[data-group][data-quick="true"]').forEach(input => {
                 processInput(input);
             });
         }
@@ -849,7 +773,7 @@
             try {
                 await setDoc(doc(db, "matchdata", "seasons"), {
                     weissHerbst: dataWeissHerbst.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
-                    weissFruehjahr: dataWeissFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.home, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
+                    weissFruehjahr: dataWeissFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.home, homeGoals: m.homeGoals, awayGoals: m.homeGoals })),
                     gruenHerbst: dataGruenHerbst.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
                     gruenFruehjahr: dataGruenFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals }))
                 });
