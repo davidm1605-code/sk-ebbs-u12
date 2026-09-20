@@ -42,6 +42,14 @@
         .score-inputs { display: flex; align-items: center; justify-content: center; gap: 2px; width: 65px; flex-shrink: 0; }
         .match input { width: 26px; height: 24px; text-align: center; background: #0f172a; border: 1px solid #475569; color: white; border-radius: 4px; font-size: 0.8rem; padding: 0; }
         
+        /* Termin-Zeile */
+        .termin-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #334155; font-size: 0.75rem; gap: 6px; }
+        .termin-date { width: 110px; font-size: 0.7rem; color: #38bdf8; font-weight: bold; flex-shrink: 0; }
+        .termin-match { flex: 1; display: flex; align-items: center; gap: 4px; overflow: hidden; min-width: 0; }
+        .termin-status { font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; flex-shrink: 0; }
+        .status-open { background: rgba(56, 189, 248, 0.2); color: #38bdf8; }
+        .status-done { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+
         table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.75rem; }
         th, td { padding: 5px; text-align: left; border-bottom: 1px solid #334155; }
         th { background: #334155; color: #38bdf8; }
@@ -79,6 +87,7 @@
             <button class="tab-btn active" onclick="switchTab('gespielt', event)">Gespielt</button>
             <button class="tab-btn" onclick="switchTab('offen', event)">Offen</button>
             <button class="tab-btn" onclick="switchTab('tabelle', event)">Tabelle</button>
+            <button class="tab-btn" onclick="switchTab('termine', event)">📅 Termine</button>
         </div>
 
         <!-- TAB: GESPIELT -->
@@ -189,6 +198,32 @@
             <h2>Tabelle SK Ebbs B (Gruppe B / Grün)</h2>
             <table><thead><tr><th>#</th><th>TEAM</th><th>SP</th><th>TORE</th><th>PKT</th></tr></thead><tbody id="table-gruen"></tbody></table>
         </div>
+
+        <!-- TAB: TERMINE -->
+        <div id="tab-termine" class="tab-content">
+            <div class="sub-tabs">
+                <button class="sub-tab-btn active" onclick="switchSubTab('termine', 'weiss', event)">SK Ebbs A (Weiß)</button>
+                <button class="sub-tab-btn" onclick="switchSubTab('termine', 'gruen', event)">SK Ebbs B (Grün)</button>
+            </div>
+
+            <!-- SK Ebbs A Termine -->
+            <div id="sub-termine-weiss" class="sub-content active">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h2 style="margin: 0; border: none;">Meisterschaftstermine SK Ebbs A</h2>
+                    <button class="action-btn" onclick="exportCalendar('weiss')" style="width: auto; padding: 6px 12px; font-size: 0.7rem;">📅 In Google Kalender übertragen</button>
+                </div>
+                <div id="termine-list-weiss"></div>
+            </div>
+
+            <!-- SK Ebbs B Termine -->
+            <div id="sub-termine-gruen" class="sub-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h2 style="margin: 0; border: none;">Meisterschaftstermine SK Ebbs B</h2>
+                    <button class="action-btn" onclick="exportCalendar('gruen')" style="width: auto; padding: 6px 12px; font-size: 0.7rem;">📅 In Google Kalender übertragen</button>
+                </div>
+                <div id="termine-list-gruen"></div>
+            </div>
+        </div>
     </div>
 
     <script type="module">
@@ -239,6 +274,30 @@
             const conf = teamConfigs[teamName] || { label: teamName ? teamName.substring(0, 3).toUpperCase() : "SKE", color: "#334155" };
             return `<div class="team-shield" style="background-color: ${conf.color};">${conf.label}</div>`;
         }
+
+        // Exakte Meisterschaftstermine laut bereitgestellten Screenshots
+        const termineWeissList = [
+            { date: "Fr. 04.09.2026 18:30", home: "SK Ebbs B", away: "Kufstein", rawDate: "2026-09-04T18:30:00" },
+            { date: "Fr. 11.09.2026 17:00", home: "Kundl/Breitenbach", away: "SK Ebbs B", rawDate: "2026-09-11T17:00:00" },
+            { date: "Sa. 12.09.2026 14:00", home: "Walchsee", away: "SK Ebbs A", rawDate: "2026-09-12T14:00:00" },
+            { date: "Sa. 19.09.2026 12:00", home: "SK Ebbs A", away: "Bichlach A", rawDate: "2026-09-19T12:00:00" },
+            { date: "Sa. 19.09.2026 12:00", home: "SK Ebbs B", away: "Wörgl", rawDate: "2026-09-19T12:00:00" },
+            { date: "Fr. 25.09.2026 17:00", home: "Erl", away: "SK Ebbs A", rawDate: "2026-09-25T17:00:00" },
+            { date: "Sa. 26.09.2026 13:00", home: "Söll", away: "SK Ebbs B", rawDate: "2026-09-26T13:00:00" },
+            { date: "Sa. 03.10.2026 11:30", home: "SK Ebbs A", away: "Waidring", rawDate: "2026-10-03T11:30:00" },
+            { date: "Sa. 03.10.2026 11:30", home: "SK Ebbs B", away: "Bichlach B", rawDate: "2026-10-03T11:30:00" },
+            { date: "Sa. 10.10.2026 12:00", home: "SK Ebbs B", away: "Pillerseetal", rawDate: "2026-10-10T12:00:00" },
+            { date: "So. 11.10.2026 14:30", home: "Schwoich", away: "SK Ebbs A", rawDate: "2026-10-11T14:30:00" },
+            { date: "Sa. 17.10.2026 12:30", home: "SK Ebbs A", away: "Niederndorf", rawDate: "2026-10-17T12:30:00" },
+            { date: "Sa. 24.10.2026 12:00", home: "Kössen", away: "SK Ebbs A", rawDate: "2026-10-24T12:00:00" },
+            { date: "Sa. 24.10.2026 12:00", home: "SK Ebbs B", away: "St. Johann B", rawDate: "2026-10-24T12:00:00" },
+            { date: "Do. 29.10.2026 17:00", home: "SK Ebbs A", away: "Bruckhäusl", rawDate: "2026-10-29T17:00:00" },
+            { date: "Fr. 30.10.2026 17:00", home: "Bad Häring", away: "SK Ebbs B", rawDate: "2026-10-30T17:00:00" }
+        ];
+
+        // Filter specific for SK Ebbs A and SK Ebbs B based on participants
+        const termineGruenList = termineWeissList.filter(t => t.home.includes("SK Ebbs B") || t.away.includes("SK Ebbs B") || t.home.includes("SK Ebbs") || t.away.includes("SK Ebbs"));
+        const termineAList = termineWeissList.filter(t => t.home.includes("SK Ebbs A") || t.away.includes("SK Ebbs A") || (t.home.includes("SK Ebbs") && !t.home.includes("SK Ebbs B")) || (t.away.includes("SK Ebbs") && !t.away.includes("SK Ebbs B")));
 
         // Alle Herbst-Spiele Gruppe A (Weiß) - Vollständiger Spielplan
         const scheduleWeissHerbst = [
@@ -481,6 +540,68 @@
 
             calculateTable("weiss", dataWeissHerbst, dataWeissFruehjahr);
             calculateTable("gruen", dataGruenHerbst, dataGruenFruehjahr);
+
+            renderTermineList('weiss', termineAList);
+            renderTermineList('gruen', termineGruenList);
+        }
+
+        function renderTermineList(teamKey, list) {
+            const container = document.getElementById(`termine-list-${teamKey}`);
+            if (!container) return;
+            container.innerHTML = "";
+
+            const now = new Date();
+
+            list.forEach(t => {
+                const matchDate = new Date(t.rawDate);
+                const isDone = matchDate < now;
+                const statusClass = isDone ? "status-done" : "status-open";
+                const statusText = isDone ? "Beendet" : "Anstehend";
+
+                const div = document.createElement("div");
+                div.className = "termin-row";
+                div.innerHTML = `
+                    <span class="termin-date">${t.date}</span>
+                    <div class="termin-match">
+                        ${getTeamLogoHtml(t.home)} <span>${t.home}</span> 
+                        <span style="color: #94a3b8; padding: 0 2px;">vs.</span> 
+                        <span>${t.away}</span> ${getTeamLogoHtml(t.away)}
+                    </div>
+                    <span class="termin-status ${statusClass}">${statusText}</span>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        window.exportCalendar = function(teamKey) {
+            const list = teamKey === 'weiss' ? termineAList : termineGruenList;
+            let icsContent = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//SK Ebbs U12//Spielplan//DE\n";
+            
+            list.forEach(t => {
+                const start = new Date(t.rawDate);
+                const end = new Date(start.getTime() + 90 * 60000); // 90 min Spieldauer
+                const fmtDate = (d) => d.toISOString().replace(/[-:]/g, "").split('.')[0] + "Z";
+                
+                icsContent += "BEGIN:VEVENT\n";
+                icsContent += `SUMMARY:Meisterschaftsspiel: ${t.home} vs. ${t.away}\n`;
+                icsContent += `DTSTART:${fmtDate(start)}\n`;
+                icsContent += `DTEND:${fmtDate(end)}\n`;
+                icsContent += `DESCRIPTION:SK Ebbs U12 Meisterschaftsspiel\n`;
+                icsContent += "END:VEVENT\n";
+            });
+            icsContent += "END:VCALENDAR";
+
+            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `SK_Ebbs_${teamKey === 'weiss' ? 'A_Weiss' : 'B_Gruen'}_Termine.ics`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            alert("Kalenderdatei (.ics) wurde heruntergeladen! Du kannst diese Datei nun direkt in Google Kalender importieren.");
         }
 
         function renderGroupContainer(groupKey, seasonKey, groupData, filterTeam) {
