@@ -562,7 +562,6 @@
 
             list.forEach(t => {
                 const matchStartTime = new Date(t.rawDate);
-                // 60 Minuten (60 * 60 * 1000 ms) nach Anpfiff gilt das Spiel als beendet
                 const matchEndTime = new Date(matchStartTime.getTime() + 60 * 60000);
                 
                 const isDone = matchEndTime < now;
@@ -602,17 +601,14 @@
             });
             iCalContent += "END:VCALENDAR";
 
-            const blob = new Blob([iCalContent], { type: 'text/calendar;charset=utf-8' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `SK_Ebbs_${teamKey === 'weiss' ? 'A_Weiss' : 'B_Gruen'}_Termine.ics`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-            
-            alert("Kalenderdatei (.ics) wurde heruntergeladen!");
+            // Direktes Öffnen der Vorschau-Ansicht via Data-URI (optimiert für Smartphones)
+            const encodedUri = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(iCalContent);
+            const link = document.createElement('a');
+            link.setAttribute('href', encodedUri);
+            link.setAttribute('download', `SK_Ebbs_${teamKey === 'weiss' ? 'A_Weiss' : 'B_Gruen'}_Termine.ics`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         function renderGroupContainer(groupKey, seasonKey, groupData, filterTeam) {
@@ -799,8 +795,8 @@
                 await setDoc(doc(db, "matchdata", "seasons"), {
                     weissHerbst: dataWeissHerbst.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
                     weissFruehjahr: dataWeissFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
-                    gruenHerbst: dataGruenHerbst.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.homeGoals })),
-                    gruenFruehjahr: dataGruenFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.homeGoals }))
+                    gruenHerbst: dataGruenHerbst.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals })),
+                    gruenFruehjahr: dataGruenFruehjahr.map(m => ({ round: m.round, home: m.home, away: m.away, homeGoals: m.homeGoals, awayGoals: m.awayGoals }))
                 });
                 alert("Erfolgreich in Firebase gespeichert!");
                 renderAll(); 
