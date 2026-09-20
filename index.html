@@ -561,8 +561,11 @@
             const now = new Date();
 
             list.forEach(t => {
-                const matchDate = new Date(t.rawDate);
-                const isDone = matchDate < now;
+                const matchStartTime = new Date(t.rawDate);
+                // 60 Minuten (60 * 60 * 1000 ms) nach Anpfiff gilt das Spiel als beendet
+                const matchEndTime = new Date(matchStartTime.getTime() + 60 * 60000);
+                
+                const isDone = matchEndTime < now;
                 const statusClass = isDone ? "status-done" : "status-open";
                 const statusText = isDone ? "Beendet" : "Anstehend";
 
