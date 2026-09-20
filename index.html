@@ -275,7 +275,7 @@
             return `<div class="team-shield" style="background-color: ${conf.color};">${conf.label}</div>`;
         }
 
-        // Exakte Meisterschaftstermine getrennt nach Team A und Team B (aktualisiert)
+        // Exakte Meisterschaftstermine getrennt nach Team A und Team B (inkl. ergänztem Spiel für SK Ebbs B)
         const termineAList = [
             { date: "Fr. 04.09.2026 18:30", home: "SK Ebbs A", away: "Kufstein", rawDate: "2026-09-04T18:30:00" },
             { date: "Sa. 12.09.2026 14:00", home: "Walchsee", away: "SK Ebbs A", rawDate: "2026-09-12T14:00:00" },
@@ -289,6 +289,7 @@
         ];
 
         const termineGruenList = [
+            { date: "Fr. 04.09.2026 18:30", home: "SK Ebbs B", away: "St. Johann B", rawDate: "2026-09-04T18:30:00" },
             { date: "Fr. 11.09.2026 17:00", home: "Kundl/Breitenbach", away: "SK Ebbs B", rawDate: "2026-09-11T17:00:00" },
             { date: "Sa. 19.09.2026 12:00", home: "SK Ebbs B", away: "Bichlach A", rawDate: "2026-09-19T12:00:00" },
             { date: "Sa. 26.09.2026 13:00", home: "Söll", away: "SK Ebbs B", rawDate: "2026-09-26T13:00:00" },
@@ -347,8 +348,9 @@
             { round: "9. Rde", home: "Schwoich", away: "Niederndorf" }
         ];
 
-        // Alle Herbst-Spiele Gruppe B (Grün) - Vollständiger Spielplan
+        // Alle Herbst-Spiele Gruppe B (Grün) - Vollständiger Spielplan (inkl. SK Ebbs B vs. St. Johann B am 04.09.)
         const scheduleGruenHerbst = [
+            { round: "1. Rde", home: "SK Ebbs B", away: "St. Johann B" },
             { round: "1. Rde", home: "SK Ebbs B", away: "Kufstein" },
             { round: "1. Rde", home: "Pillerseetal", away: "SPG Bichlach B" },
             { round: "1. Rde", home: "SPG Breitenbach / Kundl", away: "SPG Unterland A" },
@@ -574,23 +576,23 @@
 
         window.exportCalendar = function(teamKey) {
             const list = teamKey === 'weiss' ? termineAList : termineGruenList;
-            let icsContent = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//SK Ebbs U12//Spielplan//DE\n";
+            let iCalContent = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//SK Ebbs U12//Spielplan//DE\n";
             
             list.forEach(t => {
                 const start = new Date(t.rawDate);
-                const end = new Date(start.getTime() + 90 * 60000); // 90 min Spieldauer
+                const end = new Date(start.getTime() + 90 * 60000);
                 const fmtDate = (d) => d.toISOString().replace(/[-:]/g, "").split('.')[0] + "Z";
                 
-                icsContent += "BEGIN:VEVENT\n";
-                icsContent += `SUMMARY:Meisterschaftsspiel: ${t.home} vs. ${t.away}\n`;
-                icsContent += `DTSTART:${fmtDate(start)}\n`;
-                icsContent += `DTEND:${fmtDate(end)}\n`;
-                icsContent += `DESCRIPTION:SK Ebbs U12 Meisterschaftsspiel\n`;
-                icsContent += "END:VEVENT\n";
+                iCalContent += "BEGIN:VEVENT\n";
+                iCalContent += `SUMMARY:Meisterschaftsspiel: ${t.home} vs. ${t.away}\n`;
+                iCalContent += `DTSTART:${fmtDate(start)}\n`;
+                iCalContent += `DTEND:${fmtDate(end)}\n`;
+                iCalContent += `DESCRIPTION:SK Ebbs U12 Meisterschaftsspiel\n`;
+                iCalContent += "END:VEVENT\n";
             });
-            icsContent += "END:VCALENDAR";
+            iCalContent += "END:VCALENDAR";
 
-            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+            const blob = new Blob([iCalContent], { type: 'text/calendar;charset=utf-8' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -600,7 +602,7 @@
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
             
-            alert("Kalenderdatei (.ics) wurde heruntergeladen! Du kannst diese Datei nun direkt in Google Kalender importieren.");
+            alert("Kalenderdatei (.ics) wurde heruntergeladen!");
         }
 
         function renderGroupContainer(groupKey, seasonKey, groupData, filterTeam) {
@@ -681,32 +683,19 @@
 
                 let targetArray = null;
 
-                if (group === "weiss" && season === "herbst") {
-                    targetArray = dataWeissHerbst;
-                } else if (group === "weiss" && season === "fruehjahr") {
-                    targetArray = dataWeissFruehjahr;
-                } else if (group === "gruen" && season === "herbst") {
-                    targetArray = dataGruenHerbst;
-                } else if (group === "gruen" && season === "fruehjahr") {
-                    targetArray = dataGruenFruehjahr;
-                }
+                if (group === "weiss" && season === "herbst") targetArray = dataWeissHerbst;
+                else if (group === "weiss" && season === "fruehjahr") targetArray = dataWeissFruehjahr;
+                else if (group === "gruen" && season === "herbst") targetArray = dataGruenHerbst;
+                else if (group === "gruen" && season === "fruehjahr") targetArray = dataGruenFruehjahr;
 
                 if (targetArray && targetArray[index]) {
-                    if (type === "h") {
-                        targetArray[index].homeGoals = input.value.trim();
-                    } else if (type === "a") {
-                        targetArray[index].awayGoals = input.value.trim();
-                    }
+                    if (type === "h") targetArray[index].homeGoals = input.value.trim();
+                    else if (type === "a") targetArray[index].awayGoals = input.value.trim();
                 }
             }
 
-            document.querySelectorAll('input[data-group]:not([data-quick="true"])').forEach(input => {
-                processInput(input);
-            });
-
-            document.querySelectorAll('input[data-group][data-quick="true"]').forEach(input => {
-                processInput(input);
-            });
+            document.querySelectorAll('input[data-group]:not([data-quick="true"])').forEach(input => processInput(input));
+            document.querySelectorAll('input[data-group][data-quick="true"]').forEach(input => processInput(input));
         }
 
         window.syncAndUpdate = function() {
@@ -771,7 +760,6 @@
                 const docSnap = await getDoc(doc(db, "matchdata", "seasons"));
                 if (docSnap.exists()) {
                     const saved = docSnap.data();
-                    
                     const applySavedData = (targetList, savedList) => {
                         if (!savedList) return;
                         savedList.forEach(savedItem => {
